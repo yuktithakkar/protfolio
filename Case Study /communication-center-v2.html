@@ -1,0 +1,2352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>ADP Communication Center – Case Study</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+/* ─── RESET ─────────────────────────────────────── */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:Inter,ui-sans-serif,sans-serif;color:#0F172A;background:#fff;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+/* ─── TOKENS ─────────────────────────────────────── */
+:root{
+  --ink:#0F172A; --ink2:#1E293B; --ink3:#374151; --ink4:#64748B; --meta:#94A3B8;
+  --line:#E5E7EB; --linem:#D1D5DB;
+  --blue:#2563EB; --blueh:#1D4ED8; --bluel:#DBEAFE; --bluell:#EFF6FF;
+  --or:#EA580C; --orl:#FED7AA;
+  --green:#059669; --greenl:#D1FAE5;
+  --off:#FAFAF9; --off2:#F8FAFC; --off3:#F1F5F9;
+  --app:#111827; --app2:#1F2937; --appb:rgba(255,255,255,.08); --appb2:rgba(255,255,255,.15);
+  --ss:Inter,ui-sans-serif,sans-serif; --mo:"JetBrains Mono",monospace;
+  --radius:8px; --max:1200px;
+}
+
+/* ─── PROGRESS BAR ───────────────────────────────── */
+#pg{position:fixed;top:0;left:0;height:2px;width:0%;background:var(--blue);z-index:1000;transition:width .12s;}
+
+/* ─── NAV ────────────────────────────────────────── */
+.nav{position:fixed;top:0;left:0;right:0;z-index:800;height:52px;display:flex;align-items:center;padding:0 48px;background:rgba(255,255,255,.96);backdrop-filter:blur(16px);border-bottom:1px solid var(--line);}
+.nav-l{font-size:13px;font-weight:600;color:var(--ink);letter-spacing:-0.01em;}
+.nav-r{margin-left:auto;font-family:var(--mo);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--meta);}
+
+/* ─── LAYOUT ─────────────────────────────────────── */
+.w{max-width:var(--max);margin:0 auto;padding:0 24px;}
+.sec{padding:72px 0;}
+.sec-off{background:var(--off);}
+.sec-dark{background:var(--app);}
+
+/* ─── SECTION EYEBROW ────────────────────────────── */
+.ey{font-family:var(--mo);font-size:10px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--blue);margin-bottom:14px;}
+.ey-lt{color:rgba(147,197,253,.7);}
+
+/* ─── HEADINGS ───────────────────────────────────── */
+.h2{font-size:clamp(28px,3.5vw,44px);font-weight:700;color:var(--ink);letter-spacing:-0.025em;line-height:1.08;margin:0 0 14px;}
+.h2 em{font-style:normal;color:var(--blue);}
+.h2-lt{color:#F1F5F9;}
+.h2-lt em{color:#93C5FD;}
+.h3{font-size:clamp(18px,2vw,26px);font-weight:700;color:var(--ink);letter-spacing:-0.015em;line-height:1.15;margin-bottom:10px;}
+
+/* ─── BODY TEXT ──────────────────────────────────── */
+.body{font-size:15px;line-height:1.7;color:#6B7280;max-width:580px;}
+.body-lt{color:rgba(209,213,219,.7);}
+
+/* ─── CALLOUT / NOTE ─────────────────────────────── */
+.note{padding:14px 16px;background:#EFF6FF;border-left:3px solid #2563EB;border-radius:0 8px 8px 0;font-size:13px;color:#374151;line-height:1.65;}
+.note-lbl{font-family:var(--mo);font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--blue);display:block;margin-bottom:5px;}
+.note-lt{background:rgba(37,99,235,.1);color:rgba(209,229,255,.8);}
+.note-lbl-lt{color:rgba(147,197,253,.85);}
+
+/* ─── REVEAL ─────────────────────────────────────── */
+.rv{opacity:0;transform:translateY(16px);transition:opacity .55s ease,transform .55s ease;}
+.rv.in{opacity:1;transform:none;}
+.rv-up{opacity:0;transform:translateY(28px);transition:opacity .7s ease,transform .7s ease;}
+.rv-up.in{opacity:1;transform:none;}
+.d1{transition-delay:.06s}.d2{transition-delay:.12s}.d3{transition-delay:.18s}.d4{transition-delay:.24s}
+
+/* ─── HERO ────────────────────────────────────────── */
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;padding:80px 48px 72px;position:relative;overflow:hidden;border-bottom:1px solid var(--line);}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(15,23,42,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(15,23,42,.03) 1px,transparent 1px);background-size:72px 72px;clip-path:inset(0 0 0 45%);}
+.hero-glow{position:absolute;top:-15%;right:-8%;width:60%;height:85%;background:radial-gradient(ellipse at center,rgba(37,99,235,.06) 0%,transparent 65%);pointer-events:none;}
+.hero-tag{font-family:var(--mo);font-size:10px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--meta);margin-bottom:20px;display:flex;align-items:center;gap:10px;}
+.hero-tag::before{content:"";width:24px;height:2px;background:var(--blue);}
+.hero-h{font-size:clamp(48px,8vw,112px);font-weight:700;line-height:.9;letter-spacing:-0.035em;color:var(--ink);margin-bottom:28px;}
+.hero-h em{font-style:normal;color:var(--blue);}
+.hero-sub{font-size:17px;line-height:1.62;color:#6B7280;max-width:460px;margin-bottom:64px;}
+.hero-nums{display:flex;border-top:1px solid var(--line);}
+.hn{padding:20px 40px 0 0;border-right:1px solid var(--line);margin-right:40px;}
+.hn:last-child{border-right:none;margin-right:0;}
+.hn-n{font-size:48px;font-weight:700;color:var(--blue);line-height:1;letter-spacing:-0.02em;}
+.hn-l{font-family:var(--mo);font-size:9px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--meta);margin-top:5px;line-height:1.4;}
+.hero-meta{display:flex;gap:0;margin-top:36px;border:1px solid var(--line);border-radius:10px;overflow:hidden;width:fit-content;}
+.hmk{font-family:var(--mo);font-size:9px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--meta);margin-bottom:3px;}
+.hmv{font-size:12px;font-weight:600;color:var(--ink);}
+.hm{padding:10px 18px;border-right:1px solid var(--line);}
+.hm:last-child{border-right:none;background:var(--blue);}
+.hm:last-child .hmk{color:rgba(255,255,255,.6);}
+.hm:last-child .hmv{color:#fff;}
+
+/* ─── PROBLEM MATRIX ─────────────────────────────── */
+.tool-matrix{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:1px solid var(--line);border-radius:var(--radius) var(--radius) 0 0;overflow:hidden;margin-top:48px;}
+.tm-col{border-right:1px solid var(--line);display:flex;flex-direction:column;}
+.tm-col:last-child{border-right:none;}
+.tm-head{padding:14px 16px;border-bottom:1px solid var(--line);background:var(--off2);}
+.tm-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;margin-bottom:8px;}
+.tm-name{font-family:var(--mo);font-size:9px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--meta);}
+.tm-body{flex:1;padding:12px 14px;display:flex;flex-direction:column;gap:7px;}
+.tm-msg{font-size:11px;line-height:1.5;color:var(--ink3);padding:8px 10px;border-radius:6px;border:1px solid var(--line);background:#fff;}
+.tm-msg strong{color:var(--ink);font-weight:600;}
+.tm-gap{font-size:10.5px;color:var(--blue);background:var(--bluell);border:1px solid rgba(37,99,235,.15);border-radius:6px;padding:7px 10px;font-style:italic;line-height:1.5;display:flex;gap:6px;}
+.tm-gap::before{content:"!";font-family:var(--mo);font-style:normal;font-size:8px;background:var(--blue);color:#fff;min-width:14px;height:14px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+
+/* ─── ARCHITECTURE ───────────────────────────────── */
+.arch-layers{border:1px solid var(--appb);border-radius:var(--radius);overflow:hidden;margin-top:48px;}
+.al{display:grid;grid-template-columns:52px 1fr 1fr;border-bottom:1px solid var(--appb);cursor:default;}
+.al:last-child{border-bottom:none;}
+.al-n{padding:20px 0 20px 20px;font-size:18px;font-weight:700;color:rgba(147,197,253,.5);display:flex;align-items:flex-start;font-variant-numeric:tabular-nums;}
+.al-l{padding:20px 22px;border-left:1px solid var(--appb);}
+.al-name{font-size:15px;font-weight:600;color:rgba(255,255,255,.88);margin-bottom:3px;}
+.al-badge{font-family:var(--mo);font-size:9px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:rgba(147,197,253,.55);}
+.al-r{padding:20px 22px;border-left:1px solid var(--appb);}
+.al-desc{font-size:13px;color:rgba(255,255,255,.55);line-height:1.65;}
+.arch-foot{padding:10px 20px;text-align:center;font-family:var(--mo);font-size:9.5px;letter-spacing:.07em;color:rgba(147,197,253,.5);border-top:1px dashed rgba(147,197,253,.2);}
+.init-2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:32px;}
+.ic{padding:22px;background:rgba(255,255,255,.03);border:1px solid var(--appb);border-radius:var(--radius);}
+.ic-badge{font-family:var(--mo);font-size:9px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;margin-bottom:9px;}
+.ic-h{font-size:16px;font-weight:600;color:rgba(255,255,255,.86);margin-bottom:6px;line-height:1.2;}
+.ic-b{font-size:12px;color:rgba(255,255,255,.38);line-height:1.65;}
+
+/* ─── SCREEN SECTIONS ────────────────────────────── */
+.screen-sec{padding:72px 0;border-top:1px solid #E5E7EB;}
+.screen-sec.on-dark{background:#111827;border-top-color:rgba(255,255,255,.08);}
+.ss-intro{max-width:1200px;margin:0 auto;padding:0 24px 40px;display:grid;grid-template-columns:1fr 300px;gap:48px;align-items:start;}
+.ss-step{font-family:"JetBrains Mono",monospace;font-size:10px;font-weight:700;color:#2563EB;letter-spacing:.12em;text-transform:uppercase;margin-bottom:10px;}
+.ss-step-lt{color:rgba(147,197,253,.65);}
+.ss-h{font-size:clamp(22px,2.5vw,32px);font-weight:700;letter-spacing:-0.02em;line-height:1.1;color:#0F172A;margin-bottom:10px;}
+.ss-h-lt{color:#F1F5F9;}
+.ss-body{font-size:14px;line-height:1.7;color:#6B7280;}
+.ss-body-lt{color:rgba(209,213,219,.6);}
+
+/* ─── BROWSER CHROME ─────────────────────────────── */
+.chrome{max-width:1200px;margin:0 auto;padding:0 24px;}
+.chrome-inner{background:var(--app);border-radius:10px;overflow:hidden;}
+.chrome-inner.lt-shadow{box-shadow:0 2px 4px rgba(0,0,0,.04),0 12px 40px rgba(0,0,0,.08),0 0 0 1px rgba(0,0,0,.04);}
+.chrome-inner.dk-shadow{box-shadow:0 4px 8px rgba(0,0,0,.2),0 24px 64px rgba(0,0,0,.4),0 0 0 1px rgba(255,255,255,.05);}
+.c-bar{height:28px;background:rgba(0,0,0,.2);display:flex;align-items:center;padding:0 10px;gap:5px;}
+.c-dot{width:8px;height:8px;border-radius:50%;}
+.c-url{flex:1;text-align:center;font-family:var(--mo);font-size:8px;color:rgba(255,255,255,.16);}
+.c-top{height:44px;background:var(--app);border-bottom:1px solid var(--appb);display:flex;align-items:center;padding:0 14px;gap:9px;}
+.c-logo{width:28px;height:28px;border-radius:6px;background:var(--or);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.c-brand{font-size:13px;font-weight:700;color:#fff;}
+.c-pill{font-family:var(--mo);font-size:9px;letter-spacing:.04em;padding:2px 9px;border-radius:100px;background:rgba(255,255,255,.09);color:rgba(255,255,255,.5);}
+.c-tr{margin-left:auto;display:flex;align-items:center;gap:9px;}
+.c-bw{position:relative;}
+.c-nbadge{position:absolute;top:-3px;right:-3px;width:13px;height:13px;background:var(--or);border-radius:50%;font-size:7px;color:#fff;display:flex;align-items:center;justify-content:center;font-family:var(--mo);}
+.c-av{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--mo);font-size:9px;font-weight:700;color:#fff;}
+.c-body{display:flex;}
+.c-nav{width:190px;flex-shrink:0;background:var(--app);border-right:1px solid var(--appb);padding:8px 0;display:flex;flex-direction:column;}
+.c-ni{display:flex;align-items:center;gap:8px;padding:8px 14px;font-size:11px;color:rgba(255,255,255,.28);cursor:default;}
+.c-ni.act{background:rgba(234,88,12,.1);color:rgba(255,255,255,.9);}
+.c-ni.act svg{color:var(--or);opacity:1;}
+.c-ni svg{opacity:.28;flex-shrink:0;}
+.c-nav-foot{display:flex;align-items:center;gap:8px;padding:8px 14px;font-size:11px;color:rgba(255,255,255,.2);margin-top:auto;border-top:1px solid var(--appb);}
+.c-nav-ic{width:52px;flex-shrink:0;background:var(--app);border-right:1px solid var(--appb);padding:8px 0;display:flex;flex-direction:column;align-items:center;gap:2px;}
+.c-ic{width:38px;height:34px;border-radius:7px;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.28);cursor:default;}
+.c-ic.act{background:rgba(234,88,12,.12);color:var(--or);}
+.c-content{flex:1;background:#fff;overflow:hidden;}
+
+/* ─── CONSTRAINTS ────────────────────────────────── */
+.con-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:40px;}
+.con{padding:22px;border-radius:var(--radius);border:1px solid;}
+.con.yes{background:rgba(5,150,105,.04);border-color:rgba(5,150,105,.18);}
+.con.no{background:rgba(37,99,235,.03);border-color:rgba(37,99,235,.13);}
+.con-ic{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;margin-bottom:10px;}
+.con-ic.yes{background:rgba(5,150,105,.12);color:var(--green);}
+.con-ic.no{background:rgba(37,99,235,.1);color:var(--blue);}
+.con-t{font-weight:600;font-size:13px;color:var(--ink2);margin-bottom:4px;}
+.con-b{font-size:12px;color:var(--ink4);line-height:1.6;}
+
+/* ─── LEARNINGS ──────────────────────────────────── */
+.lrn-row{display:grid;grid-template-columns:48px 1fr;padding:32px 0;border-bottom:1px solid rgba(255,255,255,.07);}
+.lrn-n{font-size:30px;font-weight:700;color:rgba(147,197,253,.4);align-self:center;font-variant-numeric:tabular-nums;}
+.lrn-t{font-size:clamp(16px,2vw,24px);font-weight:600;line-height:1.2;letter-spacing:-0.01em;color:rgba(241,245,249,.88);align-self:center;}
+.lrn-t em{font-style:normal;color:#93C5FD;}
+/* ─── REVEAL (matches TestBench) ──────────────────── */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .9s cubic-bezier(0.22,1,0.36,1),transform .9s cubic-bezier(0.22,1,0.36,1);}
+.reveal.visible{opacity:1;transform:none;}
+
+</style>
+
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style id="cc-portfolio-overlay">
+/* ─── CC PORTFOLIO DESIGN SYSTEM OVERLAY ─── */
+/* Accent: Deep Teal-Indigo — premium, professional, distinct from TestBench blue */
+:root {
+  --cc-accent: #0D7377;
+  --cc-accent-rgb: 13,115,119;
+  --cc-accent-lt: #E6F4F5;
+  --cc-accent-mid: #14919B;
+  --font-display: 'DM Serif Display', Georgia, serif;
+  --font-body: 'Inter', ui-sans-serif, sans-serif;
+  --cc-ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+body { font-family: var(--font-body), 'Inter', ui-sans-serif, sans-serif; }
+
+/* ─── SCROLL PROGRESS ─── */
+#cc-pg { position:fixed;top:0;left:0;height:2.5px;background:var(--cc-accent);z-index:9999;width:0%;transition:width .08s linear;box-shadow:0 0 8px rgba(13,115,119,0.5); }
+
+/* ─── FIXED NAV ─── */
+.cc-nav {
+  position:fixed;top:0;left:0;right:0;z-index:900;height:52px;
+  display:flex;align-items:center;padding:0 40px;
+  background:rgba(255,255,255,0.93);backdrop-filter:blur(20px);
+  border-bottom:1px solid transparent;
+  transition:border-color 0.3s,box-shadow 0.3s;
+}
+.cc-nav.on { border-bottom-color:#E8EDF5;box-shadow:0 2px 20px rgba(10,15,30,0.06); }
+.cc-nav-brand { font-family:var(--font-display);font-size:13px;font-weight:800;color:#0A0F1E;letter-spacing:-0.02em; }
+.cc-nav-tag {
+  display:inline-flex;align-items:center;
+  background:rgba(13,115,119,0.08);color:var(--cc-accent);
+  font-size:9px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;
+  padding:3px 9px;border-radius:100px;border:1px solid rgba(13,115,119,0.22);
+  margin-left:14px;font-family:'JetBrains Mono',monospace;
+}
+.cc-nav-r { margin-left:auto;font-size:9.5px;letter-spacing:0.12em;text-transform:uppercase;color:#8492A6;font-family:'JetBrains Mono',monospace; }
+
+/* ─── HERO ─── */
+.cc-hero {
+  position:relative;min-height:100vh;
+  display:flex;flex-direction:column;justify-content:flex-end;
+  padding-top:52px;overflow:hidden;
+  background:#0A0F1E;
+}
+.cc-hero-noise {
+  position:absolute;inset:0;opacity:0.025;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:256px;
+}
+.cc-hero-glow {
+  position:absolute;inset:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 60% 55% at 68% 45%, rgba(13,115,119,0.16) 0%,transparent 65%),
+    radial-gradient(ellipse 35% 45% at 15% 65%, rgba(13,115,119,0.08) 0%,transparent 60%);
+}
+.cc-hero-grid {
+  position:absolute;right:0;top:0;bottom:0;width:52%;
+  background-image:linear-gradient(rgba(255,255,255,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.04) 1px,transparent 1px);
+  background-size:60px 60px;
+  -webkit-mask-image:linear-gradient(to left,rgba(0,0,0,0.5) 0%,transparent 80%);
+  mask-image:linear-gradient(to left,rgba(0,0,0,0.5) 0%,transparent 80%);
+}
+.cc-hero-body { position:relative;z-index:2;padding:0 40px 80px;max-width:1200px;margin:0 auto;width:100%; }
+
+.cc-eyebrow { display:flex;align-items:center;gap:10px;margin-bottom:28px; }
+.cc-eyebrow-line { width:28px;height:1.5px;background:var(--cc-accent); }
+.cc-eyebrow-txt {
+  font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;
+  letter-spacing:0.14em;text-transform:uppercase;color:rgba(255,255,255,0.35);
+}
+
+.cc-h1 {
+  font-family:var(--font-display);
+  font-size:clamp(52px,8vw,104px);
+  font-weight:800;line-height:0.93;letter-spacing:-0.04em;
+  color:rgba(255,255,255,0.95);margin-bottom:28px;
+}
+.cc-h1 em { font-style:normal;color:var(--cc-accent-mid); }
+
+.cc-sub {
+  font-size:17px;line-height:1.7;color:rgba(255,255,255,0.42);
+  max-width:500px;margin-bottom:48px;font-family:var(--font-body);
+}
+
+/* Hero stats — the 6/3/0 story */
+.cc-stats {
+  display:flex;gap:0;margin-bottom:56px;
+  padding-bottom:48px;border-bottom:1px solid rgba(255,255,255,0.08);
+}
+.cc-stat { padding-right:40px;margin-right:40px;border-right:1px solid rgba(255,255,255,0.1); }
+.cc-stat:last-child { border-right:none;margin-right:0; }
+.cc-stat-n {
+  font-family:var(--font-display);font-size:60px;font-weight:800;
+  color:var(--cc-accent-mid);line-height:1;letter-spacing:-0.04em;
+}
+.cc-stat-n.muted { color:rgba(255,255,255,0.15); }
+.cc-stat-l {
+  font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:500;
+  letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.28);margin-top:6px;
+}
+
+.cc-meta {
+  display:flex;gap:0;width:fit-content;
+  border:1px solid rgba(255,255,255,0.1);border-radius:10px;overflow:hidden;
+  background:rgba(255,255,255,0.04);
+}
+.cc-mk { font-size:8.5px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.28);margin-bottom:4px;font-family:'JetBrains Mono',monospace; }
+.cc-mv { font-size:12px;font-weight:600;color:rgba(255,255,255,0.85); }
+.cc-mc { padding:14px 22px;border-right:1px solid rgba(255,255,255,0.08); }
+.cc-mc.accent { border-right:none;background:var(--cc-accent); }
+.cc-mc.accent .cc-mk { color:rgba(255,255,255,0.6); }
+.cc-mc.accent .cc-mv { color:#fff; }
+
+.cc-scroll-hint {
+  position:absolute;bottom:32px;left:40px;z-index:3;
+  display:flex;align-items:center;gap:12px;
+  font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.12em;
+  text-transform:uppercase;color:rgba(255,255,255,0.2);
+}
+.cc-scroll-line { width:1px;height:40px;background:rgba(255,255,255,0.12);position:relative;overflow:hidden; }
+.cc-scroll-line::after {
+  content:'';position:absolute;top:-100%;left:0;right:0;bottom:100%;
+  background:rgba(13,115,119,0.8);
+  animation:cc-sdrop 2s ease-in-out infinite;
+}
+@keyframes cc-sdrop { 0%{top:-100%;bottom:100%} 60%{top:0%;bottom:0%} 100%{top:100%;bottom:-100%} }
+
+/* ─── REVEAL ─── */
+.cc-rv { opacity:0;transform:translateY(22px);transition:opacity .75s var(--cc-ease),transform .75s var(--cc-ease); }
+.cc-rv.cc-in { opacity:1;transform:none; }
+.cc-d1{transition-delay:.08s}.cc-d2{transition-delay:.16s}.cc-d3{transition-delay:.24s}.cc-d4{transition-delay:.32s}
+
+/* ─── HEADINGS UPGRADE ─── */
+.cc-h2 {
+  font-family:var(--font-display);
+  font-size:clamp(28px,4vw,50px);font-weight:800;color:#0A0F1E;
+  letter-spacing:-0.035em;line-height:1.0;margin-bottom:14px;
+}
+.cc-h2 em { font-style:normal;color:var(--cc-accent); }
+.cc-h2-lt { color:rgba(255,255,255,0.92); }
+.cc-h2-lt em { color:var(--cc-accent-mid); }
+
+/* ─── EYEBROW / SECTION LABEL ─── */
+.cc-ey {
+  font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;
+  letter-spacing:0.14em;text-transform:uppercase;color:var(--cc-accent);
+  margin-bottom:14px;display:flex;align-items:center;gap:10px;
+}
+.cc-ey::before { content:'';width:20px;height:1.5px;background:var(--cc-accent); }
+.cc-ey-lt { color:rgba(20,145,155,0.7); }
+.cc-ey-lt::before { background:rgba(20,145,155,0.5); }
+
+/* ─── SECTION DIVIDERS ─── */
+.cc-divider {
+  max-width:1200px;margin:0 auto;padding:0 40px;
+  display:flex;align-items:center;gap:20px;
+}
+.cc-divider-num { font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;color:#C1C9D8;letter-spacing:0.1em; }
+.cc-divider-line { flex:1;height:1px;background:#E8EDF5; }
+
+/* ─── CALLOUT ─── */
+.cc-callout {
+  padding:16px 20px;background:rgba(13,115,119,0.06);
+  border-left:3px solid var(--cc-accent);border-radius:0 10px 10px 0;
+  font-size:13.5px;color:#2D3650;line-height:1.65;
+}
+.cc-callout-lbl {
+  font-family:'JetBrains Mono',monospace;font-size:8.5px;font-weight:700;
+  letter-spacing:0.12em;text-transform:uppercase;color:var(--cc-accent);
+  display:block;margin-bottom:5px;
+}
+
+/* ─── OVERRIDE: replace orange accent with teal in all inline styles ─── */
+/* We do this via CSS specificity boosts on key classes */
+/* screen chrome colors kept as original - no override */
+
+/* ─── LEARNINGS ROW ─── */
+.cc-lrn {
+  display:grid;grid-template-columns:56px 1fr;
+  padding:36px 0;border-bottom:1px solid rgba(255,255,255,0.07);gap:8px;align-items:start;
+}
+.cc-lrn:last-child { border-bottom:none; }
+.cc-lrn-n {
+  font-family:var(--font-display);font-size:34px;font-weight:800;
+  color:rgba(13,115,119,0.35);line-height:1;
+}
+.cc-lrn-t {
+  font-family:var(--font-display);font-size:clamp(16px,2vw,24px);font-weight:700;
+  line-height:1.2;letter-spacing:-0.02em;color:rgba(255,255,255,0.85);padding-top:4px;
+}
+.cc-lrn-t em { font-style:normal;color:rgba(129,212,217,0.9); }
+
+/* ─── SCREEN SECTION ANIMATION ─── */
+.screen-sec {
+  opacity:0;transform:translateY(28px);
+  transition:opacity 0.75s var(--cc-ease), transform 0.75s var(--cc-ease);
+}
+.screen-sec.cc-visible { opacity:1;transform:none; }
+
+/* ─── ARCH LAYER TABLE COLORS ─── */
+/* Override the blue hints on arch table numbers */
+
+/* ──────────────────────────────────────────────────────────────────
+   SCREEN-MODERN
+   Modern rebuild of the 5 product screens — conversational UI, glass
+   surfaces, single-primary-action hierarchy, unified 560px frame.
+   All classes prefixed `.sm-` so existing layout chrome (chrome,
+   c-bar, c-top, c-body, c-nav) keeps working unchanged.
+   ────────────────────────────────────────────────────────────────── */
+:root {
+  --sm-bg:        #FBFBFA;
+  --sm-surface:   #FFFFFF;
+  --sm-surface-2: #F6F7F9;
+  --sm-ink:       #0B1220;
+  --sm-ink-2:     #4B5563;
+  --sm-ink-3:     #6B7280;
+  --sm-ink-faint: #94A3B8;
+  --sm-line:      rgba(15,23,42,0.06);
+  --sm-line-2:    rgba(15,23,42,0.10);
+  --sm-accent:    #0D7377;
+  --sm-accent-2:  #14919B;
+  --sm-warn:      #D97706;
+  --sm-danger:    #DC2626;
+  --sm-success:   #059669;
+  --sm-radius:    12px;
+  --sm-radius-sm: 8px;
+  --sm-radius-lg: 18px;
+  /* Elevation rhythm — 4 tiers */
+  --sm-shadow-1:  0 1px 2px rgba(15,23,42,0.04);
+  --sm-shadow-2:  0 4px 16px rgba(15,23,42,0.06);
+  --sm-shadow-3:  0 14px 32px rgba(15,23,42,0.10);
+  --sm-shadow-4:  0 24px 56px rgba(15,23,42,0.18);
+}
+
+/* Force a unified content area for all 5 screens.
+   Heights set on .c-content elsewhere are overridden so the 5 frames
+   march as one timeline. */
+.screen-sec .c-content { height: 560px !important; }
+
+/* ── Shared screen surface ───────────────────────────────────── */
+.sm-screen {
+  height: 100%;
+  background: var(--sm-bg);
+  color: var(--sm-ink);
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  line-height: 1.5;
+  display: flex;
+  flex-direction: column;
+}
+.sm-screen *,
+.sm-screen *::before,
+.sm-screen *::after { box-sizing: border-box; }
+
+/* ── Page header band ────────────────────────────────────────── */
+.sm-page {
+  padding: 18px 26px 14px;
+  border-bottom: 1px solid var(--sm-line);
+  background: var(--sm-surface);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.sm-page__breadcrumb {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--sm-ink-faint);
+  margin-bottom: 4px;
+}
+.sm-page__title {
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  color: var(--sm-ink);
+  line-height: 1.2;
+}
+.sm-page__sub {
+  font-size: 12px;
+  color: var(--sm-ink-3);
+  margin-top: 2px;
+}
+.sm-page__right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+
+/* ── Avatars ─────────────────────────────────────────────────── */
+.sm-av {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  box-shadow: 0 0 0 2px var(--sm-surface);
+  flex-shrink: 0;
+}
+.sm-av--sm { width: 24px; height: 24px; font-size: 9px; }
+.sm-av--lg { width: 40px; height: 40px; font-size: 12px; }
+.sm-av-stack { display: inline-flex; }
+.sm-av-stack .sm-av + .sm-av { margin-left: -8px; }
+
+/* ── Buttons ─────────────────────────────────────────────────── */
+.sm-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-family: 'Inter', sans-serif;
+  font-size: 12.5px;
+  font-weight: 500;
+  letter-spacing: 0.005em;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--sm-ink);
+  cursor: default;
+  transition: background 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+  white-space: nowrap;
+}
+.sm-btn--primary {
+  background: var(--sm-ink);
+  color: #fff;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.12);
+}
+.sm-btn--accent {
+  background: var(--sm-accent);
+  color: #fff;
+  box-shadow: 0 1px 2px rgba(13,115,119,0.18), 0 6px 16px rgba(13,115,119,0.22);
+}
+.sm-btn--ghost {
+  border-color: var(--sm-line-2);
+  color: var(--sm-ink-2);
+  background: var(--sm-surface);
+}
+.sm-btn--ghost:hover { background: var(--sm-surface-2); }
+.sm-btn--icon {
+  width: 30px; height: 30px; padding: 0;
+  justify-content: center;
+  border-radius: 8px;
+  border-color: var(--sm-line);
+  color: var(--sm-ink-3);
+  background: var(--sm-surface);
+}
+
+/* ── Glass surfaces ──────────────────────────────────────────── */
+.sm-glass {
+  background: rgba(255,255,255,0.72);
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  border: 1px solid rgba(255,255,255,0.6);
+  box-shadow: var(--sm-shadow-3);
+}
+.sm-glass-dark {
+  background: rgba(11,18,32,0.78);
+  backdrop-filter: blur(22px) saturate(140%);
+  -webkit-backdrop-filter: blur(22px) saturate(140%);
+  border: 1px solid rgba(255,255,255,0.08);
+  color: rgba(255,255,255,0.92);
+  box-shadow: var(--sm-shadow-4);
+}
+
+/* ── Status pills ────────────────────────────────────────────── */
+.sm-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 100px;
+  font-size: 11px;
+  font-weight: 500;
+  font-family: 'Inter', sans-serif;
+  letter-spacing: 0.01em;
+}
+.sm-pill__dot { width: 6px; height: 6px; border-radius: 50%; }
+.sm-pill--reopened { background: rgba(217,119,6,0.10); color: var(--sm-warn); }
+.sm-pill--reopened .sm-pill__dot { background: var(--sm-warn); }
+.sm-pill--resolved { background: rgba(5,150,105,0.10); color: var(--sm-success); }
+.sm-pill--resolved .sm-pill__dot { background: var(--sm-success); }
+.sm-pill--open { background: rgba(13,115,119,0.10); color: var(--sm-accent); }
+.sm-pill--open .sm-pill__dot { background: var(--sm-accent); }
+
+/* ── Metric strip (replaces 4-tile stat cards on Screen 02) ──── */
+.sm-metrics {
+  display: flex;
+  align-items: center;
+  gap: 36px;
+  padding: 16px 26px;
+  background: var(--sm-surface);
+  border-bottom: 1px solid var(--sm-line);
+}
+.sm-metric { display: flex; flex-direction: column; gap: 2px; }
+.sm-metric__num {
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--sm-ink);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+.sm-metric__num--alert { color: var(--sm-danger); }
+.sm-metric__lbl {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--sm-ink-faint);
+}
+.sm-metric__rule { width: 1px; height: 28px; background: var(--sm-line); }
+
+/* ── Topic chips ─────────────────────────────────────────────── */
+.sm-topics {
+  display: flex;
+  gap: 8px;
+  padding: 14px 26px;
+  flex-wrap: wrap;
+}
+.sm-topic {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 14px;
+  border-radius: 100px;
+  border: 1px solid var(--sm-line-2);
+  background: var(--sm-surface);
+  font-size: 12px;
+  color: var(--sm-ink-2);
+}
+.sm-topic__count {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  color: var(--sm-ink-faint);
+  font-variant-numeric: tabular-nums;
+}
+.sm-topic--alert {
+  border-color: rgba(13,115,119,0.35);
+  background: rgba(13,115,119,0.06);
+  color: var(--sm-accent);
+}
+.sm-topic--alert .sm-topic__count { color: var(--sm-accent); }
+.sm-topic__dot { width: 6px; height: 6px; border-radius: 50%; background: var(--sm-accent); }
+
+/* ── Thread list (card-row replacement for 7-col table) ──────── */
+.sm-list {
+  padding: 4px 18px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.sm-row {
+  display: grid;
+  grid-template-columns: 24px 1fr auto auto;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  background: var(--sm-surface);
+  border: 1px solid var(--sm-line);
+  border-radius: var(--sm-radius);
+  box-shadow: var(--sm-shadow-1);
+  transition: box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+}
+.sm-row:hover { box-shadow: var(--sm-shadow-2); border-color: var(--sm-line-2); }
+.sm-row--active {
+  border-color: rgba(13,115,119,0.30);
+  box-shadow: 0 0 0 3px rgba(13,115,119,0.06), var(--sm-shadow-2);
+}
+.sm-row__leader {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+}
+.sm-row__leader--alert { background: var(--sm-warn); box-shadow: 0 0 0 3px rgba(217,119,6,0.18); }
+.sm-row__leader--ok    { background: var(--sm-success); }
+.sm-row__leader--idle  { background: var(--sm-accent); }
+.sm-row__main { min-width: 0; }
+.sm-row__title {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--sm-ink);
+  letter-spacing: -0.005em;
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.sm-row__meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 11.5px;
+  color: var(--sm-ink-3);
+}
+.sm-row__meta .sm-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--sm-ink-faint); }
+
+/* ── Thread header (compressed; primary action ▸ overflow menu) ─ */
+.sm-thread-head {
+  position: relative;
+  padding: 14px 22px;
+  background: rgba(255,255,255,0.78);
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  border-bottom: 1px solid var(--sm-line);
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 14px;
+  align-items: center;
+}
+.sm-thread-head__title {
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--sm-ink);
+  letter-spacing: -0.005em;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.sm-thread-head__sub {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 4px;
+  font-size: 11.5px;
+  color: var(--sm-ink-3);
+}
+.sm-thread-head__actions { display: flex; align-items: center; gap: 8px; }
+
+/* Segmented filter toggle (External / Full) */
+.sm-toggle {
+  display: inline-flex;
+  background: var(--sm-surface-2);
+  border-radius: 8px;
+  padding: 3px;
+  border: 1px solid var(--sm-line);
+}
+.sm-toggle button {
+  border: none;
+  background: transparent;
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--sm-ink-3);
+  padding: 5px 11px;
+  border-radius: 6px;
+  font-family: inherit;
+  cursor: default;
+  letter-spacing: 0.005em;
+}
+.sm-toggle button.is-on {
+  background: var(--sm-surface);
+  color: var(--sm-ink);
+  box-shadow: var(--sm-shadow-1);
+}
+
+/* Overflow menu trigger + menu */
+.sm-menu-trigger {
+  width: 32px; height: 32px;
+  border-radius: 8px;
+  background: var(--sm-surface);
+  border: 1px solid var(--sm-line);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--sm-ink-3);
+  cursor: default;
+}
+.sm-menu {
+  position: absolute;
+  right: 22px;
+  top: calc(100% + 6px);
+  min-width: 220px;
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  border: 1px solid var(--sm-line-2);
+  border-radius: var(--sm-radius);
+  box-shadow: var(--sm-shadow-3);
+  overflow: hidden;
+  z-index: 30;
+  padding: 6px;
+}
+.sm-menu__item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  font-size: 12.5px;
+  color: var(--sm-ink);
+  border-radius: 8px;
+  cursor: default;
+}
+.sm-menu__item .sm-menu__icon { color: var(--sm-ink-3); flex-shrink: 0; }
+.sm-menu__item--danger { color: var(--sm-danger); }
+.sm-menu__item--success { color: var(--sm-success); }
+.sm-menu__item:hover { background: var(--sm-surface-2); }
+.sm-menu__sep { height: 1px; background: var(--sm-line); margin: 4px 2px; }
+
+/* ── Message bubbles (conversational) ────────────────────────── */
+.sm-thread {
+  flex: 1;
+  padding: 22px 26px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  overflow: auto;
+  background: linear-gradient(180deg, var(--sm-bg) 0%, var(--sm-surface) 100%);
+}
+.sm-msg {
+  display: grid;
+  grid-template-columns: 36px 1fr;
+  gap: 14px;
+  align-items: flex-start;
+}
+.sm-msg__bubble {
+  position: relative;
+  background: var(--sm-surface);
+  border-radius: 14px;
+  padding: 14px 18px;
+  box-shadow: var(--sm-shadow-1);
+  border: 1px solid var(--sm-line);
+}
+.sm-msg__bubble::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 14px; bottom: 14px;
+  width: 3px;
+  border-radius: 100px;
+  background: var(--sender, var(--sm-accent));
+}
+.sm-msg__head {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+.sm-msg__name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--sm-ink);
+  letter-spacing: -0.005em;
+}
+.sm-msg__tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 9px;
+  border-radius: 100px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+.sm-msg__tag--update   { background: rgba(13,115,119,0.08);  color: var(--sm-accent); }
+.sm-msg__tag--decision { background: rgba(217,119,6,0.10);   color: var(--sm-warn); }
+.sm-msg__tag--concern  { background: rgba(220,38,38,0.08);   color: var(--sm-danger); }
+.sm-msg__time {
+  margin-left: auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--sm-ink-faint);
+}
+.sm-msg__body {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--sm-ink-2);
+}
+.sm-msg__action {
+  margin-top: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  color: var(--sm-ink-faint);
+  cursor: default;
+}
+
+/* ── Composer (single glass card, command-bar feel) ──────────── */
+.sm-composer {
+  margin: 0 22px 16px;
+  background: rgba(255,255,255,0.86);
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  border: 1px solid var(--sm-line-2);
+  border-radius: var(--sm-radius-lg);
+  box-shadow: var(--sm-shadow-2);
+  padding: 14px 16px 12px;
+}
+.sm-composer__field {
+  font-size: 13px;
+  color: var(--sm-ink-faint);
+  padding: 4px 4px 14px;
+  border-bottom: 1px solid var(--sm-line);
+  margin-bottom: 12px;
+  font-style: italic;
+}
+.sm-composer__row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.sm-composer__tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 100px;
+  font-size: 12px;
+  font-weight: 500;
+  background: var(--sm-surface-2);
+  color: var(--sm-ink);
+  border: 1px solid var(--sm-line);
+  cursor: default;
+}
+.sm-composer__tag.is-active {
+  background: rgba(13,115,119,0.10);
+  color: var(--sm-accent);
+  border-color: rgba(13,115,119,0.32);
+}
+.sm-composer__util {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--sm-ink-3);
+  cursor: default;
+}
+.sm-composer__util input { accent-color: var(--sm-accent); }
+.sm-composer__submit {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: var(--sm-ink);
+  color: #fff;
+  border: none;
+  border-radius: 100px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: default;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.10), 0 8px 24px rgba(0,0,0,0.14);
+}
+
+/* ── Tag picker (command-palette feel) ───────────────────────── */
+.sm-tagpicker {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 0;
+  min-width: 280px;
+  background: rgba(15,23,42,0.88);
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: var(--sm-radius);
+  box-shadow: var(--sm-shadow-4);
+  overflow: hidden;
+  z-index: 30;
+  padding: 6px;
+}
+.sm-tagpicker__head {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.4);
+  padding: 8px 12px 6px;
+}
+.sm-tagpicker__item {
+  display: grid;
+  grid-template-columns: 16px 1fr auto;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  font-size: 12.5px;
+  color: rgba(255,255,255,0.78);
+  border-radius: 8px;
+  cursor: default;
+}
+.sm-tagpicker__item:hover {
+  background: rgba(255,255,255,0.06);
+  color: #fff;
+}
+.sm-tagpicker__item.is-active {
+  background: rgba(13,115,119,0.40);
+  color: #fff;
+}
+.sm-tagpicker__item .sm-tagpicker__hint {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9.5px;
+  color: rgba(255,255,255,0.35);
+  letter-spacing: 0.12em;
+}
+.sm-tagpicker__item.is-active .sm-tagpicker__hint { color: rgba(255,255,255,0.6); }
+.sm-tagpicker__icon { color: rgba(255,255,255,0.45); }
+.sm-tagpicker__item.is-active .sm-tagpicker__icon { color: #fff; }
+
+/* ── Customer thread modal (focused, centered, glass scrim) ──── */
+.sm-modal-scrim {
+  position: absolute;
+  inset: 0;
+  background: rgba(15,23,42,0.30);
+  backdrop-filter: blur(8px) saturate(120%);
+  -webkit-backdrop-filter: blur(8px) saturate(120%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 40;
+  padding: 32px;
+}
+.sm-modal {
+  width: 100%;
+  max-width: 460px;
+  background: rgba(255,255,255,0.96);
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  border: 1px solid rgba(255,255,255,0.6);
+  border-radius: var(--sm-radius-lg);
+  box-shadow: var(--sm-shadow-4);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  max-height: 100%;
+}
+.sm-modal__head {
+  padding: 18px 22px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.sm-modal__title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--sm-ink);
+  letter-spacing: -0.005em;
+}
+.sm-modal__close {
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  background: var(--sm-surface-2);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--sm-ink-3);
+  font-size: 14px;
+  cursor: default;
+}
+.sm-modal__body {
+  padding: 4px 22px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  overflow: auto;
+}
+.sm-modal__label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--sm-ink-faint);
+}
+.sm-modal__field {
+  margin-top: 6px;
+  padding: 10px 14px;
+  background: var(--sm-surface-2);
+  border-radius: 8px;
+  border: 1px solid var(--sm-line);
+  font-size: 13px;
+  color: var(--sm-ink);
+}
+.sm-modal__banner {
+  display: flex;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: rgba(13,115,119,0.06);
+  border: 1px solid rgba(13,115,119,0.18);
+  font-size: 12px;
+  color: var(--sm-ink-2);
+  line-height: 1.55;
+}
+.sm-modal__banner strong { color: var(--sm-ink); font-weight: 600; }
+.sm-modal__ctx {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 11px 13px;
+  border-radius: 10px;
+  background: rgba(13,115,119,0.04);
+  border: 1px solid rgba(13,115,119,0.20);
+}
+.sm-modal__ctx input { accent-color: var(--sm-accent); margin-top: 2px; flex-shrink: 0; }
+.sm-modal__ctx span { font-size: 12px; color: var(--sm-ink-2); line-height: 1.5; }
+.sm-modal__foot {
+  padding: 14px 22px 18px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  border-top: 1px solid var(--sm-line);
+}
+.sm-modal__cta {
+  flex: 1;
+  padding: 11px 18px;
+  background: var(--sm-ink);
+  color: #fff;
+  border-radius: 10px;
+  border: none;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: default;
+  letter-spacing: -0.005em;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.10), 0 10px 28px rgba(0,0,0,0.16);
+}
+
+/* ── Entry-screen specifics (Screen 01) ──────────────────────── */
+.sm-entry {
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+.sm-entry__head {
+  padding: 22px 28px 18px;
+  background: var(--sm-surface);
+  border-bottom: 1px solid var(--sm-line);
+  position: relative;
+}
+.sm-entry__crumb {
+  font-size: 11px;
+  color: var(--sm-ink-faint);
+  margin-bottom: 14px;
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.sm-entry__customer {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.sm-entry__logo {
+  width: 44px; height: 44px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(13,115,119,0.10), rgba(13,115,119,0.20));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--sm-accent);
+  letter-spacing: 0.04em;
+}
+.sm-entry__name {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--sm-ink);
+  letter-spacing: -0.015em;
+}
+.sm-entry__meta {
+  font-size: 11.5px;
+  color: var(--sm-ink-3);
+  margin-top: 2px;
+}
+.sm-entry__cta {
+  margin-left: auto;
+  position: relative;
+}
+.sm-entry__cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 14px;
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid var(--sm-line-2);
+  border-radius: 100px;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--sm-ink);
+  box-shadow: var(--sm-shadow-2);
+  cursor: default;
+}
+.sm-entry__cta-btn .sm-entry__cta-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--sm-accent);
+  box-shadow: 0 0 0 3px rgba(13,115,119,0.15);
+}
+.sm-entry__dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 280px;
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(22px) saturate(140%);
+  -webkit-backdrop-filter: blur(22px) saturate(140%);
+  border: 1px solid var(--sm-line-2);
+  border-radius: var(--sm-radius);
+  box-shadow: var(--sm-shadow-3);
+  overflow: hidden;
+  z-index: 20;
+  padding: 6px;
+}
+.sm-entry__opt {
+  display: grid;
+  grid-template-columns: 36px 1fr;
+  gap: 12px;
+  align-items: center;
+  padding: 12px;
+  border-radius: 8px;
+  cursor: default;
+}
+.sm-entry__opt:hover { background: var(--sm-surface-2); }
+.sm-entry__opt-ic {
+  width: 36px; height: 36px;
+  border-radius: 10px;
+  background: rgba(13,115,119,0.10);
+  color: var(--sm-accent);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.sm-entry__opt-ic--alt {
+  background: var(--sm-surface-2);
+  color: var(--sm-ink-3);
+}
+.sm-entry__opt-t {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--sm-ink);
+}
+.sm-entry__opt-d {
+  font-size: 11px;
+  color: var(--sm-ink-3);
+  margin-top: 2px;
+}
+
+/* Stage progress strip */
+.sm-stages {
+  padding: 22px 28px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.sm-stage-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--sm-ink-faint);
+}
+.sm-stage-track {
+  display: grid;
+  grid-template-columns: 1fr 28px 1fr 28px 1fr;
+  align-items: center;
+  gap: 8px;
+}
+.sm-stage {
+  padding: 14px 16px;
+  border-radius: var(--sm-radius);
+  border: 1px solid var(--sm-line);
+  background: var(--sm-surface);
+}
+.sm-stage--done {
+  background: rgba(5,150,105,0.04);
+  border-color: rgba(5,150,105,0.20);
+}
+.sm-stage--active {
+  background: rgba(13,115,119,0.06);
+  border-color: rgba(13,115,119,0.32);
+  box-shadow: 0 0 0 3px rgba(13,115,119,0.08);
+}
+.sm-stage--locked { opacity: 0.45; }
+.sm-stage__step {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--sm-ink-faint);
+  margin-bottom: 4px;
+}
+.sm-stage__name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--sm-ink);
+  letter-spacing: -0.005em;
+}
+.sm-stage__sub {
+  font-size: 11px;
+  color: var(--sm-ink-3);
+  margin-top: 4px;
+}
+.sm-stage-arrow {
+  color: var(--sm-ink-faint);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.sm-stage--done .sm-stage__step { color: var(--sm-success); }
+.sm-stage--active .sm-stage__step { color: var(--sm-accent); }
+
+</style>
+</head>
+<body>
+<div id="cc-pg"></div>
+<div id="pg" style="display:none"></div>
+<nav class="cc-nav" id="cc-nav-el">
+  <span class="cc-nav-brand">Portfolio</span>
+  <span class="cc-nav-tag">Case Study 02</span>
+  <span class="cc-nav-r">ADP · IP Lifecycle SaaS</span>
+</nav>
+
+<section style="min-height:100vh;background:#FAFAF9;display:flex;flex-direction:column;padding-top:52px;position:relative;overflow:hidden;" id="cc-hero-main">
+  <!-- subtle grid -->
+  <div style="position:absolute;inset:0;background-image:linear-gradient(#E8EDF5 1px,transparent 1px),linear-gradient(90deg,#E8EDF5 1px,transparent 1px);background-size:72px 72px;opacity:0.4;pointer-events:none;"></div>
+  <div style="position:absolute;bottom:0;left:0;right:0;height:40%;background:linear-gradient(to top,#FAFAF9,transparent);pointer-events:none;"></div>
+
+  <div style="max-width:1200px;margin:0 auto;padding:72px 40px 0;width:100%;position:relative;z-index:2;flex:1;display:flex;flex-direction:column;">
+    <!-- Breadcrumb -->
+    <div class="cc-rv" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:64px;">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#8492A6;letter-spacing:0.06em;">Portfolio</span>
+        <span style="color:#C1C9D8;font-size:11px;">/</span>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--cc-accent);letter-spacing:0.06em;">Case Study 02</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;">
+        <div style="width:6px;height:6px;border-radius:50%;background:#10B981;"></div>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#8492A6;letter-spacing:0.08em;text-transform:uppercase;">ADP · 2024 · Shipped</span>
+      </div>
+    </div>
+
+    <!-- Main content -->
+    <div style="display:grid;grid-template-columns:1fr 360px;gap:72px;align-items:start;flex:1;">
+      <div>
+        <div class="cc-rv cc-d1" style="display:inline-flex;align-items:center;gap:8px;margin-bottom:28px;padding:5px 12px 5px 5px;background:#fff;border:1px solid #E8EDF5;border-radius:100px;box-shadow:0 1px 4px rgba(0,0,0,0.04);">
+          <span style="background:var(--cc-accent);color:#fff;font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:600;padding:3px 8px;border-radius:100px;letter-spacing:0.08em;text-transform:uppercase;">IP Lifecycle SaaS</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#8492A6;letter-spacing:0.06em;">Enterprise · Web · Product Designer</span>
+        </div>
+
+        <h1 class="cc-rv cc-d2" style="font-family:'DM Serif Display',Georgia,serif;font-size:clamp(40px,6vw,72px);font-weight:400;color:#0A0F1E;line-height:1.05;letter-spacing:-0.02em;margin:0 0 24px;">
+          Contextual<br>
+          <em style="font-style:italic;color:var(--cc-accent);">Communication</em><br>
+          Built In
+        </h1>
+
+        <p class="cc-rv cc-d3" style="font-family:'Inter',sans-serif;font-size:17px;line-height:1.72;color:#64748B;max-width:460px;margin:0 0 40px;">Six teams. One customer journey. Every conversation living in tools that had no idea what the work was.</p>
+
+        <!-- The 6/3/0 story as inline stats -->
+        <div class="cc-rv cc-d4" style="display:flex;gap:0;border:1px solid #E8EDF5;border-radius:12px;overflow:hidden;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,0.04);margin-bottom:0;width:fit-content;">
+          <div style="padding:14px 24px;border-right:1px solid #E8EDF5;">
+            <div style="font-family:'DM Serif Display',serif;font-size:32px;font-weight:400;color:#0A0F1E;line-height:1;letter-spacing:-0.03em;margin-bottom:4px;">6</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#8492A6;text-transform:uppercase;letter-spacing:0.08em;">Teams</div>
+          </div>
+          <div style="padding:14px 24px;border-right:1px solid #E8EDF5;">
+            <div style="font-family:'DM Serif Display',serif;font-size:32px;font-weight:400;color:#0A0F1E;line-height:1;letter-spacing:-0.03em;margin-bottom:4px;">3</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#8492A6;text-transform:uppercase;letter-spacing:0.08em;">Disconnected tools</div>
+          </div>
+          <div style="padding:14px 24px;border-right:1px solid #E8EDF5;">
+            <div style="font-family:'DM Serif Display',serif;font-size:32px;font-weight:400;color:#C1C9D8;line-height:1;letter-spacing:-0.03em;margin-bottom:4px;">0</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#8492A6;text-transform:uppercase;letter-spacing:0.08em;">Traceable decisions</div>
+          </div>
+          <div style="padding:14px 24px;border-right:1px solid #E8EDF5;">
+            <div style="font-family:'DM Serif Display',serif;font-size:32px;font-weight:400;color:#0A0F1E;line-height:1;letter-spacing:-0.03em;margin-bottom:4px;">1wk</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#8492A6;text-transform:uppercase;letter-spacing:0.08em;">Timeline</div>
+          </div>
+          <div style="padding:14px 24px;background:rgba(13,115,119,0.04);">
+            <div style="font-family:'DM Serif Display',serif;font-size:32px;font-weight:400;color:var(--cc-accent);line-height:1;letter-spacing:-0.03em;margin-bottom:4px;">↑</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--cc-accent);text-transform:uppercase;letter-spacing:0.08em;opacity:0.8;">Shipped</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: message thread preview -->
+      <div class="cc-rv cc-d3" style="padding-top:8px;">
+        <div style="background:#fff;border:1px solid #E8EDF5;border-radius:14px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.07),0 1px 4px rgba(0,0,0,0.04);">
+          <div style="height:28px;background:#F7F9FC;border-bottom:1px solid #E8EDF5;display:flex;align-items:center;padding:0 10px;gap:5px;">
+            <div style="width:7px;height:7px;border-radius:50%;background:#FECACA;"></div>
+            <div style="width:7px;height:7px;border-radius:50%;background:#FDE68A;"></div>
+            <div style="width:7px;height:7px;border-radius:50%;background:#A7F3D0;"></div>
+            <div style="flex:1;text-align:center;font-family:'JetBrains Mono',monospace;font-size:8px;color:#C1C9D8;">adp / thread-center / omega-electronics</div>
+          </div>
+          <div style="padding:16px;">
+            <div style="font-family:'Inter',sans-serif;font-size:12px;font-weight:600;color:#0A0F1E;margin-bottom:2px;">Omega Electronics</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#8492A6;margin-bottom:14px;">CONTRACT / Delivery · 1 open thread</div>
+            <!-- Thread item -->
+            <div style="padding:10px 12px;border:1px solid #E8EDF5;border-radius:9px;margin-bottom:10px;background:#fff;">
+              <div style="display:flex;align-items:center;gap:7px;margin-bottom:8px;">
+                <div style="width:7px;height:7px;border-radius:50%;background:var(--cc-accent);flex-shrink:0;"></div>
+                <span style="font-size:11px;font-weight:600;color:#0A0F1E;flex:1;">Omega delivery failure – token rotation</span>
+                <div style="display:flex;">
+                  <span style="width:18px;height:18px;border-radius:50%;background:#2563EB;color:#fff;font-size:7px;font-weight:700;display:flex;align-items:center;justify-content:center;border:1.5px solid #fff;z-index:3;">BO</span>
+                  <span style="width:18px;height:18px;border-radius:50%;background:#3A9ED0;color:#fff;font-size:7px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-left:-5px;border:1.5px solid #fff;z-index:2;">TC</span>
+                  <span style="width:18px;height:18px;border-radius:50%;background:#3DAA60;color:#fff;font-size:7px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-left:-5px;border:1.5px solid #fff;z-index:1;">PM</span>
+                </div>
+              </div>
+              <!-- messages -->
+              <div style="display:flex;gap:7px;margin-bottom:7px;align-items:flex-start;">
+                <div style="width:22px;height:22px;border-radius:50%;background:#3A9ED0;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:7px;font-weight:700;color:#fff;margin-top:1px;">TC</div>
+                <div style="flex:1;padding:7px 9px;background:#F7F9FC;border-radius:0 7px 7px 7px;font-size:10px;color:#374151;line-height:1.5;">
+                  Root cause: token expired mid-download.
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:8px;color:#8492A6;background:#fff;padding:1px 5px;border-radius:3px;margin-left:5px;border:1px solid #E8EDF5;">UPDATE</span>
+                </div>
+              </div>
+              <div style="display:flex;gap:7px;align-items:flex-start;">
+                <div style="width:22px;height:22px;border-radius:50%;background:#C05878;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:7px;font-weight:700;color:#fff;margin-top:1px;">BA</div>
+                <div style="flex:1;padding:7px 9px;background:#FFF7F0;border-radius:0 7px 7px 7px;font-size:10px;color:#374151;line-height:1.5;">
+                  Escalation risk — 6 days, 2 failed downloads.
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:8px;color:#EA580C;background:#FFF7F0;padding:1px 5px;border-radius:3px;margin-left:5px;border:1px solid rgba(234,88,12,0.2);">CONCERN</span>
+                </div>
+              </div>
+            </div>
+            <!-- External / Full toggle -->
+            <div style="display:flex;gap:6px;align-items:center;">
+              <div style="flex:1;height:1px;background:#E8EDF5;"></div>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:8px;color:#C1C9D8;text-transform:uppercase;letter-spacing:0.08em;">External (0) · Full (4)</span>
+              <div style="flex:1;height:1px;background:#E8EDF5;"></div>
+            </div>
+          </div>
+        </div>
+        <div style="padding:10px 4px 0;display:flex;align-items:center;gap:6px;">
+          <div style="width:6px;height:6px;border-radius:50%;background:var(--cc-accent);flex-shrink:0;"></div>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#8492A6;letter-spacing:0.06em;">Thread view — tagged messages in context</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scroll hint -->
+    <div class="cc-rv cc-d4" style="padding:32px 0 40px;display:flex;align-items:center;gap:12px;">
+      <div style="width:1px;height:32px;background:linear-gradient(to bottom,#E8EDF5,transparent);"></div>
+      <span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#C1C9D8;letter-spacing:0.12em;text-transform:uppercase;">Scroll to explore</span>
+    </div>
+  </div>
+</section>
+
+<div class="cc-divider">
+  <span class="cc-divider-num">01</span>
+  <div class="cc-divider-line"></div>
+  <span style="font-family:'JetBrains Mono',monospace;font-size:9.5px;color:#C1C9D8;letter-spacing:0.1em;text-transform:uppercase">The Problem</span>
+</div>
+<!-- 01 PROBLEM -->
+<section style="background:#FAFAF9;">
+  <div style="max-width:1200px;margin:0 auto;padding:72px 24px;">
+    <div class="reveal" style="transition-delay:0.05s;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;color:#2563EB;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:14px;">01 &middot; The problem</div>
+      <h2 style="font-size:clamp(28px,3.5vw,44px);font-weight:700;color:#0F172A;letter-spacing:-0.02em;line-height:1.1;margin:0 0 14px;">The work was in the platform.<br>The conversation was not.</h2>
+      <p style="font-size:16px;color:#6B7280;line-height:1.7;max-width:600px;margin:0 0 48px;">Six teams managing one deal over months. Each team communicating in different tools, with different people, leaving different records. Every handoff a context gap.</p>
+    </div>
+    <!-- Tool matrix -->
+    <div class="reveal" style="transition-delay:0.1s;">
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:1px solid #E5E7EB;border-radius:8px 8px 0 0;overflow:hidden;">
+        <div style="border-right:1px solid #E5E7EB;display:flex;flex-direction:column;">
+          <div style="padding:14px 16px;border-bottom:1px solid #E5E7EB;background:#F8FAFC;">
+            <div style="width:28px;height:28px;border-radius:6px;background:#FFFBEB;display:flex;align-items:center;justify-content:center;margin-bottom:8px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#92680A" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#94A3B8;">Email</div>
+          </div>
+          <div style="flex:1;padding:12px 14px;display:flex;flex-direction:column;gap:7px;">
+            <div style="font-size:11px;line-height:1.5;color:#374151;padding:8px 10px;border-radius:6px;border:1px solid #E5E7EB;background:#fff;">BO &rarr; PM: NDA summary forwarded. <strong style="font-weight:600;color:#0F172A;">Legal not included.</strong></div>
+            <div style="font-size:11px;line-height:1.5;color:#374151;padding:8px 10px;border-radius:6px;border:1px solid #E5E7EB;background:#fff;">Legal &rarr; BD only: territory concern. <strong style="font-weight:600;color:#0F172A;">PM unaware for 3 days.</strong></div>
+            <div style="font-size:10.5px;color:#2563EB;background:#EFF6FF;border:1px solid rgba(37,99,235,.15);border-radius:6px;padding:7px 10px;font-style:italic;line-height:1.5;display:flex;gap:6px;"><span style="font-family:'JetBrains Mono',monospace;font-style:normal;font-size:8px;background:#2563EB;color:#fff;min-width:14px;height:14px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;">!</span>Legal joins Week 2 with zero context on the delay BO flagged.</div>
+          </div>
+        </div>
+        <div style="border-right:1px solid #E5E7EB;display:flex;flex-direction:column;">
+          <div style="padding:14px 16px;border-bottom:1px solid #E5E7EB;background:#F8FAFC;">
+            <div style="width:28px;height:28px;border-radius:6px;background:#EFF6FF;display:flex;align-items:center;justify-content:center;margin-bottom:8px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#1D4ED8" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#94A3B8;">Slack</div>
+          </div>
+          <div style="flex:1;padding:12px 14px;display:flex;flex-direction:column;gap:7px;">
+            <div style="font-size:11px;line-height:1.5;color:#374151;padding:8px 10px;border-radius:6px;border:1px solid #E5E7EB;background:#fff;"><strong style="font-weight:600;color:#0F172A;">Delivery hold flagged</strong> in #ip-requests. No platform record.</div>
+            <div style="font-size:10.5px;color:#2563EB;background:#EFF6FF;border:1px solid rgba(37,99,235,.15);border-radius:6px;padding:7px 10px;font-style:italic;line-height:1.5;display:flex;gap:6px;"><span style="font-family:'JetBrains Mono',monospace;font-style:normal;font-size:8px;background:#2563EB;color:#fff;min-width:14px;height:14px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;">!</span>Compliance raises same concern independently 4 days later.</div>
+            <div style="font-size:11px;line-height:1.5;color:#374151;padding:8px 10px;border-radius:6px;border:1px solid #E5E7EB;background:#fff;">PM &rarr; Legal DM: 3rd conversation on the same issue.</div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;">
+          <div style="padding:14px 16px;border-bottom:1px solid #E5E7EB;background:#F8FAFC;">
+            <div style="width:28px;height:28px;border-radius:6px;background:#F5F3FF;display:flex;align-items:center;justify-content:center;margin-bottom:8px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#6D28D9" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg></div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#94A3B8;">Jira / DMs</div>
+          </div>
+          <div style="flex:1;padding:12px 14px;display:flex;flex-direction:column;gap:7px;">
+            <div style="font-size:11px;line-height:1.5;color:#374151;padding:8px 10px;border-radius:6px;border:1px solid #E5E7EB;background:#fff;">Ticket raised. <strong style="font-weight:600;color:#0F172A;">Copy-pasted email context.</strong> 3 people missing.</div>
+            <div style="font-size:11px;line-height:1.5;color:#374151;padding:8px 10px;border-radius:6px;border:1px solid #E5E7EB;background:#fff;">Legal &amp; BD DM: <strong style="font-weight:600;color:#0F172A;">decision made,</strong> not documented anywhere.</div>
+            <div style="font-size:10.5px;color:#2563EB;background:#EFF6FF;border:1px solid rgba(37,99,235,.15);border-radius:6px;padding:7px 10px;font-style:italic;line-height:1.5;display:flex;gap:6px;"><span style="font-family:'JetBrains Mono',monospace;font-style:normal;font-size:8px;background:#2563EB;color:#fff;min-width:14px;height:14px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;">!</span>Undocumented decision resurfaces 6 weeks later. No record.</div>
+          </div>
+        </div>
+      </div>
+      <!-- Summary strip -->
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:#E5E7EB;border:1px solid #E5E7EB;border-top:none;border-radius:0 0 8px 8px;overflow:hidden;">
+        <div style="background:#EFF6FF;padding:18px 20px;"><div style="font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#64748B;margin-bottom:5px;">Parallel conversations</div><div style="font-size:36px;font-weight:700;color:#2563EB;letter-spacing:-0.02em;line-height:1;">3</div></div>
+        <div style="background:#EFF6FF;padding:18px 20px;"><div style="font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#64748B;margin-bottom:5px;">Tools involved</div><div style="font-size:36px;font-weight:700;color:#2563EB;letter-spacing:-0.02em;line-height:1;">3</div></div>
+        <div style="background:#EFF6FF;padding:18px 20px;"><div style="font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#64748B;margin-bottom:5px;">Traceable decisions in platform</div><div style="font-size:36px;font-weight:700;color:#94A3B8;letter-spacing:-0.02em;line-height:1;">0</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══ VISUAL: KEY INSIGHT BREAK ═══ -->
+<div style="background:#0A0F1E;padding:80px 0;overflow:hidden;position:relative;">
+  <!-- decorative large text -->
+  <div style="position:absolute;right:-20px;top:50%;transform:translateY(-50%);font-family:'DM Serif Display',serif;font-size:180px;font-weight:800;color:rgba(13,115,119,0.06);letter-spacing:-0.06em;line-height:1;pointer-events:none;user-select:none;">SIGNAL</div>
+  <div style="max-width:1200px;margin:0 auto;padding:0 40px;position:relative;z-index:1;">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;">
+      <!-- Pull quote -->
+      <div class="cc-rv">
+        <div style="width:40px;height:3px;background:var(--cc-accent);margin-bottom:28px;"></div>
+        <blockquote style="font-family:'DM Serif Display',serif;font-size:clamp(22px,3vw,36px);font-weight:700;color:rgba(255,255,255,0.9);line-height:1.25;letter-spacing:-0.02em;margin:0 0 24px;">
+          "Every handoff was<br>a context gap.<br><em style='font-style:normal;color:rgba(20,145,155,0.9)'>No one had the full picture.</em>"
+        </blockquote>
+        <p style="font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;color:rgba(255,255,255,0.3);letter-spacing:0.12em;text-transform:uppercase;">— Discovery finding, Week 1</p>
+      </div>
+      <!-- 3 problem stats -->
+      <div class="cc-rv cc-d2" style="display:flex;flex-direction:column;gap:16px;">
+        <div style="padding:20px 24px;border:1px solid rgba(255,255,255,0.08);border-radius:12px;display:flex;align-items:center;gap:20px;">
+          <div style="font-family:'DM Serif Display',serif;font-size:48px;font-weight:800;color:rgba(234,88,12,0.9);line-height:1;letter-spacing:-0.04em;min-width:64px;">3×</div>
+          <div style="font-size:13px;color:rgba(255,255,255,0.5);line-height:1.6">Same issue discussed across 3 separate tools before anyone acted</div>
+        </div>
+        <div style="padding:20px 24px;border:1px solid rgba(255,255,255,0.08);border-radius:12px;display:flex;align-items:center;gap:20px;">
+          <div style="font-family:'DM Serif Display',serif;font-size:48px;font-weight:800;color:rgba(234,88,12,0.9);line-height:1;letter-spacing:-0.04em;min-width:64px;">6wk</div>
+          <div style="font-size:13px;color:rgba(255,255,255,0.5);line-height:1.6">Average time before an undocumented decision resurfaced as a problem</div>
+        </div>
+        <div style="padding:20px 24px;border:1px solid rgba(255,255,255,0.08);border-radius:12px;display:flex;align-items:center;gap:20px;">
+          <div style="font-family:'DM Serif Display',serif;font-size:48px;font-weight:800;color:rgba(13,115,119,0.9);line-height:1;letter-spacing:-0.04em;min-width:64px;">0</div>
+          <div style="font-size:13px;color:rgba(255,255,255,0.5);line-height:1.6">Decisions traceable inside the platform before this project</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="cc-divider">
+  <span class="cc-divider-num">02</span>
+  <div class="cc-divider-line"></div>
+  <span style="font-family:'JetBrains Mono',monospace;font-size:9.5px;color:#C1C9D8;letter-spacing:0.1em;text-transform:uppercase">Architecture</span>
+</div>
+<!-- 02 ARCHITECTURE -->
+<section style="background:#111827;">
+  <div style="max-width:1200px;margin:0 auto;padding:72px 24px;">
+    <div class="reveal" style="transition-delay:0.05s;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;color:rgba(147,197,253,.7);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:14px;">02 &middot; How we thought about it</div>
+      <h2 style="font-size:clamp(28px,3.5vw,44px);font-weight:700;color:#F1F5F9;letter-spacing:-0.02em;line-height:1.1;margin:0 0 14px;">Not a messaging tool.<br>A communication layer.</h2>
+      <p style="font-size:16px;color:rgba(209,213,219,.65);line-height:1.7;max-width:600px;margin:0 0 48px;">We mapped four architectural layers before sketching a screen. Each layer has a hard boundary. Information flows outward only by deliberate action.</p>
+    </div>
+    <!-- Architecture layers table -->
+    <div class="reveal" style="transition-delay:0.1s;border:1px solid rgba(255,255,255,.08);border-radius:8px;overflow:hidden;margin-bottom:32px;">
+      <div style="display:grid;grid-template-columns:52px 1fr 1fr;border-bottom:1px solid rgba(255,255,255,.08);">
+        <div style="padding:20px 0 20px 20px;font-size:18px;font-weight:700;color:rgba(147,197,253,.5);">01</div>
+        <div style="padding:20px 22px;border-left:1px solid rgba(255,255,255,.08);">
+          <div style="font-size:15px;font-weight:600;color:rgba(255,255,255,.88);margin-bottom:3px;">Internal Thread</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;color:rgba(147,197,253,.55);">Foundation layer</div>
+        </div>
+        <div style="padding:20px 22px;border-left:1px solid rgba(255,255,255,.08);">
+          <div style="font-size:13px;color:rgba(255,255,255,.55);line-height:1.65;">Anchored to customer and lifecycle stage. Started from inside the workflow, not a messaging surface. Scoped to relevant roles.</div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:52px 1fr 1fr;border-bottom:1px solid rgba(255,255,255,.08);">
+        <div style="padding:20px 0 20px 20px;font-size:18px;font-weight:700;color:rgba(147,197,253,.5);">02</div>
+        <div style="padding:20px 22px;border-left:1px solid rgba(255,255,255,.08);">
+          <div style="font-size:15px;font-weight:600;color:rgba(255,255,255,.88);margin-bottom:3px;">Tagged Messages</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;color:rgba(147,197,253,.55);">Signal layer</div>
+        </div>
+        <div style="padding:20px 22px;border-left:1px solid rgba(255,255,255,.08);">
+          <div style="font-size:13px;color:rgba(255,255,255,.55);line-height:1.65;">Five intent types chosen before sending: Update, Concern, Decision Request, Approving, Escalating. Each tag is a filter axis across every thread.</div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:52px 1fr 1fr;border-bottom:1px solid rgba(255,255,255,.08);">
+        <div style="padding:20px 0 20px 20px;font-size:18px;font-weight:700;color:rgba(147,197,253,.5);">03</div>
+        <div style="padding:20px 22px;border-left:1px solid rgba(255,255,255,.08);">
+          <div style="font-size:15px;font-weight:600;color:rgba(255,255,255,.88);margin-bottom:3px;">External Messages</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;color:rgba(147,197,253,.55);">Default view</div>
+        </div>
+        <div style="padding:20px 22px;border-left:1px solid rgba(255,255,255,.08);">
+          <div style="font-size:13px;color:rgba(255,255,255,.55);line-height:1.65;">Messages marked for customer visibility. These become selectable as context when starting a Customer Thread. External is the default view on thread entry.</div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:52px 1fr 1fr;">
+        <div style="padding:20px 0 20px 20px;font-size:18px;font-weight:700;color:rgba(147,197,253,.5);">04</div>
+        <div style="padding:20px 22px;border-left:1px solid rgba(255,255,255,.08);">
+          <div style="font-size:15px;font-weight:600;color:rgba(255,255,255,.88);margin-bottom:3px;">Customer Thread</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;color:rgba(147,197,253,.55);">Hard boundary</div>
+        </div>
+        <div style="padding:20px 22px;border-left:1px solid rgba(255,255,255,.08);">
+          <div style="font-size:13px;color:rgba(255,255,255,.55);line-height:1.65;">Created from inside an internal thread only. One per thread, enforced architecturally. External messages become selectable context. Customers cannot initiate.</div>
+        </div>
+      </div>
+      <div style="padding:10px 20px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:0.07em;color:rgba(147,197,253,.5);border-top:1px dashed rgba(147,197,253,.2);">Customers cannot access Layers 01&#8211;03 &middot; architectural boundary, not a permission toggle</div>
+    </div>
+    <!-- Init cards -->
+    <div class="reveal" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;transition-delay:0.15s;">
+      <div style="padding:22px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:8px;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:rgba(234,88,12,.65);margin-bottom:9px;">Where threads start</div>
+        <div style="font-size:16px;font-weight:600;color:rgba(255,255,255,.86);margin-bottom:6px;line-height:1.2;">Communications button on every workflow page.</div>
+        <div style="font-size:12px;color:rgba(255,255,255,.38);line-height:1.65;">LT reviewing a contract, BO on a customer page &#8211; both see it top-right. New Thread or Raise Ticket. Customer and stage pre-filled.</div>
+      </div>
+      <div style="padding:22px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:8px;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:rgba(147,197,253,.65);margin-bottom:9px;">Where you return</div>
+        <div style="font-size:16px;font-weight:600;color:rgba(255,255,255,.86);margin-bottom:6px;line-height:1.2;">My Threads &#8211; the monitoring surface.</div>
+        <div style="font-size:12px;color:rgba(255,255,255,.38);line-height:1.65;">All active threads across all customers. Quick-filter chips, full table. Threads are initiated in context. My Threads is where you check, triage, and continue.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══ VISUAL: DESIGN PRINCIPLES ═══ -->
+<div style="background:#F7F9FC;padding:80px 0;">
+  <div style="max-width:1200px;margin:0 auto;padding:0 40px;">
+    <div class="cc-rv" style="margin-bottom:48px;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--cc-accent);margin-bottom:12px;display:flex;align-items:center;gap:10px;"><span style="display:inline-block;width:20px;height:1.5px;background:var(--cc-accent)"></span>Design Principles</div>
+      <h2 style="font-family:'DM Serif Display',serif;font-size:clamp(26px,3.5vw,42px);font-weight:800;color:#0A0F1E;letter-spacing:-0.03em;line-height:1.05;margin:0;">Three rules that<br>governed every decision.</h2>
+    </div>
+    <div class="cc-rv cc-d1" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
+      <!-- Principle 1 -->
+      <div style="background:#fff;border:1px solid #E8EDF5;border-radius:14px;padding:28px;position:relative;overflow:hidden;transition:transform 0.3s,box-shadow 0.3s;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 12px 32px rgba(13,115,119,0.1)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+        <div style="position:absolute;top:0;left:0;right:0;height:3px;background:var(--cc-accent);border-radius:14px 14px 0 0;"></div>
+        <div style="font-family:'DM Serif Display',serif;font-size:48px;font-weight:800;color:rgba(13,115,119,0.1);line-height:1;margin-bottom:16px;letter-spacing:-0.04em;">01</div>
+        <div style="font-family:'DM Serif Display',serif;font-size:18px;font-weight:700;color:#0A0F1E;margin-bottom:10px;line-height:1.2;letter-spacing:-0.02em;">Context before conversation</div>
+        <div style="font-size:13px;color:#4A5568;line-height:1.65;">A thread without a customer is a chat. Anchoring to customer + stage before the first message was non-negotiable.</div>
+      </div>
+      <!-- Principle 2 -->
+      <div style="background:#fff;border:1px solid #E8EDF5;border-radius:14px;padding:28px;position:relative;overflow:hidden;transition:transform 0.3s,box-shadow 0.3s;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 12px 32px rgba(13,115,119,0.1)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+        <div style="position:absolute;top:0;left:0;right:0;height:3px;background:var(--cc-accent);border-radius:14px 14px 0 0;"></div>
+        <div style="font-family:'DM Serif Display',serif;font-size:48px;font-weight:800;color:rgba(13,115,119,0.1);line-height:1;margin-bottom:16px;letter-spacing:-0.04em;">02</div>
+        <div style="font-family:'DM Serif Display',serif;font-size:18px;font-weight:700;color:#0A0F1E;margin-bottom:10px;line-height:1.2;letter-spacing:-0.02em;">Intent before sending</div>
+        <div style="font-size:13px;color:#4A5568;line-height:1.65;">Forcing a tag at compose time — Update, Concern, Decision — turns noise into signal. You can't filter on what you never captured.</div>
+      </div>
+      <!-- Principle 3 -->
+      <div style="background:#fff;border:1px solid #E8EDF5;border-radius:14px;padding:28px;position:relative;overflow:hidden;transition:transform 0.3s,box-shadow 0.3s;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 12px 32px rgba(13,115,119,0.1)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+        <div style="position:absolute;top:0;left:0;right:0;height:3px;background:var(--cc-accent);border-radius:14px 14px 0 0;"></div>
+        <div style="font-family:'DM Serif Display',serif;font-size:48px;font-weight:800;color:rgba(13,115,119,0.1);line-height:1;margin-bottom:16px;letter-spacing:-0.04em;">03</div>
+        <div style="font-family:'DM Serif Display',serif;font-size:18px;font-weight:700;color:#0A0F1E;margin-bottom:10px;line-height:1.2;letter-spacing:-0.02em;">Boundaries enforced, not asked</div>
+        <div style="font-size:13px;color:#4A5568;line-height:1.65;">One customer thread per internal thread. Customers can't initiate. These are architecture — not defaults that erode under pressure.</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="cc-divider">
+  <span class="cc-divider-num">03</span>
+  <div class="cc-divider-line"></div>
+  <span style="font-family:'JetBrains Mono',monospace;font-size:9.5px;color:#C1C9D8;letter-spacing:0.1em;text-transform:uppercase">The System, Working</span>
+</div>
+<!-- 03 SCREENS -->
+<section style="background:#fff;border-top:1px solid #F1F5F9;">
+  <div style="max-width:1200px;margin:0 auto;padding:56px 24px 48px;">
+    <div class="reveal">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;color:#2563EB;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:14px;">03 &middot; The system, working</div>
+      <h2 style="font-size:clamp(28px,3.5vw,44px);font-weight:700;color:#0F172A;letter-spacing:-0.02em;line-height:1.1;margin:0 0 14px;">Five moments.<br>One thread. One customer.</h2>
+      <p style="font-size:16px;color:#6B7280;line-height:1.7;max-width:580px;">Omega Electronics. BO David Clark. A delivery failure and how the Communication Center handles it from entry to customer thread.</p>
+    </div>
+  </div>
+</section>
+<div class="screen-sec rv-up">
+  <div class="ss-intro">
+    <div>
+      <div class="ss-step">01 of 05</div>
+      <h3 class="ss-h">The entry point.<br/>Any workflow page.</h3>
+      <p class="ss-body" style="margin-top:10px">BO is on the Omega Electronics customer page reviewing a delivery issue. He clicks Communications top-right. Two options: New Thread or Raise Ticket. Customer and stage are already known.</p>
+    </div>
+    <div class="note" style="margin-top:6px"><span class="note-lbl">Why from the workflow page</span>Starting here means the thread is anchored to customer and stage before the first message. No setup. No context to copy-paste.</div>
+  </div>
+  <div class="chrome"><div class="chrome-inner lt-shadow">
+  <div class="c-bar"><div class="c-dot" style="background:#FF5F57"></div><div class="c-dot" style="background:#FFBD2E"></div><div class="c-dot" style="background:#28C840"></div><div class="c-url">adp / bo / customers / omega-electronics</div></div>
+  <div class="c-top"><div class="c-logo"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></div><span class="c-brand">ADP</span><span class="c-pill">INTERNAL &middot; BO</span><div class="c-tr"><div class="c-bw"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.38)" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg><div class="c-nbadge">2</div></div><div class="c-av" style="background:#ea580c">DC</div></div></div>
+  <div class="c-body"><div class="c-nav"><div class="c-ni"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Dashboard</div><div class="c-ni"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Customers</div><div class="c-ni"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>IP Requests</div><div class="c-ni"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>Tickets</div><div class="c-ni act"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Communication</div><div class="c-nav-foot"><svg width="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" height="11"><polyline points="15 18 9 12 15 6"/></svg>Collapse</div></div><div class="c-content"><div class="sm-screen sm-entry">
+  <div class="sm-entry__head">
+    <div class="sm-entry__crumb">&larr; Customers</div>
+    <div class="sm-entry__customer">
+      <div class="sm-entry__logo">OE</div>
+      <div>
+        <div class="sm-entry__name">Omega Electronics</div>
+        <div class="sm-entry__meta">Hyderabad, India &middot; SAP OE-001 &middot; 4d in stage</div>
+      </div>
+      <div class="sm-entry__cta">
+        <div class="sm-entry__cta-btn">
+          <span class="sm-entry__cta-dot"></span>
+          Communications
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="sm-entry__dropdown">
+          <div class="sm-entry__opt">
+            <div class="sm-entry__opt-ic">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </div>
+            <div>
+              <div class="sm-entry__opt-t">New Thread</div>
+              <div class="sm-entry__opt-d">Start an internal discussion</div>
+            </div>
+          </div>
+          <div class="sm-entry__opt">
+            <div class="sm-entry__opt-ic sm-entry__opt-ic--alt">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+            </div>
+            <div>
+              <div class="sm-entry__opt-t">Raise Ticket</div>
+              <div class="sm-entry__opt-d">Escalate a blocker or issue</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="sm-stages">
+    <span class="sm-stage-label">Customer journey</span>
+    <div class="sm-stage-track">
+      <div class="sm-stage sm-stage--done">
+        <div class="sm-stage__step">01 &middot; Done</div>
+        <div class="sm-stage__name">Onboarding</div>
+        <div class="sm-stage__sub">Compliance &middot; NDA cleared</div>
+      </div>
+      <div class="sm-stage-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+      <div class="sm-stage sm-stage--active">
+        <div class="sm-stage__step">02 &middot; Active</div>
+        <div class="sm-stage__name">Licensing</div>
+        <div class="sm-stage__sub">Contract &middot; 4 days in stage</div>
+      </div>
+      <div class="sm-stage-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+      <div class="sm-stage sm-stage--locked">
+        <div class="sm-stage__step">03 &middot; Locked</div>
+        <div class="sm-stage__name">Delivery</div>
+        <div class="sm-stage__sub">&mdash;</div>
+      </div>
+    </div>
+  </div>
+</div></div></div>
+</div></div>
+</div>
+<div class="screen-sec rv-up">
+  <div class="ss-intro">
+    <div>
+      <div class="ss-step">02 of 05</div>
+      <h3 class="ss-h">The Communication Center.<br/>All threads in one place.</h3>
+      <p class="ss-body" style="margin-top:10px">BO opens the Communication Center. The Omega thread is already in the table. Four stat cards. Priority topic tiles. Thread table with status, participants, and last active.</p>
+    </div>
+    <div class="note" style="margin-top:6px"><span class="note-lbl">Monitoring, not starting</span>Threads begin from workflow pages. My Threads is where you return to monitor and continue.</div>
+  </div>
+  <div class="chrome"><div class="chrome-inner lt-shadow">
+  <div class="c-bar"><div class="c-dot" style="background:#FF5F57"></div><div class="c-dot" style="background:#FFBD2E"></div><div class="c-dot" style="background:#28C840"></div><div class="c-url">adp / bo / thread-center</div></div>
+  <div class="c-top"><div class="c-logo"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></div><span class="c-brand">ADP</span><span class="c-pill">INTERNAL &middot; BO</span><div class="c-tr"><div class="c-bw"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.38)" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg><div class="c-nbadge">2</div></div><div class="c-av" style="background:#ea580c">DC</div></div></div>
+  <div class="c-body"><div class="c-nav"><div class="c-ni"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Dashboard</div><div class="c-ni"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Customers</div><div class="c-ni"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>IP Requests</div><div class="c-ni"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>Tickets</div><div class="c-ni act"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Communication</div><div class="c-nav-foot"><svg width="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" height="11"><polyline points="15 18 9 12 15 6"/></svg>Collapse</div></div><div class="c-content"><div class="sm-screen">
+  <div class="sm-page">
+    <div>
+      <div class="sm-page__title">Communication Center</div>
+      <div class="sm-page__sub">Threads across onboarding, BOM, contracts, compliance, delivery.</div>
+    </div>
+  </div>
+  <div class="sm-metrics">
+    <div class="sm-metric"><span class="sm-metric__num">4</span><span class="sm-metric__lbl">Total threads</span></div>
+    <div class="sm-metric__rule"></div>
+    <div class="sm-metric"><span class="sm-metric__num">3</span><span class="sm-metric__lbl">Open</span></div>
+    <div class="sm-metric__rule"></div>
+    <div class="sm-metric"><span class="sm-metric__num">0</span><span class="sm-metric__lbl">Unread</span></div>
+    <div class="sm-metric__rule"></div>
+    <div class="sm-metric"><span class="sm-metric__num sm-metric__num--alert">1</span><span class="sm-metric__lbl">High priority</span></div>
+  </div>
+  <div class="sm-topics">
+    <span class="sm-topic"><span class="sm-topic__count">0</span> Onboarding / NDA</span>
+    <span class="sm-topic"><span class="sm-topic__count">1</span> BOM / Contract</span>
+    <span class="sm-topic"><span class="sm-topic__count">1</span> Compliance</span>
+    <span class="sm-topic sm-topic--alert"><span class="sm-topic__dot"></span><span class="sm-topic__count">1</span> Delivery &amp; IP</span>
+  </div>
+  <div class="sm-list">
+    <div class="sm-row sm-row--active">
+      <span class="sm-row__leader sm-row__leader--alert"></span>
+      <div class="sm-row__main">
+        <div class="sm-row__title">Omega delivery failure &mdash; token rotation</div>
+        <div class="sm-row__meta">
+          <span>Omega Electronics</span><span class="sm-dot"></span>
+          <span>Delivery</span><span class="sm-dot"></span>
+          <span>24 Mar</span>
+        </div>
+      </div>
+      <span class="sm-pill sm-pill--reopened"><span class="sm-pill__dot"></span>Reopened</span>
+      <div class="sm-av-stack">
+        <span class="sm-av sm-av--sm" style="background:#5572E8">BO</span>
+        <span class="sm-av sm-av--sm" style="background:#3A9ED0">TC</span>
+        <span class="sm-av sm-av--sm" style="background:#3DAA60">PM</span>
+      </div>
+    </div>
+    <div class="sm-row">
+      <span class="sm-row__leader sm-row__leader--idle"></span>
+      <div class="sm-row__main">
+        <div class="sm-row__title">ArcLight export control review</div>
+        <div class="sm-row__meta">
+          <span>ArcLight Systems</span><span class="sm-dot"></span>
+          <span>Compliance</span><span class="sm-dot"></span>
+          <span>24 Mar</span>
+        </div>
+      </div>
+      <span class="sm-pill sm-pill--reopened"><span class="sm-pill__dot"></span>Reopened</span>
+      <div class="sm-av-stack">
+        <span class="sm-av sm-av--sm" style="background:#5572E8">BO</span>
+        <span class="sm-av sm-av--sm" style="background:#708080">CC</span>
+        <span class="sm-av sm-av--sm" style="background:#9058D0">LT</span>
+      </div>
+    </div>
+    <div class="sm-row">
+      <span class="sm-row__leader sm-row__leader--ok"></span>
+      <div class="sm-row__main">
+        <div class="sm-row__title">Northstar NDA expiry &mdash; renewal</div>
+        <div class="sm-row__meta">
+          <span>Northstar Energy</span><span class="sm-dot"></span>
+          <span>Compliance</span><span class="sm-dot"></span>
+          <span>23 Mar</span>
+        </div>
+      </div>
+      <span class="sm-pill sm-pill--resolved"><span class="sm-pill__dot"></span>Resolved</span>
+      <div class="sm-av-stack">
+        <span class="sm-av sm-av--sm" style="background:#5572E8">BO</span>
+        <span class="sm-av sm-av--sm" style="background:#9058D0">LT</span>
+      </div>
+    </div>
+  </div>
+</div></div></div>
+</div></div>
+</div>
+<div class="screen-sec rv-up">
+  <div class="ss-intro">
+    <div>
+      <div class="ss-step">03 of 05</div>
+      <h3 class="ss-h">Inside the thread.<br/>Three messages. Three tags.</h3>
+      <p class="ss-body" style="margin-top:10px">BO clicks into the Omega thread. Engineering posted an Update and a Decision Request. BA flagged a Concern. Each tag was chosen before sending. External(0) means no messages are marked for the customer yet. Full shows all 4.</p>
+    </div>
+    <div class="note" style="margin-top:6px"><span class="note-lbl">External is the default view</span>When entering a thread, External is shown first. A thread in active use has 100+ messages. External surfaces only what matters.</div>
+  </div>
+  <div class="chrome"><div class="chrome-inner lt-shadow">
+  <div class="c-bar"><div class="c-dot" style="background:#FF5F57"></div><div class="c-dot" style="background:#FFBD2E"></div><div class="c-dot" style="background:#28C840"></div><div class="c-url">adp / bo / thread-center / omega-electronics</div></div>
+  <div class="c-top"><div class="c-logo"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></div><span class="c-brand">ADP</span><span class="c-pill">INTERNAL &middot; BO</span><div class="c-tr"><div class="c-bw"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.38)" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg><div class="c-nbadge">2</div></div><div class="c-av" style="background:#ea580c">DC</div></div></div>
+  <div class="c-body"><div class="c-nav"><div class="c-ni"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Dashboard</div><div class="c-ni"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Customers</div><div class="c-ni"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>IP Requests</div><div class="c-ni"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>Tickets</div><div class="c-ni act"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Communication</div><div class="c-nav-foot"><svg width="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" height="11"><polyline points="15 18 9 12 15 6"/></svg>Collapse</div></div><div class="c-content"><div class="sm-screen">
+  <div class="sm-thread-head">
+    <div>
+      <div class="sm-thread-head__title">
+        <span class="sm-pill sm-pill--reopened"><span class="sm-pill__dot"></span>Reopened</span>
+        Omega delivery failure &mdash; token rotation
+      </div>
+      <div class="sm-thread-head__sub">
+        Omega Electronics &middot; Delivery
+        <div class="sm-av-stack" style="margin-left:6px">
+          <span class="sm-av sm-av--sm" style="background:#5572E8">BO</span>
+          <span class="sm-av sm-av--sm" style="background:#3A9ED0">TC</span>
+          <span class="sm-av sm-av--sm" style="background:#3DAA60">PM</span>
+        </div>
+      </div>
+    </div>
+    <div class="sm-thread-head__actions">
+      <div class="sm-toggle">
+        <button>External 0</button>
+        <button class="is-on">Full 4</button>
+      </div>
+      <div class="sm-menu-trigger"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg></div>
+    </div>
+  </div>
+  <div class="sm-thread">
+    <div class="sm-msg">
+      <span class="sm-av" style="background:#3A9ED0">TC</span>
+      <div class="sm-msg__bubble" style="--sender:#3A9ED0">
+        <div class="sm-msg__head">
+          <span class="sm-msg__name">Engineering</span>
+          <span class="sm-msg__tag sm-msg__tag--update">Update</span>
+          <span class="sm-msg__time">24 Mar</span>
+        </div>
+        <div class="sm-msg__body">Root cause: portal access token expired mid-download. Token rotation queued.</div>
+      </div>
+    </div>
+    <div class="sm-msg">
+      <span class="sm-av" style="background:#3A9ED0">TC</span>
+      <div class="sm-msg__bubble" style="--sender:#D97706">
+        <div class="sm-msg__head">
+          <span class="sm-msg__name">Engineering</span>
+          <span class="sm-msg__tag sm-msg__tag--decision">Decision Request</span>
+          <span class="sm-msg__time">24 Mar</span>
+        </div>
+        <div class="sm-msg__body">Fresh delivery package rebuilt. ETA for re-delivery is 2 hours. Will confirm when live.</div>
+      </div>
+    </div>
+    <div class="sm-msg">
+      <span class="sm-av" style="background:#C05878">BA</span>
+      <div class="sm-msg__bubble" style="--sender:#DC2626">
+        <div class="sm-msg__head">
+          <span class="sm-msg__name">Internal Note</span>
+          <span class="sm-msg__tag sm-msg__tag--concern">Concern</span>
+          <span class="sm-msg__time">24 Mar</span>
+        </div>
+        <div class="sm-msg__body">Customer escalation risk &mdash; 6 days in Delivery, 2 failed downloads. Ensure token monitoring is in place post-recovery.</div>
+      </div>
+    </div>
+  </div>
+  <div class="sm-composer">
+    <div class="sm-composer__field">Factual update on the topic &mdash; state current status or progress.</div>
+    <div class="sm-composer__row">
+      <span class="sm-composer__tag">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+        Providing Update
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </span>
+      <label class="sm-composer__util"><input type="checkbox"> Mark as External</label>
+      <span class="sm-composer__util">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+        Attach
+      </span>
+      <button class="sm-composer__submit">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        Submit
+      </button>
+    </div>
+  </div>
+</div></div></div>
+</div></div>
+</div>
+<div class="screen-sec rv-up">
+  <div class="ss-intro">
+    <div>
+      <div class="ss-step">04 of 05</div>
+      <h3 class="ss-h">Tagging a reply.<br/>Providing Update, marked External.</h3>
+      <p class="ss-body" style="margin-top:10px">BO opens the tag selector. They pick Providing Update and check Mark as External. The same 3 messages are visible above. External(1) shows one message is now marked. The dropdown sits above the button.</p>
+    </div>
+    <div class="note" style="margin-top:6px"><span class="note-lbl">The tag drives the filter</span>A BO can pull every Decision Request across all customers without opening a thread. The tag chosen here is that primitive.</div>
+  </div>
+  <div class="chrome"><div class="chrome-inner lt-shadow">
+  <div class="c-bar"><div class="c-dot" style="background:#FF5F57"></div><div class="c-dot" style="background:#FFBD2E"></div><div class="c-dot" style="background:#28C840"></div><div class="c-url">adp / bo / thread-center / omega-electronics</div></div>
+  <div class="c-top"><div class="c-logo"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></div><span class="c-brand">ADP</span><span class="c-pill">INTERNAL &middot; BO</span><div class="c-tr"><div class="c-bw"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.38)" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg><div class="c-nbadge">2</div></div><div class="c-av" style="background:#ea580c">DC</div></div></div>
+  <div class="c-body"><div class="c-nav"><div class="c-ni"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Dashboard</div><div class="c-ni"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Customers</div><div class="c-ni"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>IP Requests</div><div class="c-ni"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>Tickets</div><div class="c-ni act"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Communication</div><div class="c-nav-foot"><svg width="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" height="11"><polyline points="15 18 9 12 15 6"/></svg>Collapse</div></div><div class="c-content"><div class="sm-screen">
+  <div class="sm-thread-head">
+    <div>
+      <div class="sm-thread-head__title">
+        <span class="sm-pill sm-pill--reopened"><span class="sm-pill__dot"></span>Reopened</span>
+        Omega delivery failure &mdash; token rotation
+      </div>
+      <div class="sm-thread-head__sub">
+        Omega Electronics &middot; Delivery
+        <div class="sm-av-stack" style="margin-left:6px">
+          <span class="sm-av sm-av--sm" style="background:#5572E8">BO</span>
+          <span class="sm-av sm-av--sm" style="background:#3A9ED0">TC</span>
+          <span class="sm-av sm-av--sm" style="background:#3DAA60">PM</span>
+        </div>
+      </div>
+    </div>
+    <div class="sm-thread-head__actions">
+      <div class="sm-toggle">
+        <button class="is-on">External 1</button>
+        <button>Full 4</button>
+      </div>
+      <div class="sm-menu-trigger"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg></div>
+    </div>
+  </div>
+  <div class="sm-thread">
+    <div class="sm-msg">
+      <span class="sm-av" style="background:#3A9ED0">TC</span>
+      <div class="sm-msg__bubble" style="--sender:#3A9ED0">
+        <div class="sm-msg__head">
+          <span class="sm-msg__name">Engineering</span>
+          <span class="sm-msg__tag sm-msg__tag--update">Update</span>
+          <span class="sm-msg__time">24 Mar</span>
+        </div>
+        <div class="sm-msg__body">Root cause: portal access token expired mid-download. Token rotation queued.</div>
+      </div>
+    </div>
+    <div class="sm-msg">
+      <span class="sm-av" style="background:#3A9ED0">TC</span>
+      <div class="sm-msg__bubble" style="--sender:#D97706">
+        <div class="sm-msg__head">
+          <span class="sm-msg__name">Engineering</span>
+          <span class="sm-msg__tag sm-msg__tag--decision">Decision Request</span>
+          <span class="sm-msg__time">24 Mar</span>
+        </div>
+        <div class="sm-msg__body">Fresh delivery package rebuilt. ETA for re-delivery is 2 hours. Will confirm when live.</div>
+      </div>
+    </div>
+    <div class="sm-msg">
+      <span class="sm-av" style="background:#C05878">BA</span>
+      <div class="sm-msg__bubble" style="--sender:#DC2626">
+        <div class="sm-msg__head">
+          <span class="sm-msg__name">Internal Note</span>
+          <span class="sm-msg__tag sm-msg__tag--concern">Concern</span>
+          <span class="sm-msg__time">24 Mar</span>
+        </div>
+        <div class="sm-msg__body">Customer escalation risk &mdash; 6 days in Delivery.</div>
+      </div>
+    </div>
+  </div>
+  <div class="sm-composer">
+    <div class="sm-composer__field">Factual update on the topic &mdash; state current status or progress.</div>
+    <div class="sm-composer__row">
+      <div style="position:relative">
+        <span class="sm-composer__tag is-active">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+          Providing Update
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </span>
+        <div class="sm-tagpicker">
+          <div class="sm-tagpicker__head">Tag this message</div>
+          <div class="sm-tagpicker__item is-active">
+            <span class="sm-tagpicker__icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></span>
+            Providing Update
+            <span class="sm-tagpicker__hint">External</span>
+          </div>
+          <div class="sm-tagpicker__item">
+            <span class="sm-tagpicker__icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span>
+            Flagging Concern
+            <span class="sm-tagpicker__hint">Internal</span>
+          </div>
+          <div class="sm-tagpicker__item">
+            <span class="sm-tagpicker__icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
+            Requesting Decision
+            <span class="sm-tagpicker__hint">Internal</span>
+          </div>
+          <div class="sm-tagpicker__item">
+            <span class="sm-tagpicker__icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></span>
+            Approving / Accepting
+            <span class="sm-tagpicker__hint">External</span>
+          </div>
+          <div class="sm-tagpicker__item">
+            <span class="sm-tagpicker__icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span>
+            Escalating
+            <span class="sm-tagpicker__hint">Internal</span>
+          </div>
+        </div>
+      </div>
+      <label class="sm-composer__util"><input type="checkbox" checked> Mark as External</label>
+      <span class="sm-composer__util">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+        Attach
+      </span>
+      <button class="sm-composer__submit">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        Submit
+      </button>
+    </div>
+  </div>
+</div></div></div>
+</div></div>
+</div>
+<div class="screen-sec rv-up">
+  <div class="ss-intro">
+    <div>
+      <div class="ss-step">05 of 05</div>
+      <h3 class="ss-h">Start Customer Thread.<br/>From inside the internal thread.</h3>
+      <p class="ss-body" style="margin-top:10px">BO clicks Start Customer Thread. A panel slides in. External messages are pre-selected as context. Subject auto-filled. The internal thread is still visible behind it. One orange button.</p>
+    </div>
+    <div class="note" style="margin-top:6px"><span class="note-lbl">One per thread. Architectural constraint.</span>Once started the button becomes View Customer Thread. Customers cannot initiate. This is enforced by the system, not a guideline.</div>
+  </div>
+  <div class="chrome"><div class="chrome-inner lt-shadow">
+  <div class="c-bar"><div class="c-dot" style="background:#FF5F57"></div><div class="c-dot" style="background:#FFBD2E"></div><div class="c-dot" style="background:#28C840"></div><div class="c-url">adp / bo / thread-center / omega-electronics</div></div>
+  <div class="c-top"><div class="c-logo"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></div><span class="c-brand">ADP</span><span class="c-pill">INTERNAL &middot; BO</span><div class="c-tr"><div class="c-bw"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.38)" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg><div class="c-nbadge">2</div></div><div class="c-av" style="background:#ea580c">DC</div></div></div>
+  <div class="c-body"><div class="c-nav"><div class="c-ni"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Dashboard</div><div class="c-ni"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Customers</div><div class="c-ni"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>IP Requests</div><div class="c-ni"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>Tickets</div><div class="c-ni act"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Communication</div><div class="c-nav-foot"><svg width="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" height="11"><polyline points="15 18 9 12 15 6"/></svg>Collapse</div></div><div class="c-content"><div class="sm-screen" style="position:relative">
+  <div class="sm-thread-head">
+    <div>
+      <div class="sm-thread-head__title">
+        <span class="sm-pill sm-pill--reopened"><span class="sm-pill__dot"></span>Reopened</span>
+        Omega delivery failure &mdash; token rotation
+      </div>
+      <div class="sm-thread-head__sub">
+        Omega Electronics &middot; Delivery
+        <div class="sm-av-stack" style="margin-left:6px">
+          <span class="sm-av sm-av--sm" style="background:#5572E8">BO</span>
+          <span class="sm-av sm-av--sm" style="background:#3A9ED0">TC</span>
+          <span class="sm-av sm-av--sm" style="background:#3DAA60">PM</span>
+        </div>
+      </div>
+    </div>
+    <div class="sm-thread-head__actions">
+      <div class="sm-toggle">
+        <button class="is-on">External 1</button>
+        <button>Full 4</button>
+      </div>
+      <div class="sm-menu-trigger"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg></div>
+    </div>
+  </div>
+  <div class="sm-thread">
+    <div class="sm-msg">
+      <span class="sm-av" style="background:#3A9ED0">TC</span>
+      <div class="sm-msg__bubble" style="--sender:#3A9ED0">
+        <div class="sm-msg__head">
+          <span class="sm-msg__name">Engineering</span>
+          <span class="sm-msg__tag sm-msg__tag--update">Update</span>
+          <span class="sm-msg__time">24 Mar</span>
+        </div>
+        <div class="sm-msg__body">Root cause: portal access token expired mid-download. Token rotation queued.</div>
+      </div>
+    </div>
+    <div class="sm-msg">
+      <span class="sm-av" style="background:#3A9ED0">TC</span>
+      <div class="sm-msg__bubble" style="--sender:#D97706">
+        <div class="sm-msg__head">
+          <span class="sm-msg__name">Engineering</span>
+          <span class="sm-msg__tag sm-msg__tag--decision">Decision Request</span>
+          <span class="sm-msg__time">24 Mar</span>
+        </div>
+        <div class="sm-msg__body">Fresh delivery package rebuilt. ETA for re-delivery is 2 hours.</div>
+      </div>
+    </div>
+  </div>
+  <div class="sm-modal-scrim">
+    <div class="sm-modal">
+      <div class="sm-modal__head">
+        <span class="sm-modal__title">Start Customer Thread</span>
+        <span class="sm-modal__close">&times;</span>
+      </div>
+      <div class="sm-modal__body">
+        <div>
+          <span class="sm-modal__label">Subject</span>
+          <div class="sm-modal__field">Omega delivery failure &mdash; token rotation</div>
+        </div>
+        <div class="sm-modal__banner">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:1px;color:var(--sm-accent)"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+          <div><strong>Visibility &mdash;</strong> Thread will go to <strong>Omega Electronics</strong>. All internal members can still view it.</div>
+        </div>
+        <div>
+          <span class="sm-modal__label">External messages as context</span>
+          <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">
+            <label class="sm-modal__ctx"><input type="checkbox" checked><span>Root cause: portal access token expired mid-download. Token rotation queued.</span></label>
+            <label class="sm-modal__ctx"><input type="checkbox" checked><span>Fresh delivery package rebuilt. ETA for re-delivery is 2 hours.</span></label>
+          </div>
+        </div>
+      </div>
+      <div class="sm-modal__foot">
+        <button class="sm-modal__cta">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          Start Customer Thread
+        </button>
+      </div>
+    </div>
+  </div>
+</div></div></div>
+</div></div>
+</div>
+
+
+<!-- ═══ VISUAL: INFORMATION FLOW ═══ -->
+<div style="background:#F7F9FC;padding:80px 0;">
+  <div style="max-width:1200px;margin:0 auto;padding:0 40px;">
+    <div class="cc-rv" style="margin-bottom:48px;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--cc-accent);margin-bottom:12px;display:flex;align-items:center;gap:10px;"><span style="display:inline-block;width:20px;height:1.5px;background:var(--cc-accent)"></span>Information Flow</div>
+      <h2 style="font-family:'DM Serif Display',serif;font-size:clamp(26px,3.5vw,42px);font-weight:800;color:#0A0F1E;letter-spacing:-0.03em;line-height:1.05;margin:0 0 12px;">How information<br>moves through the system.</h2>
+      <p style="font-size:16px;color:#4A5568;line-height:1.7;max-width:520px;">Four layers. Information only flows outward by deliberate action — never automatically.</p>
+    </div>
+    <!-- Flow diagram -->
+    <div class="cc-rv cc-d1" style="position:relative;">
+      <!-- Layer blocks -->
+      <div style="display:flex;flex-direction:column;gap:0;">
+        <!-- Layer 1 -->
+        <div style="display:grid;grid-template-columns:220px 1fr;gap:0;border:1px solid #E8EDF5;border-radius:14px 14px 0 0;overflow:hidden;background:#fff;">
+          <div style="padding:24px;background:#0A0F1E;display:flex;flex-direction:column;justify-content:center;">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:rgba(13,115,119,0.7);text-transform:uppercase;letter-spacing:0.12em;margin-bottom:6px">Layer 01</div>
+            <div style="font-family:'DM Serif Display',serif;font-size:17px;font-weight:700;color:#fff;line-height:1.2">Internal Thread</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:rgba(255,255,255,0.3);margin-top:5px;text-transform:uppercase;letter-spacing:0.08em">Foundation</div>
+          </div>
+          <div style="padding:24px;display:flex;align-items:center;gap:32px;">
+            <div style="flex:1;font-size:13px;color:#4A5568;line-height:1.65">Anchored to customer + lifecycle stage. Started from the workflow page, never a standalone surface. All 6 teams scoped to what they need.</div>
+            <div style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
+              <div style="width:8px;height:8px;border-radius:50%;background:#10B981"></div>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#10B981;font-weight:600;text-transform:uppercase;letter-spacing:0.08em">Internal only</span>
+            </div>
+          </div>
+        </div>
+        <!-- Arrow -->
+        <div style="display:flex;justify-content:center;padding:8px 0;background:#F7F9FC;border-left:1px solid #E8EDF5;border-right:1px solid #E8EDF5;">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:2px;">
+            <div style="width:1px;height:12px;background:#C1C9D8;"></div>
+            <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M0 0L5 6L10 0" fill="#C1C9D8"/></svg>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:8px;color:#C1C9D8;letter-spacing:0.1em;text-transform:uppercase">deliberate action</div>
+          </div>
+        </div>
+        <!-- Layer 2 -->
+        <div style="display:grid;grid-template-columns:220px 1fr;gap:0;border:1px solid #E8EDF5;border-left:1px solid #E8EDF5;border-right:1px solid #E8EDF5;overflow:hidden;background:#fff;">
+          <div style="padding:24px;background:#132030;display:flex;flex-direction:column;justify-content:center;">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:rgba(13,115,119,0.7);text-transform:uppercase;letter-spacing:0.12em;margin-bottom:6px">Layer 02</div>
+            <div style="font-family:'DM Serif Display',serif;font-size:17px;font-weight:700;color:#fff;line-height:1.2">Tagged Messages</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:rgba(255,255,255,0.3);margin-top:5px;text-transform:uppercase;letter-spacing:0.08em">Signal</div>
+          </div>
+          <div style="padding:24px;display:flex;align-items:center;gap:32px;">
+            <div style="flex:1;font-size:13px;color:#4A5568;line-height:1.65">Intent chosen at compose time. Update · Concern · Decision Request · Approving · Escalating. Each tag is a filter axis across every thread.</div>
+            <div style="display:flex;flex-direction:column;gap:4px;flex-shrink:0;">
+              <span style="font-family:'JetBrains Mono',monospace;font-size:9px;background:rgba(13,115,119,0.08);color:var(--cc-accent);padding:2px 8px;border-radius:100px;border:1px solid rgba(13,115,119,0.2)">Update</span>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:9px;background:rgba(234,88,12,0.07);color:#EA580C;padding:2px 8px;border-radius:100px;border:1px solid rgba(234,88,12,0.18)">Concern</span>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:9px;background:rgba(37,99,235,0.07);color:#2563EB;padding:2px 8px;border-radius:100px;border:1px solid rgba(37,99,235,0.18)">Decision</span>
+            </div>
+          </div>
+        </div>
+        <!-- Arrow -->
+        <div style="display:flex;justify-content:center;padding:8px 0;background:#F7F9FC;border-left:1px solid #E8EDF5;border-right:1px solid #E8EDF5;">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:2px;">
+            <div style="width:1px;height:12px;background:#C1C9D8;"></div>
+            <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M0 0L5 6L10 0" fill="#C1C9D8"/></svg>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:8px;color:#C1C9D8;letter-spacing:0.1em;text-transform:uppercase">mark as external</div>
+          </div>
+        </div>
+        <!-- Layer 3 -->
+        <div style="display:grid;grid-template-columns:220px 1fr;gap:0;border:1px solid #E8EDF5;border-left:1px solid #E8EDF5;border-right:1px solid #E8EDF5;overflow:hidden;background:#fff;">
+          <div style="padding:24px;background:#1C3040;display:flex;flex-direction:column;justify-content:center;">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:rgba(13,115,119,0.7);text-transform:uppercase;letter-spacing:0.12em;margin-bottom:6px">Layer 03</div>
+            <div style="font-family:'DM Serif Display',serif;font-size:17px;font-weight:700;color:#fff;line-height:1.2">External Messages</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:rgba(255,255,255,0.3);margin-top:5px;text-transform:uppercase;letter-spacing:0.08em">Default view</div>
+          </div>
+          <div style="padding:24px;display:flex;align-items:center;gap:32px;">
+            <div style="flex:1;font-size:13px;color:#4A5568;line-height:1.65">Messages curated for customer visibility. Default view on thread entry. Selectable as context when starting a Customer Thread.</div>
+            <div style="flex-shrink:0;padding:8px 14px;background:#EFF6FF;border:1px solid rgba(37,99,235,0.2);border-radius:8px;font-family:'JetBrains Mono',monospace;font-size:9px;color:#2563EB;font-weight:600;text-transform:uppercase;letter-spacing:0.08em">Default view</div>
+          </div>
+        </div>
+        <!-- Arrow -->
+        <div style="display:flex;justify-content:center;padding:8px 0;background:#F7F9FC;border-left:1px solid #E8EDF5;border-right:1px solid #E8EDF5;">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:2px;">
+            <div style="width:1px;height:12px;background:#C1C9D8;"></div>
+            <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M0 0L5 6L10 0" fill="#C1C9D8"/></svg>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:8px;color:#C1C9D8;letter-spacing:0.1em;text-transform:uppercase">start customer thread</div>
+          </div>
+        </div>
+        <!-- Layer 4 -->
+        <div style="display:grid;grid-template-columns:220px 1fr;gap:0;border:1px solid rgba(13,115,119,0.4);border-radius:0 0 14px 14px;overflow:hidden;background:rgba(13,115,119,0.03);">
+          <div style="padding:24px;background:var(--cc-accent);display:flex;flex-direction:column;justify-content:center;">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:rgba(255,255,255,0.6);text-transform:uppercase;letter-spacing:0.12em;margin-bottom:6px">Layer 04</div>
+            <div style="font-family:'DM Serif Display',serif;font-size:17px;font-weight:700;color:#fff;line-height:1.2">Customer Thread</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:rgba(255,255,255,0.5);margin-top:5px;text-transform:uppercase;letter-spacing:0.08em">Hard boundary</div>
+          </div>
+          <div style="padding:24px;display:flex;align-items:center;gap:32px;">
+            <div style="flex:1;font-size:13px;color:#2D3650;line-height:1.65">Created from inside an internal thread only. One per thread — enforced architecturally. Customers cannot initiate. This is the only layer customers can see.</div>
+            <div style="flex-shrink:0;padding:8px 14px;background:rgba(13,115,119,0.12);border:1px solid rgba(13,115,119,0.3);border-radius:8px;font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--cc-accent);font-weight:600;text-transform:uppercase;letter-spacing:0.08em;white-space:nowrap">Customer visible</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="cc-divider">
+  <span class="cc-divider-num">04</span>
+  <div class="cc-divider-line"></div>
+  <span style="font-family:'JetBrains Mono',monospace;font-size:9.5px;color:#C1C9D8;letter-spacing:0.1em;text-transform:uppercase">Hard Constraints</span>
+</div>
+<!-- 04 CONSTRAINTS -->
+<section style="background:#FAFAF9;">
+  <div style="max-width:1200px;margin:0 auto;padding:72px 24px;">
+    <div class="reveal">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;color:#2563EB;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:14px;">04 &middot; Hard constraints</div>
+      <h2 style="font-size:clamp(28px,3.5vw,44px);font-weight:700;color:#0F172A;letter-spacing:-0.02em;line-height:1.1;margin:0 0 14px;">Enforced. Not advised.</h2>
+      <p style="font-size:16px;color:#6B7280;line-height:1.7;max-width:600px;margin:0 0 40px;">The customer thread model has architectural boundaries. Not guidelines that erode under pressure.</p>
+    </div>
+    <div class="reveal" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;transition-delay:0.1s;">
+      <div style="padding:22px;border-radius:8px;border:1px solid rgba(5,150,105,.2);background:rgba(5,150,105,.04);">
+        <div style="width:26px;height:26px;border-radius:50%;background:rgba(5,150,105,.12);color:#059669;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;margin-bottom:10px;">&#10003;</div>
+        <div style="font-size:13px;font-weight:600;color:#1E293B;margin-bottom:4px;">Started from inside an internal thread only</div>
+        <div style="font-size:12px;color:#64748B;line-height:1.6;">Never from a standalone surface. The internal thread is the prerequisite. Customer and stage are always known.</div>
+      </div>
+      <div style="padding:22px;border-radius:8px;border:1px solid rgba(5,150,105,.2);background:rgba(5,150,105,.04);">
+        <div style="width:26px;height:26px;border-radius:50%;background:rgba(5,150,105,.12);color:#059669;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;margin-bottom:10px;">&#10003;</div>
+        <div style="font-size:13px;font-weight:600;color:#1E293B;margin-bottom:4px;">External messages as selectable, editable context</div>
+        <div style="font-size:12px;color:#64748B;line-height:1.6;">The team curates what the customer sees. All editable before the thread starts.</div>
+      </div>
+      <div style="padding:22px;border-radius:8px;border:1px solid rgba(37,99,235,.13);background:rgba(37,99,235,.03);">
+        <div style="width:26px;height:26px;border-radius:50%;background:rgba(37,99,235,.1);color:#2563EB;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;margin-bottom:10px;">&times;</div>
+        <div style="font-size:13px;font-weight:600;color:#1E293B;margin-bottom:4px;">Cannot start a second customer thread from the same internal thread</div>
+        <div style="font-size:12px;color:#64748B;line-height:1.6;">One per thread. Enforced architecturally. Multiple threads splits the record and creates lineage ambiguity.</div>
+      </div>
+      <div style="padding:22px;border-radius:8px;border:1px solid rgba(37,99,235,.13);background:rgba(37,99,235,.03);">
+        <div style="width:26px;height:26px;border-radius:50%;background:rgba(37,99,235,.1);color:#2563EB;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;margin-bottom:10px;">&times;</div>
+        <div style="font-size:13px;font-weight:600;color:#1E293B;margin-bottom:4px;">Customers cannot initiate</div>
+        <div style="font-size:12px;color:#64748B;line-height:1.6;">Customers can only be added to a thread that already exists. Architectural boundary, not a permission setting.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="cc-divider">
+  <span class="cc-divider-num">05</span>
+  <div class="cc-divider-line"></div>
+  <span style="font-family:'JetBrains Mono',monospace;font-size:9.5px;color:#C1C9D8;letter-spacing:0.1em;text-transform:uppercase">Learnings</span>
+</div>
+<!-- 05 LEARNINGS -->
+<section style="background:#0A0F1E;padding:96px 0;">
+  <div style="max-width:1200px;margin:0 auto;padding:0 40px;">
+    <div class="cc-rv">
+      <div class="cc-ey cc-ey-lt">05 · Learnings</div>
+      <h2 class="cc-h2 cc-h2-lt" style="margin-bottom:56px">Three things<br>that didn't leave.</h2>
+    </div>
+    <div class="cc-rv cc-d1">
+      <div class="cc-lrn">
+        <div class="cc-lrn-n">1</div>
+        <div class="cc-lrn-t">The hardest problem was the model of initiation. <em>Where a conversation starts shapes everything it can become.</em></div>
+      </div>
+      <div class="cc-lrn">
+        <div class="cc-lrn-n">2</div>
+        <div class="cc-lrn-t">External as the default view was the most contested call. <em>It turned out to be the most important one.</em></div>
+      </div>
+      <div class="cc-lrn">
+        <div class="cc-lrn-n">3</div>
+        <div class="cc-lrn-t">This was not messaging. It was <em>binding</em> — tying every conversation to customer, stage, intent, and outcome so none of it could exist in isolation.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+const pg = document.getElementById("pg");
+window.addEventListener("scroll", () => {
+  const s = window.scrollY, h = document.documentElement.scrollHeight - window.innerHeight;
+  if (pg) pg.style.width = (s / h * 100) + "%";
+}, {passive:true});
+
+const obs = new IntersectionObserver(es => {
+  es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("in"); obs.unobserve(e.target); } });
+}, {threshold: 0.04});
+document.querySelectorAll(".rv, .rv-up").forEach(el => obs.observe(el));
+
+// Reveal for editorial sections (matches TestBench pattern)
+const revealObs = new IntersectionObserver(es => {
+  es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("visible"); revealObs.unobserve(e.target); } });
+}, {threshold: 0.1});
+document.querySelectorAll(".reveal").forEach(el => revealObs.observe(el));
+
+const cobs = new IntersectionObserver(es => {
+  es.forEach(e => {
+    if (!e.isIntersecting) return;
+    const el = e.target, t = +el.dataset.t;
+    if (t === 0) { el.textContent = "0"; cobs.unobserve(el); return; }
+    let c = 0;
+    const ti = setInterval(() => { c++; el.textContent = c; if (c >= t) clearInterval(ti); }, 600 / t);
+    cobs.unobserve(el);
+  });
+}, {threshold: 0.6});
+document.querySelectorAll("[data-t]").forEach(el => cobs.observe(el));
+
+// Architecture layers are static (no accordion)
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+(function() {
+  // Progress bar
+  const pg = document.getElementById('cc-pg');
+  if (pg) {
+    window.addEventListener('scroll', () => {
+      const s = window.scrollY, h = document.documentElement.scrollHeight - window.innerHeight;
+      pg.style.width = (s / h * 100) + '%';
+    }, {passive:true});
+  }
+
+  // Nav
+  const nav = document.getElementById('cc-nav-el');
+  if (nav) {
+    window.addEventListener('scroll', () => nav.classList.toggle('on', window.scrollY > 20), {passive:true});
+  }
+
+  // Hero reveals
+  setTimeout(() => {
+    document.querySelectorAll('#cc-hero-main .cc-rv, #cc-hero-main [class*="cc-rv"]').forEach(el => el.classList.add('cc-in'));
+  }, 100);
+
+  // General reveal
+  const obs = new IntersectionObserver(es => {
+    es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('cc-in'); obs.unobserve(e.target); }});
+  }, {threshold:0.05});
+  document.querySelectorAll('.cc-rv').forEach(el => {
+    if (!el.closest('#cc-hero-main')) obs.observe(el);
+  });
+
+  // Screen section reveals
+  const ssObs = new IntersectionObserver(es => {
+    es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('cc-visible'); ssObs.unobserve(e.target); }});
+  }, {threshold:0.04});
+  document.querySelectorAll('.screen-sec').forEach(el => ssObs.observe(el));
+
+  // Fix the existing progress bar (the original #pg)
+  const pgOld = document.getElementById('pg');
+  if (pgOld) {
+    pgOld.style.display = 'none'; // hide original, ours handles it
+  }
+})();
+}); // DOMContentLoaded
+</script>
+</body>
+</html>
