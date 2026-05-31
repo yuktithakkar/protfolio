@@ -67,7 +67,10 @@ function Landing({ phase, trackRef, onAboutOpen, onCaseOpen }) {
     STAGE_STOPS,
     ['0vw', ...Array(STAGE_STOPS.length - 1).fill('-60vw')],
   )
-  const chromeOpacity = useTransform(scrollYProgress, [0, 0.04, 0.08], [1, 1, 0])
+  // Intro chrome (hero copy + footer) fades out almost immediately once
+  // the user starts scrolling — BEFORE the first card expands — so it
+  // never overlaps the growing card.
+  const chromeOpacity = useTransform(scrollYProgress, [0, 0.008, 0.022], [1, 1, 0])
 
   // Vertical-phase choreography. Tiles are 50vh tall (2 visible at a time).
   //   • The next tile starts peeking in from below AT THE SAME TIME as
@@ -277,14 +280,17 @@ function ScrollCard({ card, index, scrollYProgress, show, onCaseOpen }) {
   // fades OUT 0→1 → 1→0 across the same window the expanded layer fades
   // in. This means once expansion happens, only the landscape composition
   // is visible — no ghosting of the portrait behind it.
+  // Snappy crossfade near the END of the expansion so the collapsed
+  // layer (image for TestBench, vertical label for Comms/Titan) and the
+  // expanded image overlap only briefly — minimal ghosting.
   const expandedOpacity = useTransform(
     scrollYProgress,
-    [activeStop - 0.055, activeStop - 0.005],
+    [activeStop - 0.03, activeStop - 0.005],
     [0, 1],
   )
   const collapsedOpacity = useTransform(
     scrollYProgress,
-    [activeStop - 0.055, activeStop - 0.005],
+    [activeStop - 0.03, activeStop - 0.005],
     [1, 0],
   )
   // Info row fades in as the card becomes active.
@@ -355,32 +361,36 @@ function ScrollCard({ card, index, scrollYProgress, show, onCaseOpen }) {
           : undefined
       }
     >
-      {/* AKARU-pattern: full-bleed image inside the card, staggered
-          vertically via landingY so narrower cards show empty cream at
-          the top with the photograph "sitting lower" in the frame.
-          Crossfade to landscape image as card expands to full screen. */}
-      <motion.div
-        className={`band-card ${card.img ? '' : 'band-card--placeholder'}`}
-        style={{
-          backgroundImage: card.img ? `url(${card.img})` : undefined,
-          backgroundSize: card.imageFit === 'contain' ? 'contain' : 'cover',
-          backgroundRepeat: 'no-repeat',
-          backgroundPosition: 'center top',
-          y: imageY,
-          opacity: card.imgExpanded ? collapsedOpacity : 1,
-          top: bandCardTop,
-          left: bandCardLeft,
-          right: bandCardRight,
-          height: bandCardHeight,
-        }}
-      >
-        {!card.img && (
-          <div className="band-card__placeholder">
-            <span>{card.title}</span>
-            <small>image coming soon</small>
-          </div>
-        )}
-      </motion.div>
+      {/* Collapsed layer. TestBench's collapsed card is wide enough to
+          show its portrait image; the much thinner Comms / Titan cards
+          would only crop/zoom an image, so they show a VERTICAL title
+          label instead. The image appears for those two only once the
+          card expands. */}
+      {card.img && (
+        <motion.div
+          className="band-card"
+          style={{
+            backgroundImage: `url(${card.img})`,
+            backgroundSize: card.imageFit === 'contain' ? 'contain' : 'cover',
+            backgroundRepeat: 'no-repeat',
+            backgroundPosition: 'center top',
+            y: imageY,
+            opacity: card.imgExpanded ? collapsedOpacity : 1,
+            top: bandCardTop,
+            left: bandCardLeft,
+            right: bandCardRight,
+            height: bandCardHeight,
+          }}
+        />
+      )}
+      {card.collapsedLabel && (
+        <motion.div
+          className="band-vlabel"
+          style={{ opacity: collapsedOpacity, color: card.titleColor || undefined }}
+        >
+          <span style={{ transform: `translateY(${card.labelShift || '0'})` }}>{card.title}</span>
+        </motion.div>
+      )}
       {card.imgExpanded && (
         <motion.div
           className="band-card band-card--expanded"
@@ -656,7 +666,8 @@ const CARDS = [
   // staggered landingY so narrower cards (2, 3) show empty cream at the
   // top with the photograph sitting lower in the frame. Crossfade to
   // the landscape expanded image as the card grows to full screen.
-  { id: 'archidomo', bg: '#E2E5EC',
+  // TestBench keeps its collapsed portrait image (its card is wide enough).
+  { id: 'archidomo', bg: '#C1D3E0',   // light dusty blue (palette: cool accent)
     img:         '/landing-cards/test-1.png',
     imgExpanded: '/landing-cards/test-2.png',
     landingY: 0,  year: '2024', type: 'AI RELIABILITY',
@@ -665,23 +676,28 @@ const CARDS = [
     caseId: 'testbench',
     imageFit: 'cover',
     expandedFit: 'cover' },
-  { id: 'orlinski',  bg: '#F6E7DA',   // subtle baby-orange / peach pastel
-    img:         '/landing-cards/comm-1.png',   // collapsed peek
+  // Comms + Titan: collapsed card is too thin for an image, so show a
+  // vertical title label; the image reveals on expand. labelShift keeps
+  // the two labels at DIFFERENT heights (staggered, like the old images).
+  { id: 'orlinski',  bg: '#E3C7BA',   // light terracotta (palette: warm 1)
+    img: null,
+    collapsedLabel: true,
+    labelShift: '-10vh',
     imgExpanded: '/landing-cards/comm-2.png',   // expanded full view
     landingY: 35, year: '2024', type: 'IP LIFECYCLE SAAS',
     desc: 'CONTEXTUAL COMMUNICATION BUILT INTO THE PLATFORM',
-    title: 'Comms Center',
+    title: 'Communication Center',
     caseId: 'comms',
-    imageFit: 'cover',
     expandedFit: 'cover' },
-  { id: 'titan',     bg: '#EDE2C4',   // subtle golden-beige pastel
-    img:         '/landing-cards/crest-1.png',  // collapsed peek
+  { id: 'titan',     bg: '#E3D9BE',   // light soft gold (palette: warm 2)
+    img: null,
+    collapsedLabel: true,
+    labelShift: '12vh',
     imgExpanded: '/landing-cards/crest-2.png',  // expanded full view
     landingY: 55, year: '2024', type: 'PRODUCT · SMARTWATCH',
     desc: 'PREMIUM WATCH-FACE SYSTEM FOR THE TITAN CREST LINE',
     title: 'Titan Crest 2.0',
     caseId: 'titan-crest',
-    imageFit: 'cover',
     expandedFit: 'cover' },
 ]
 

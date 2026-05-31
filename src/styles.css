@@ -1720,6 +1720,31 @@ body.locked-scroll { overflow: hidden; height: 100vh; }
   z-index: 3;
   pointer-events: none;
 }
+/* Vertical title label for the thin collapsed Comms / Titan cards. The
+   name is rotated so it reads up the narrow column, and sized in vh so
+   the full name stays readable at any screen resolution (the collapsed
+   card is full viewport height, so it always has room). Fades out as the
+   card expands and its image takes over. */
+.band-vlabel {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  z-index: 2;
+  pointer-events: none;
+}
+.band-vlabel span {
+  writing-mode: sideways-lr;       /* rotated sideways, glyph tops facing LEFT */
+  white-space: nowrap;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-weight: 600;
+  font-size: clamp(18px, 3.6vh, 38px);
+  letter-spacing: 0.01em;
+  line-height: 1;
+  color: var(--ink);
+}
 /* Titan PEEK — landing state. Typographic + dial-icon teaser. Mirrors
    the floating-white-card aesthetic of the comms peek so the three
    cards read as a coherent system. */
