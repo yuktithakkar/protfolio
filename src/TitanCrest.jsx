@@ -218,7 +218,7 @@ function Moodboard() {
             &ldquo;A face that reads like a mechanical watch, but holds a
             lifetime of information underneath.&rdquo;
           </p>
-          <span className="tc-moodboard__attr">— design direction</span>
+          <span className="tc-moodboard__attr">design direction</span>
         </Reveal>
 
         <Reveal className="tc-persona" delay={120}>

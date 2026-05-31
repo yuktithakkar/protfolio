@@ -59,10 +59,13 @@ function Landing({ phase, trackRef, onAboutOpen, onCaseOpen }) {
   const { scrollYProgress } = useScroll()
   // YUKTI exits left fully by stage 1 — so when Archidomo expands flush
   // to viewport-left, no cream/YUKTI sliver is visible behind it.
+  // YUKTI exits left during the very first expansion (stop 0 → 1) and
+  // stays off-screen for the rest of the timeline. One output value per
+  // STAGE_STOPS entry (lengths must match).
   const yuktiX = useTransform(
     scrollYProgress,
     STAGE_STOPS,
-    ['0vw', '-60vw', '-60vw', '-60vw', '-60vw', '-60vw'],
+    ['0vw', ...Array(STAGE_STOPS.length - 1).fill('-60vw')],
   )
   const chromeOpacity = useTransform(scrollYProgress, [0, 0.04, 0.08], [1, 1, 0])
 
@@ -151,7 +154,7 @@ function VertTilesGroup({ scrollYProgress }) {
   // between the morphed Titan tile and the first vert-tile.
   const y = useTransform(
     scrollYProgress,
-    [STAGE_STOPS[4], STAGE_STOPS[5]],
+    [HERO_STOP, TILE_STOP],
     ['0vh', `-${TILE_H}vh`],
   )
   return (
@@ -263,7 +266,7 @@ function ScrollCard({ card, index, scrollYProgress, show, onCaseOpen }) {
   // back to 0 the moment that card hits its own expansion stage. After
   // that stage it stays at 0 (image stays top-aligned even when the card
   // shrinks again on the left).
-  const activeStop = STAGE_STOPS[index + 1]
+  const activeStop = REACH_STOPS[index]
   const imageY = useTransform(
     scrollYProgress,
     [0, activeStop],
@@ -276,18 +279,18 @@ function ScrollCard({ card, index, scrollYProgress, show, onCaseOpen }) {
   // is visible — no ghosting of the portrait behind it.
   const expandedOpacity = useTransform(
     scrollYProgress,
-    [activeStop - 0.08, activeStop - 0.01],
+    [activeStop - 0.055, activeStop - 0.005],
     [0, 1],
   )
   const collapsedOpacity = useTransform(
     scrollYProgress,
-    [activeStop - 0.08, activeStop - 0.01],
+    [activeStop - 0.055, activeStop - 0.005],
     [1, 0],
   )
   // Info row fades in as the card becomes active.
   const infoOpacity = useTransform(
     scrollYProgress,
-    [activeStop - 0.10, activeStop],
+    [activeStop - 0.06, activeStop],
     [0, 1],
   )
   // Title fades in with the info row, but for Pikko (index 2) it fades
@@ -297,7 +300,7 @@ function ScrollCard({ card, index, scrollYProgress, show, onCaseOpen }) {
   const titleOpacity = isPikko
     ? useTransform(
         scrollYProgress,
-        [activeStop - 0.10, activeStop, STAGE_STOPS[4] - 0.05, STAGE_STOPS[4]],
+        [activeStop - 0.06, activeStop, HERO_STOP - 0.05, HERO_STOP],
         [0, 1, 1, 0],
       )
     : infoOpacity
@@ -309,14 +312,14 @@ function ScrollCard({ card, index, scrollYProgress, show, onCaseOpen }) {
   // fades out in tile mode.
   // Hooks must be called unconditionally — we compute the transforms
   // always and only USE them when isPikko.
-  const tileModeProgress = useTransform(scrollYProgress, [STAGE_STOPS[4], STAGE_STOPS[5]], [0, 1])
+  const tileModeProgress = useTransform(scrollYProgress, [HERO_STOP, TILE_STOP], [0, 1])
   const tileTopMV    = useTransform(tileModeProgress, [0, 1], ['4%', '0%'])
   const tileLeftMV   = useTransform(tileModeProgress, [0, 1], ['0%', '0%'])
   const tileRightMV  = useTransform(tileModeProgress, [0, 1], ['0%', '0%'])
-  const tileHeightMV = useTransform(tileModeProgress, [0, 1], ['78%', '100%'])
+  const tileHeightMV = useTransform(tileModeProgress, [0, 1], ['70%', '100%'])
   const pikkoInfoMV  = useTransform(
     scrollYProgress,
-    [activeStop - 0.10, activeStop, STAGE_STOPS[4] - 0.05, STAGE_STOPS[4]],
+    [activeStop - 0.06, activeStop, HERO_STOP - 0.05, HERO_STOP],
     [0, 1, 1, 0],
   )
   // AKARU-pattern: band-card spans the full width of the band (no
@@ -325,7 +328,7 @@ function ScrollCard({ card, index, scrollYProgress, show, onCaseOpen }) {
   const bandCardTop    = isPikko ? tileTopMV    : '4%'
   const bandCardLeft   = isPikko ? tileLeftMV   : '0%'
   const bandCardRight  = isPikko ? tileRightMV  : '0%'
-  const bandCardHeight = isPikko ? tileHeightMV : '78%'
+  const bandCardHeight = isPikko ? tileHeightMV : '70%'
   const pikkoInfoOpacity = isPikko ? pikkoInfoMV : infoOpacity
 
   // Intro slide-in (during splash 'shift'): card enters from right.
@@ -498,7 +501,7 @@ function ComposedCommsCard({ imageY, collapsedOpacity, expandedOpacity }) {
             </span>
           </div>
           <div className="comms-peek__title">
-            Delivery failure &mdash; token rotation
+            Delivery failure, token rotation
           </div>
           <div className="comms-peek__bubble">
             <span className="comms-peek__av">PM</span>
@@ -528,7 +531,7 @@ function ComposedCommsCard({ imageY, collapsedOpacity, expandedOpacity }) {
             </span>
           </div>
           <div className="comms-card__title">
-            Delivery failure &mdash; token rotation
+            Delivery failure, token rotation
           </div>
           <div className="comms-card__avstack">
             <span className="comms-card__sm-av" style={{ background: '#5572E8' }}>BO</span>
@@ -565,7 +568,7 @@ function ComposedCommsCard({ imageY, collapsedOpacity, expandedOpacity }) {
                   <span>LT</span>
                   <span className="comms-card__tag comms-card__tag--concern">Concern</span>
                 </div>
-                <div className="comms-card__msg-text">Escalation risk &mdash; 6 days.</div>
+                <div className="comms-card__msg-text">Escalation risk, 6 days.</div>
               </div>
             </div>
           </div>
@@ -662,23 +665,23 @@ const CARDS = [
     caseId: 'testbench',
     imageFit: 'cover',
     expandedFit: 'cover' },
-  { id: 'orlinski',  bg: '#E7E1D5',
-    // Awaiting hi-res images (see spec at bottom of file). Until then a
-    // soft solid block keeps the layout intact.
-    img: null,
-    imgExpanded: null,
+  { id: 'orlinski',  bg: '#F6E7DA',   // subtle baby-orange / peach pastel
+    img:         '/landing-cards/comm-1.png',   // collapsed peek
+    imgExpanded: '/landing-cards/comm-2.png',   // expanded full view
     landingY: 35, year: '2024', type: 'IP LIFECYCLE SAAS',
     desc: 'CONTEXTUAL COMMUNICATION BUILT INTO THE PLATFORM',
     title: 'Comms Center',
-    caseId: 'comms' },
-  { id: 'titan',     bg: '#D2C9B5',
-    // Awaiting new hi-res images (see spec at bottom of file).
-    img: null,
-    imgExpanded: null,
+    caseId: 'comms',
+    imageFit: 'cover',
+    expandedFit: 'cover' },
+  { id: 'titan',     bg: '#EDE2C4',   // subtle golden-beige pastel
+    img:         '/landing-cards/crest-1.png',  // collapsed peek
+    imgExpanded: '/landing-cards/crest-2.png',  // expanded full view
     landingY: 55, year: '2024', type: 'PRODUCT · SMARTWATCH',
     desc: 'PREMIUM WATCH-FACE SYSTEM FOR THE TITAN CREST LINE',
     title: 'Titan Crest 2.0',
     caseId: 'titan-crest',
+    imageFit: 'cover',
     expandedFit: 'cover' },
 ]
 
@@ -697,7 +700,11 @@ const TILE_H = 50         // vh — height of each vertical tile (2 visible)
 /* Each card stage = { left, width, top, height } in vw/vh. */
 const _e = EXPANDED, _s = SHRUNK, _g = GUTTER
 const FH = 100   // full-height (vh)
-const CARD_STAGES = [
+/* The 6 KEY states each card passes through (S0 landing … S5 tile).
+   These are the "destinations"; the held timeline below repeats each
+   expanded state so a card sits STEADY for a beat before the next one
+   takes over (see STAGE_STOPS / HOLD_SEQ). */
+const CARD_KEY_STAGES = [
   // Archidomo (index 0)
   [
     { left: 48,                width: 29, top: 0, height: FH },        // 0: landing
@@ -731,11 +738,28 @@ const CARD_STAGES = [
     { left: 0,                 width: PIKKO_LEFT_W, top: 0, height: TILE_H }, // stage 5 — morphs to a tile
   ],
 ]
-/* Six stages over scrollYProgress 0–0.50.
-   Stage 0–4 = horizontal card phase (same as before, just compressed
-   so we have room for the vertical phase in the second half of scroll).
-   Stage 5 = Pikko transitions to become the first tile of the stack. */
-const STAGE_STOPS = [0, 0.10, 0.20, 0.30, 0.40, 0.50]
+/* Held timeline. Each expanded card now DWELLS (stays fully expanded
+   for a beat) before the next card takes over, instead of the cards
+   morphing continuously. We do this by repeating the key state across
+   two consecutive stops:
+
+     stop:  0.00  0.06  0.12 | 0.18  0.24 | 0.30  0.35 | 0.40  0.50
+     state:  S0    S1    S1  |  S2    S2  |  S3    S3  |  S4    S5
+            land  ─expand→ HOLD ─expand→ HOLD ─expand→ HOLD  hero  tile
+
+   Between an "expand" stop and the matching "HOLD" stop the values are
+   identical, so scrolling through that range keeps the card steady.
+   HERO_STOP / TILE_STOP stay at 0.40 / 0.50 so the vertical-tile phase
+   (leftStackY etc., which keys off those scroll positions) is unchanged. */
+const HOLD_SEQ   = [0, 1, 1, 2, 2, 3, 3, 4, 5]
+const STAGE_STOPS = [0, 0.06, 0.12, 0.18, 0.24, 0.30, 0.35, 0.40, 0.50]
+const HERO_STOP = 0.40   // titan reaches its full-left hero state
+const TILE_STOP = 0.50   // titan finishes morphing into the first tile
+const CARD_STAGES = CARD_KEY_STAGES.map((stages) => HOLD_SEQ.map((i) => stages[i]))
+/* The scroll position at which each card REACHES its fully-expanded
+   state (the start of its dwell). Indexed by card: TestBench, Comms,
+   Titan — i.e. the first stop whose held state == that card grown. */
+const REACH_STOPS = [STAGE_STOPS[1], STAGE_STOPS[3], STAGE_STOPS[5]]
 
 /* The 6 image-only tiles that stack BELOW Pikko in the vertical phase.
    Each tile is PIKKO_LEFT_W vw wide × TILE_H vh tall, positioned at
@@ -813,7 +837,7 @@ function Footer({ show, onAboutOpen }) {
       transition={{ duration: 0.6, delay: 0.2, ease }}
     >
       <div className="socials">
-        <a href="https://www.linkedin.com/" target="_blank" rel="noreferrer">LINKEDIN</a>
+        <a href="https://www.linkedin.com/in/yuktirthakkar/" target="_blank" rel="noreferrer">LINKEDIN</a>
         <a href="/yukti-thakkar-resume.pdf" target="_blank" rel="noreferrer">RESUME</a>
         <button
           type="button"

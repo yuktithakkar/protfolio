@@ -49,8 +49,8 @@ export default function AboutPanel({ open, onClose }) {
             <p className="about-hero__lede">
               Designer with 4+ years crafting experiences across wearables,
               health-tech, AI products, and digital platforms. I translate
-              complex problems into intuitive, visually compelling work
-              &mdash; currently designing at Divami after consumer products
+              complex problems into intuitive, visually compelling work,
+              currently designing at Divami after consumer products
               at Titan and freelance collaborations with startups.
             </p>
             <a
@@ -74,10 +74,10 @@ export default function AboutPanel({ open, onClose }) {
               className="g-img g-img--hero"
               style={{
                 backgroundImage: `url(${G_LEFT})`,
-                /* Anchor the window LOW in the image (= crop from the top)
-                   so the face/subject stays visible while the sky above
-                   gets trimmed. */
-                backgroundPosition: '50% 85%',
+                /* Centre the window vertically so the face sits fully in
+                   frame with headroom (verified against the new portrait's
+                   composition). */
+                backgroundPosition: '50% 50%',
               }}
             />
           </div>
@@ -109,7 +109,7 @@ export default function AboutPanel({ open, onClose }) {
               <li className="timeline-row">
                 <div className="timeline-row__when">
                   <span className="timeline-row__year">2025</span>
-                  <span className="timeline-row__range">Sep — Present</span>
+                  <span className="timeline-row__range">Sep - Present</span>
                 </div>
                 <div className="timeline-row__body">
                   <h3 className="timeline-row__role">Product Designer</h3>
@@ -127,14 +127,14 @@ export default function AboutPanel({ open, onClose }) {
               <li className="timeline-row">
                 <div className="timeline-row__when">
                   <span className="timeline-row__year">2025</span>
-                  <span className="timeline-row__range">Jan — Sep</span>
+                  <span className="timeline-row__range">Jan - Sep</span>
                 </div>
                 <div className="timeline-row__body">
                   <h3 className="timeline-row__role">Freelance Product Designer</h3>
                   <p className="timeline-row__where">Startups &amp; small businesses</p>
                   <p className="timeline-row__note">
                     Collaborated with startups and small businesses on product
-                    and web design engagements &mdash; end-to-end solutions
+                    and web design engagements, end-to-end solutions
                     across discovery, UX strategy, wireframing, interface
                     design, and prototyping. Worked directly with founders to
                     define product direction and user-experience requirements.
@@ -144,14 +144,14 @@ export default function AboutPanel({ open, onClose }) {
               <li className="timeline-row">
                 <div className="timeline-row__when">
                   <span className="timeline-row__year">2022</span>
-                  <span className="timeline-row__range">Jul — Dec 2024</span>
+                  <span className="timeline-row__range">Jul - Dec 2024</span>
                 </div>
                 <div className="timeline-row__body">
                   <h3 className="timeline-row__role">Product Designer</h3>
                   <p className="timeline-row__where">Titan Company Ltd.</p>
                   <p className="timeline-row__note">
-                    Contributed to Titan and Fastrack's connected ecosystem
-                    &mdash; smartwatch experiences, companion mobile apps, and
+                    Contributed to Titan and Fastrack's connected ecosystem,
+                    smartwatch experiences, companion mobile apps, and
                     health-focused digital products. Led and supported
                     initiatives across women's health, wellness tracking,
                     watch-face systems, and app modernization, working with
@@ -175,49 +175,35 @@ export default function AboutPanel({ open, onClose }) {
 
         <footer className="about-footer">
           <div className="about-footer__top">
-            <p className="about-footer__eyebrow">LET’S WORK TOGETHER</p>
+            <p className="about-footer__eyebrow">YOU MADE IT THIS FAR</p>
             <h2 className="about-footer__headline">
-              Have a project<br />in mind?
+              Still here?<br />Let&rsquo;s talk.
             </h2>
-            <a className="about-footer__cta" href="mailto:hello@yukti.studio">
+            <a className="about-footer__cta" href="mailto:yuktithakkar247@gmail.com">
               <span>SAY HELLO</span>
               <span className="about-footer__cta-dot" />
             </a>
           </div>
-          <div className="about-footer__grid">
-            <div className="about-footer__col">
-              <p className="about-footer__col-title">STUDIO</p>
-              <p>Yukti Design Studio</p>
-              <p>Bangalore · Remote</p>
+          <nav className="about-footer__nav" aria-label="Footer">
+            <div className="about-footer__nav-group">
+              <button type="button" className="about-footer__navlink" onClick={onClose}>Projects</button>
+              <button
+                type="button"
+                className="about-footer__navlink"
+                onClick={() => scrollRef.current?.scrollTo({ top: 0, behavior: 'smooth' })}
+              >
+                About me
+              </button>
             </div>
-            <div className="about-footer__col">
-              <p className="about-footer__col-title">CONTACT</p>
-              <p>hello@yukti.studio</p>
-              <p>+91 80 0000 0000</p>
+            <div className="about-footer__nav-group">
+              <a href="/yukti-thakkar-resume.pdf" target="_blank" rel="noreferrer">Resume</a>
+              <a href="https://www.linkedin.com/in/yuktirthakkar/" target="_blank" rel="noreferrer">LinkedIn</a>
+              <a href="mailto:yuktithakkar247@gmail.com">yuktithakkar247@gmail.com</a>
             </div>
-            <div className="about-footer__col">
-              <p className="about-footer__col-title">SOCIAL</p>
-              <p>Instagram</p>
-              <p>LinkedIn</p>
-              <p>Twitter</p>
-            </div>
-            <div className="about-footer__col about-footer__col--wide">
-              <p className="about-footer__col-title">NEWSLETTER</p>
-              <form className="about-footer__form" onSubmit={(e) => e.preventDefault()}>
-                <input
-                  type="email"
-                  placeholder="your@email.com"
-                  className="about-footer__input"
-                  aria-label="Email"
-                />
-                <button type="submit" className="about-footer__submit" aria-label="Subscribe">→</button>
-              </form>
-            </div>
-          </div>
+          </nav>
           <div className="about-footer__bottom">
-            <span className="about-footer__mark">YUKTI</span>
-            <span>© 2008 — 2024 · ALL RIGHTS RESERVED</span>
-            <span>BACK TO TOP ↑</span>
+            <span className="about-footer__mark">YUKTI THAKKAR</span>
+            <span>© {new Date().getFullYear()} Yukti Thakkar</span>
           </div>
         </footer>
       </div>

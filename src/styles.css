@@ -256,12 +256,15 @@ body.locked-scroll { overflow: hidden; height: 100vh; }
   line-height: 1;
 }
 
+/* Matches .about-gallery / .about-values column geometry so the
+   explanation text column lines up to the same width + edges as the
+   right-hand image column below it. */
 .about-hero {
   display: grid;
-  grid-template-columns: 1.4fr 1fr;
-  gap: 48px;
+  grid-template-columns: 1fr 0.76fr;
+  gap: 24px;
   align-items: end;
-  padding: 80px 56px 60px;
+  padding: 80px clamp(120px, 13vw, 260px) 60px 56px;
 }
 .about-hero__title {
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
@@ -288,7 +291,8 @@ body.locked-scroll { overflow: hidden; height: 100vh; }
   font-size: 19px;
   line-height: 1.45;
   margin: 0;
-  max-width: 460px;
+  /* Fill the column so the text block matches the image-column width. */
+  max-width: none;
   color: var(--ink);
 }
 .about-hero__cta {
@@ -318,22 +322,24 @@ body.locked-scroll { overflow: hidden; height: 100vh; }
    extent — left top aligns with right-top top, left bottom aligns with
    right-bottom bottom. Combined right column ≈ 70% of the left. */
 .about-gallery {
-  padding: 24px 56px 80px;
+  /* Normal left margin, generous right whitespace — the photos do NOT
+     run edge-to-edge. */
+  padding: 24px clamp(120px, 13vw, 260px) 88px 56px;
   display: grid;
-  grid-template-columns: 1fr 0.7fr;
+  grid-template-columns: 1fr 0.76fr;   /* wide hero, narrower right column */
   gap: 24px;
-  align-items: stretch;     /* lets the columns claim the same height */
+  /* Bottom-align both columns: the hero and the LOWER-right image share
+     one baseline, and the AKARU stagger appears at the TOP (the right
+     column's shorter stack sits lower than the hero's top). */
+  align-items: end;
 }
 .g-col {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 20px;
   min-height: 0;
 }
-/* The right column drives the gallery's overall height (two landscape
-   images at fixed clamp + the gap). The left image stretches to match
-   that same height via height: 100% (within the stretched column). */
-.g-col--right { /* no padding-top — aligned with the left column top */ }
+.g-col--right { /* stagger handled by align-items: end on the grid */ }
 .g-img {
   background-size: cover;
   background-position: center;
@@ -341,27 +347,29 @@ body.locked-scroll { overflow: hidden; height: 100vh; }
   border-radius: 2px;
   image-orientation: from-image;
 }
-/* Left hero — fills the whole column so its top + bottom align with
-   the right column's top + bottom respectively. */
+/* Left hero — one tall portrait; moderate height (not oversized). */
 .g-img--hero {
-  flex: 1;
-  min-height: clamp(376px, 56vh, 576px);
+  height: clamp(420px, 62vh, 680px);
 }
-/* Right stacked landscape images. Each ≈ half the gallery height. */
-.g-img--landscape {
-  flex: 1;
-  min-height: clamp(180px, 28vh, 280px);
+/* Right column landscapes — narrower; the lower one's bottom lines up
+   with the hero's bottom. */
+.g-col--right .g-img--landscape {
+  height: clamp(180px, 26vh, 300px);
 }
 
 /* Experience section — a real timeline on the left, image + year on
    the right. align-items: stretch so the columns share height; inner
    alignment via flexbox so the image lines up with the timeline's top
    and the year lines up with the bottom. */
+/* Shares the EXACT column geometry of .about-gallery (same padding, same
+   1fr / 0.76fr tracks, same gap) so the experience image's left + right
+   edges line up vertically with the gallery's right column above it —
+   the four images read as one aligned grid. */
 .about-values {
-  padding: 80px 56px 80px;
+  padding: 80px clamp(120px, 13vw, 260px) 80px 56px;
   display: grid;
-  grid-template-columns: 1.5fr 1fr;
-  gap: 56px;
+  grid-template-columns: 1fr 0.76fr;
+  gap: 24px;
   align-items: stretch;
 }
 .values-text {
@@ -500,7 +508,7 @@ body.locked-scroll { overflow: hidden; height: 100vh; }
 /* Footer — full black-theme block for contrast against the cream body. */
 .about-footer {
   margin-top: 60px;
-  padding: 90px 56px 36px;
+  padding: 72px 56px 32px;
   background: var(--bg-dark);
   color: var(--bg-cream);
 }
@@ -509,7 +517,7 @@ body.locked-scroll { overflow: hidden; height: 100vh; }
   grid-template-columns: 1fr auto;
   align-items: end;
   gap: 48px;
-  padding-bottom: 72px;
+  padding-bottom: 48px;
   border-bottom: 1px solid rgba(244,240,232,0.18);
 }
 .about-footer__eyebrow {
@@ -555,55 +563,52 @@ body.locked-scroll { overflow: hidden; height: 100vh; }
   display: inline-block;
 }
 
-.about-footer__grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1.4fr;
-  gap: 40px;
-  padding: 56px 0;
+/* Light nav row — section links on the left, quick links + email on the
+   right. No heavy multi-column grid, no newsletter. */
+.about-footer__nav {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 18px 48px;
+  padding: 30px 0;
   border-bottom: 1px solid rgba(244,240,232,0.18);
 }
-.about-footer__col {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  font-size: 15px;
-  line-height: 1.45;
-  color: rgba(244,240,232,0.85);
-}
-.about-footer__col p { margin: 0; }
-.about-footer__col-title {
-  font-size: 12px !important;
-  letter-spacing: 0.2em;
-  color: rgba(244,240,232,0.55) !important;
-  margin: 0 0 6px !important;
-}
-.about-footer__form {
+.about-footer__nav-group {
   display: flex;
   align-items: center;
-  gap: 10px;
-  border-bottom: 1px solid rgba(244,240,232,0.4);
-  padding-bottom: 8px;
-  max-width: 320px;
+  gap: 32px;
 }
-.about-footer__input {
-  flex: 1;
-  background: transparent;
-  border: none;
-  outline: none;
-  color: var(--bg-cream);
+.about-footer__nav a,
+.about-footer__navlink {
   font-family: inherit;
   font-size: 15px;
-  padding: 6px 0;
-}
-.about-footer__input::placeholder { color: rgba(244,240,232,0.45); }
-.about-footer__submit {
-  background: transparent;
+  letter-spacing: 0.02em;
+  color: rgba(244,240,232,0.85);
+  text-decoration: none;
+  background: none;
   border: none;
-  color: var(--bg-cream);
-  font-size: 18px;
+  padding: 0;
   cursor: pointer;
-  padding: 4px 6px;
+  position: relative;
+  transition: color 0.2s ease;
 }
+.about-footer__nav a::after,
+.about-footer__navlink::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  width: 100%;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.25s ease;
+}
+.about-footer__nav a:hover,
+.about-footer__navlink:hover { color: var(--bg-cream); }
+.about-footer__nav a:hover::after,
+.about-footer__navlink:hover::after { transform: scaleX(1); }
 
 .about-footer__bottom {
   display: flex;
@@ -630,7 +635,8 @@ body.locked-scroll { overflow: hidden; height: 100vh; }
   .about-footer { padding: 56px 28px 24px; }
   .about-footer__top { grid-template-columns: 1fr; padding-bottom: 40px; }
   .about-footer__cta { grid-column: 1; grid-row: auto; align-self: flex-start; margin-top: 24px; }
-  .about-footer__grid { grid-template-columns: 1fr 1fr; gap: 32px; padding: 32px 0; }
+  .about-footer__nav { gap: 18px 28px; padding: 26px 0; }
+  .about-footer__nav-group { gap: 24px; flex-wrap: wrap; }
 }
 
 /* ====================================================================
@@ -1670,7 +1676,7 @@ body.locked-scroll { overflow: hidden; height: 100vh; }
   top: 4%;
   left: 0;
   right: 0;
-  height: 78%;
+  height: 70%;
   background-size: cover;
   background-position: center top;
   background-repeat: no-repeat;
@@ -2133,7 +2139,9 @@ body.locked-scroll { overflow: hidden; height: 100vh; }
   position: absolute;
   left: 7%;
   right: 7%;
-  bottom: 18%;
+  /* Sits in the clear coloured band BELOW the image (image ends at 74%),
+     so the IP-lifecycle / type / desc row never overlaps the artwork. */
+  bottom: 21%;
   display: grid;
   grid-template-columns: auto 1fr auto;
   gap: clamp(4px, 1.5cqw, 16px);
