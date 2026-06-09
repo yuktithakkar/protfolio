@@ -744,8 +744,8 @@ const CARDS = [
     expandedFit: 'cover' },
   { id: 'testbench',
     glass: 'rgba(170, 190, 152, 0.40)',          // sage
-    thumb: null,
-    imgExpanded: '/landing-cards/test-2.png',
+    thumb: '/landing-cards/test-1.png',
+    imgExpanded: '/landing-cards/test-3.png',
     labelTop: '42%',
     title: 'Test Bench',
     discipline: 'Product Design · AI',
