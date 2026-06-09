@@ -1,5 +1,5 @@
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 const ease = [0.76, 0, 0.24, 1]
 
@@ -122,8 +122,37 @@ function Landing({ phase, trackRef, onAboutOpen, onCaseOpen }) {
     [0, 1],
   )
 
+  // Cursor-reactive highlight on the fluid background.
+  const landingRef = useRef(null)
+  const handleMove = (e) => {
+    const el = landingRef.current
+    if (!el) return
+    const r = el.getBoundingClientRect()
+    el.style.setProperty('--mx', `${((e.clientX - r.left) / r.width) * 100}%`)
+    el.style.setProperty('--my', `${((e.clientY - r.top) / r.height) * 100}%`)
+  }
+
+  // Make THAKKAR exactly the same rendered width as YUKTI (both scale with
+  // vw, so the matched font-size in vw holds at any viewport).
+  useEffect(() => {
+    const BASE = 13
+    const match = () => {
+      const yt = document.querySelector('.variant-full .yukti-text')
+      const sm = document.querySelector('.surname-mark')
+      if (!yt || !sm) return
+      const yw = yt.getBoundingClientRect().width
+      sm.style.fontSize = `${BASE}vw`
+      const tw = sm.getBoundingClientRect().width
+      if (yw > 0 && tw > 0) sm.style.fontSize = `${(BASE * yw / tw).toFixed(3)}vw`
+    }
+    const t = setTimeout(match, 3500)      // after the splash settles (YUKTI at rest)
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => setTimeout(match, 120))
+    window.addEventListener('resize', match)
+    return () => { clearTimeout(t); window.removeEventListener('resize', match) }
+  }, [])
+
   return (
-    <div className="landing">
+    <div className="landing" ref={landingRef} onMouseMove={handleMove}>
       <motion.div
         style={{
           x: yuktiX,
@@ -131,6 +160,7 @@ function Landing({ phase, trackRef, onAboutOpen, onCaseOpen }) {
         }}
       >
         <YuktiWord centred={yuktiCentred} />
+        <Surname show={chromeIn} />
       </motion.div>
       {/* Left column: cards + 6 image-only tiles, all translate Y in
           vertical phase. The vert-tiles get an extra counter-translate
@@ -258,6 +288,53 @@ function BandsArea({ scrollYProgress, show, onCaseOpen }) {
   )
 }
 
+/* Recreated TestBench product dashboard — a crisp HTML/CSS "peek" of the
+   real case-study screen (agent header + score + metric tiles + trend),
+   sized in cqw so it scales with the card. Used as the collapsed visual. */
+function TestBenchPeek() {
+  return (
+    <div className="tb-peek">
+      <div className="tb-peek__head">
+        <span className="tb-peek__ic" />
+        <span className="tb-peek__nm">Customer Support Agent</span>
+        <span className="tb-peek__pill">94%</span>
+      </div>
+      <div className="tb-peek__sub">Production · v2 · cs-prod-001</div>
+      <div className="tb-peek__tiles">
+        <div className="tb-peek__tile"><span className="tb-peek__tl">Accuracy</span><span className="tb-peek__tv">92%<i>+3</i></span></div>
+        <div className="tb-peek__tile"><span className="tb-peek__tl">Safety</span><span className="tb-peek__tv">95%<i>+1</i></span></div>
+        <div className="tb-peek__tile"><span className="tb-peek__tl">Pass rate</span><span className="tb-peek__tv">91%</span></div>
+      </div>
+      <div className="tb-peek__spark">
+        {[40, 60, 45, 75, 65, 88, 72, 95].map((h, i) => (
+          <span key={i} style={{ height: `${h}%` }} />
+        ))}
+      </div>
+      <div className="tb-peek__div" />
+      <div className="tb-peek__runs">
+        <div className="tb-peek__run">
+          <span className="tb-peek__rdot" />
+          <span className="tb-peek__rid">TC-014</span>
+          <span className="tb-peek__rlbl">Refund policy</span>
+          <span className="tb-peek__rtag tb-peek__rtag--ok">Pass</span>
+        </div>
+        <div className="tb-peek__run">
+          <span className="tb-peek__rdot tb-peek__rdot--warn" />
+          <span className="tb-peek__rid">TC-011</span>
+          <span className="tb-peek__rlbl">PII exposure</span>
+          <span className="tb-peek__rtag tb-peek__rtag--warn">Flag</span>
+        </div>
+        <div className="tb-peek__run">
+          <span className="tb-peek__rdot" />
+          <span className="tb-peek__rid">TC-009</span>
+          <span className="tb-peek__rlbl">Tone &amp; empathy</span>
+          <span className="tb-peek__rtag tb-peek__rtag--ok">Pass</span>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 function ScrollCard({ card, index, scrollYProgress, show, onCaseOpen }) {
   const stages = CARD_STAGES[index]
   const left   = useTransform(scrollYProgress, STAGE_STOPS, stages.map(s => `${s.left}vw`))
@@ -343,10 +420,10 @@ function ScrollCard({ card, index, scrollYProgress, show, onCaseOpen }) {
   const handleClick = clickable ? () => onCaseOpen(card.caseId) : undefined
   return (
     <motion.div
-      className={`band band--${index + 1}${clickable ? ' is-clickable' : ''}`}
+      className={`band band--glass band--${index + 1}${clickable ? ' is-clickable' : ''}`}
       style={{
         position: 'absolute',
-        background: card.bg,
+        background: card.glass,
         left, width, top, height,
       }}
       initial={{ x: '100vw' }}
@@ -361,36 +438,22 @@ function ScrollCard({ card, index, scrollYProgress, show, onCaseOpen }) {
           : undefined
       }
     >
-      {/* Collapsed layer. TestBench's collapsed card is wide enough to
-          show its portrait image; the much thinner Comms / Titan cards
-          would only crop/zoom an image, so they show a VERTICAL title
-          label instead. The image appears for those two only once the
-          card expands. */}
-      {card.img && (
-        <motion.div
-          className="band-card"
-          style={{
-            backgroundImage: `url(${card.img})`,
-            backgroundSize: card.imageFit === 'contain' ? 'contain' : 'cover',
-            backgroundRepeat: 'no-repeat',
-            backgroundPosition: 'center top',
-            y: imageY,
-            opacity: card.imgExpanded ? collapsedOpacity : 1,
-            top: bandCardTop,
-            left: bandCardLeft,
-            right: bandCardRight,
-            height: bandCardHeight,
-          }}
+      {/* Collapsed visual: square thumbnail + vertical name (title +
+          discipline) at the card's staggered start. Fades out as the card
+          expands and the full case-study image takes over. */}
+      <motion.div
+        className="band-collapsed"
+        style={{ opacity: collapsedOpacity, top: card.labelTop }}
+      >
+        <div
+          className={`band-thumb${card.thumb ? ' has-thumb' : ''}`}
+          style={card.thumb ? { backgroundImage: `url(${card.thumb})` } : undefined}
         />
-      )}
-      {card.collapsedLabel && (
-        <motion.div
-          className="band-vlabel"
-          style={{ opacity: collapsedOpacity, color: card.titleColor || undefined }}
-        >
-          <span style={{ transform: `translateY(${card.labelShift || '0'})` }}>{card.title}</span>
-        </motion.div>
-      )}
+        <div className="band-vname">
+          <span className="band-vname__title">{card.title}</span>
+          <span className="band-vname__disc">{card.discipline}</span>
+        </div>
+      </motion.div>
       {card.imgExpanded && (
         <motion.div
           className="band-card band-card--expanded"
@@ -406,21 +469,16 @@ function ScrollCard({ card, index, scrollYProgress, show, onCaseOpen }) {
           }}
         />
       )}
-      <motion.div
-        className="band-info"
-        style={{ opacity: isPikko ? pikkoInfoOpacity : infoOpacity, color: card.titleColor || undefined }}
-      >
-        <span className="band-year">{card.year}</span>
-        <span className="band-type">{card.type}</span>
-        <span className="band-desc">{card.desc}</span>
+      {/* Expanded footer: title + discipline + a clear case-study CTA so
+          it's obvious the card is clickable. */}
+      <motion.div className="band-foot" style={{ opacity: pikkoInfoOpacity }}>
+        <div className="band-foot__txt">
+          <span className="band-foot__title">{card.title}</span>
+          <span className="band-foot__disc">{card.discipline}</span>
+        </div>
+        <span className="band-foot__cta">View case study <span aria-hidden>&rarr;</span></span>
       </motion.div>
-      <motion.h2
-        className="band-title"
-        style={{ opacity: titleOpacity, color: card.titleColor || undefined }}
-      >
-        {card.title}
-      </motion.h2>
-      <span className="band-page" style={{ color: card.titleColor || undefined }}>{`0${index + 1}`}</span>
+      <span className="band-num">{`0${index + 1}`}</span>
     </motion.div>
   )
 }
@@ -661,43 +719,37 @@ function YuktiWord({ centred, variant = 'full' }) {
    and a card becomes "active" (its expansion stage), its image
    translateY animates back to 0, so the image moves UP to the top of
    the now-larger card. Text below the image fades in at the same time. */
+/* Three tinted-glass cards (frosted over the fluid background). Collapsed,
+   each shows a square thumbnail + vertical name at a STAGGERED start; on
+   scroll the card expands and crossfades to the full case-study image.
+   Ordered by name length so the widest card carries the longest name. */
 const CARDS = [
-  // AKARU-pattern: each card uses a single portrait landing image with
-  // staggered landingY so narrower cards (2, 3) show empty cream at the
-  // top with the photograph sitting lower in the frame. Crossfade to
-  // the landscape expanded image as the card grows to full screen.
-  // TestBench keeps its collapsed portrait image (its card is wide enough).
-  { id: 'archidomo', bg: '#C1D3E0',   // light dusty blue (palette: cool accent)
-    img:         '/landing-cards/test-1.png',
-    imgExpanded: '/landing-cards/test-2.png',
-    landingY: 0,  year: '2024', type: 'AI RELIABILITY',
-    desc: 'EVALUATION PLATFORM FOR ENTERPRISE AI AGENTS',
-    title: 'TestBench',
-    caseId: 'testbench',
-    imageFit: 'cover',
-    expandedFit: 'cover' },
-  // Comms + Titan: collapsed card is too thin for an image, so show a
-  // vertical title label; the image reveals on expand. labelShift keeps
-  // the two labels at DIFFERENT heights (staggered, like the old images).
-  { id: 'orlinski',  bg: '#E3C7BA',   // light terracotta (palette: warm 1)
-    img: null,
-    collapsedLabel: true,
-    labelShift: '-10vh',
-    imgExpanded: '/landing-cards/comm-2.png',   // expanded full view
-    landingY: 35, year: '2024', type: 'IP LIFECYCLE SAAS',
-    desc: 'CONTEXTUAL COMMUNICATION BUILT INTO THE PLATFORM',
+  { id: 'comms',
+    glass: 'rgba(160, 176, 214, 0.40)',          // periwinkle
+    thumb: '/landing-cards/comm-thumb.png',
+    imgExpanded: '/landing-cards/comm-3.png',
+    labelTop: '12%',
     title: 'Communication Center',
+    discipline: 'UX · SaaS',
     caseId: 'comms',
     expandedFit: 'cover' },
-  { id: 'titan',     bg: '#E3D9BE',   // light soft gold (palette: warm 2)
-    img: null,
-    collapsedLabel: true,
-    labelShift: '12vh',
-    imgExpanded: '/landing-cards/crest-2.png',  // expanded full view
-    landingY: 55, year: '2024', type: 'PRODUCT · SMARTWATCH',
-    desc: 'PREMIUM WATCH-FACE SYSTEM FOR THE TITAN CREST LINE',
+  { id: 'titan',
+    glass: 'rgba(190, 172, 206, 0.40)',          // lilac
+    thumb: '/landing-cards/crest-thumb.png',
+    imgExpanded: '/landing-cards/crest-3.png',
+    labelTop: '27%',
     title: 'Titan Crest 2.0',
+    discipline: 'UI · Watch Faces',
     caseId: 'titan-crest',
+    expandedFit: 'cover' },
+  { id: 'testbench',
+    glass: 'rgba(170, 190, 152, 0.40)',          // sage
+    thumb: null,
+    imgExpanded: '/landing-cards/test-2.png',
+    labelTop: '42%',
+    title: 'Test Bench',
+    discipline: 'Product Design · AI',
+    caseId: 'testbench',
     expandedFit: 'cover' },
 ]
 
@@ -723,7 +775,7 @@ const FH = 100   // full-height (vh)
 const CARD_KEY_STAGES = [
   // Archidomo (index 0)
   [
-    { left: 48,                width: 29, top: 0, height: FH },        // 0: landing
+    { left: 56.5,              width: 18, top: 0, height: FH },        // 0: landing (CC, widest)
     { left: 0,                 width: _e, top: 0, height: FH },        // 1: expanded
     { left: 0,                 width: _s, top: 0, height: FH },        // 2: shrunk
     { left: 0,                 width: _s, top: 0, height: FH },        // 3: still shrunk
@@ -732,7 +784,7 @@ const CARD_KEY_STAGES = [
   ],
   // Orlinski (index 1)
   [
-    { left: 77,                width: 13.5, top: 0, height: FH },
+    { left: 74.5,              width: 13.5, top: 0, height: FH },     // 0: landing (Titan, middle)
     { left: _e + _g,           width: _s, top: 0, height: FH },
     { left: _s + _g,           width: _e, top: 0, height: FH },
     { left: _s + _g,           width: _s, top: 0, height: FH },
@@ -746,7 +798,7 @@ const CARD_KEY_STAGES = [
   // (handled in JSX), and the leftStackY scroll continues to push the
   // whole strip upward. Visually it becomes the first of the 6 tiles.
   [
-    { left: 90.5,              width: 9.5,          top: 0, height: FH },
+    { left: 88,                width: 12,           top: 0, height: FH },     // 0: landing (Test Bench, flush right)
     { left: _e + _g + _s + _g, width: _s,           top: 0, height: FH },
     { left: _s + _g + _e + _g, width: _s,           top: 0, height: FH },
     { left: 2 * (_s + _g),     width: _e,           top: 0, height: FH },
@@ -820,7 +872,7 @@ function Copy({ show }) {
       className="hero-copy"
       initial={{ opacity: 0, y: 10 }}
       animate={show ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.6, delay: 0.15, ease }}
+      transition={{ duration: 0.6, delay: 0.3, ease }}
     >
       Product designer exploring interaction, behavior, and how intelligence
       is shaping the experiences we build beyond static screens.
@@ -837,7 +889,7 @@ function Surname({ show }) {
       className="surname-mark"
       initial={{ opacity: 0, y: 8 }}
       animate={show ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.7, delay: 0.6, ease }}
+      transition={{ duration: 0.6, delay: 0, ease }}
     >
       THAKKAR
     </motion.div>
@@ -850,17 +902,17 @@ function Footer({ show, onAboutOpen }) {
       className="landing__footer"
       initial={{ opacity: 0, y: 10 }}
       animate={show ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.6, delay: 0.2, ease }}
+      transition={{ duration: 0.6, delay: 0.5, ease }}
     >
       <div className="socials">
-        <a href="https://www.linkedin.com/in/yuktirthakkar/" target="_blank" rel="noreferrer">LINKEDIN</a>
-        <a href="/yukti-thakkar-resume.pdf" target="_blank" rel="noreferrer">RESUME</a>
+        <a href="https://www.linkedin.com/in/yuktirthakkar/" target="_blank" rel="noreferrer">LinkedIn<span className="socials__ar" aria-hidden>&rarr;</span></a>
+        <a href="/yukti-thakkar-resume.pdf" target="_blank" rel="noreferrer">Resume<span className="socials__ar" aria-hidden>&rarr;</span></a>
         <button
           type="button"
           className="socials__btn"
           onClick={onAboutOpen}
         >
-          ABOUT ME
+          About me<span className="socials__ar" aria-hidden>&rarr;</span>
         </button>
       </div>
     </motion.footer>

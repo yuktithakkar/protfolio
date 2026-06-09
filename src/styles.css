@@ -1556,7 +1556,46 @@ body.locked-scroll { overflow: hidden; height: 100vh; }
 .landing {
   position: absolute;
   inset: 0;
-  background: var(--bg-cream);
+  overflow: hidden;
+  /* Fluid colour field that the glass cards frost over. */
+  background:
+    radial-gradient(40% 48% at 14% 24%, rgba(160,176,214,0.50), transparent 70%),
+    radial-gradient(42% 46% at 58% 70%, rgba(190,172,206,0.42), transparent 70%),
+    radial-gradient(48% 52% at 90% 24%, rgba(170,190,152,0.50), transparent 70%),
+    radial-gradient(38% 40% at 36% 92%, rgba(186,198,220,0.40), transparent 70%),
+    #E8E9E4;
+}
+/* Cursor-reactive soft highlight (interactive). */
+.landing::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(26% 34% at var(--mx, 30%) var(--my, 38%), rgba(255,255,255,0.45), transparent 70%);
+  transition: background 0.18s ease-out;
+}
+/* Slow drifting blob (fluid motion). */
+.landing::after {
+  content: "";
+  position: absolute;
+  width: 55vw;
+  height: 55vw;
+  left: 18%;
+  top: 8%;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(circle, rgba(190,172,206,0.32), transparent 60%);
+  filter: blur(46px);
+  animation: floatBlob 24s ease-in-out infinite alternate;
+}
+@keyframes floatBlob {
+  0%   { transform: translate(0, 0) scale(1); }
+  50%  { transform: translate(8vw, 7vh) scale(1.14); }
+  100% { transform: translate(-6vw, 4vh) scale(0.94); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .landing::after { animation: none; }
 }
 
 /* Top nav */
@@ -1620,15 +1659,19 @@ body.locked-scroll { overflow: hidden; height: 100vh; }
    YUKTI and left-aligned with its left visual edge. Appears AFTER the
    splash settles (driven by chromeIn). Light weight, much smaller than
    the surname so it sits quietly. */
+/* THAKKAR is the second line of the wordmark: same left edge AND ~same
+   width as YUKTI, stacked tightly beneath it. Sized in vw (like the YUKTI
+   SVG) so the two stay proportional at any width. */
 .surname-mark {
   position: absolute;
-  top: calc(50% + 13vw);
-  left: 3vw;
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  font-weight: 300;
-  font-size: clamp(20px, 2.6vw, 38px);
-  letter-spacing: 0.04em;
-  color: rgba(0,0,0,0.55);
+  top: calc(50% + 4vw);
+  left: 4vw;                  /* T aligns with YUKTI's Y (glyph side-bearing) */
+  font-family: 'Anton', 'Bebas Neue', Impact, sans-serif;
+  font-weight: 400;
+  font-size: 13vw;            /* base; JS fine-tunes to match YUKTI's width exactly */
+  letter-spacing: -0.01em;
+  line-height: 0.92;
+  color: var(--ink);
   pointer-events: none;
   z-index: 6;
 }
@@ -1639,9 +1682,9 @@ body.locked-scroll { overflow: hidden; height: 100vh; }
 /* Hero descriptive copy */
 .hero-copy {
   position: absolute;
-  left: 64px;
-  bottom: 120px;
-  max-width: 460px;
+  left: 6vw;
+  bottom: 56px;
+  max-width: 420px;
   font-size: 17px;
   line-height: 1.5;
   color: var(--ink);
@@ -1663,6 +1706,69 @@ body.locked-scroll { overflow: hidden; height: 100vh; }
   overflow: hidden;
   will-change: left, width, transform;
   container-type: inline-size;   /* lets text inside size by card width */
+}
+/* Frosted-glass card over the fluid background. */
+.band--glass {
+  backdrop-filter: blur(16px) saturate(1.4);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+  border-left: 1px solid rgba(255, 255, 255, 0.4);
+}
+/* Collapsed content: square thumbnail + vertical name, centred in the
+   column at the card's staggered start (inline `top`). */
+.band-collapsed {
+  position: absolute;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  z-index: 2;
+  pointer-events: none;
+}
+.band-thumb {
+  width: 58%;
+  aspect-ratio: 1;
+  border-radius: 14px;
+  background-color: rgba(255, 255, 255, 0.42);
+  background-size: cover;
+  background-position: center;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 8px 24px rgba(40, 50, 70, 0.10);
+}
+/* When a real thumbnail image is set: it already carries its own rounded
+   corners + transparent background, so drop the box chrome and use a
+   drop-shadow that follows the image's actual shape. */
+.band-thumb.has-thumb {
+  background-color: transparent;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  filter: drop-shadow(0 12px 26px rgba(40, 50, 70, 0.18));
+}
+.band-vname {
+  display: flex;
+  flex-direction: row;
+  gap: 11px;
+  align-items: flex-start;
+}
+.band-vname__title {
+  writing-mode: sideways-lr;
+  font-family: 'DM Serif Display', Georgia, serif;
+  font-size: clamp(18px, 1.7vw, 26px);
+  line-height: 1;
+  color: var(--ink);
+}
+.band-vname__disc {
+  writing-mode: sideways-lr;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600;
+  font-size: clamp(8px, 0.66vw, 11px);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink);
+  opacity: 0.55;
+  line-height: 1;
 }
 
 /* All cards are rectangular for visual consistency. Each card gets its
@@ -1729,22 +1835,174 @@ body.locked-scroll { overflow: hidden; height: 100vh; }
   position: absolute;
   inset: 0;
   display: flex;
+  flex-direction: row;       /* serif title + discipline as two vertical lines */
   align-items: center;
   justify-content: center;
+  gap: 16px;
   overflow: hidden;
   z-index: 2;
   pointer-events: none;
 }
-.band-vlabel span {
+.band-vlabel__title {
   writing-mode: sideways-lr;       /* rotated sideways, glyph tops facing LEFT */
   white-space: nowrap;
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  font-weight: 600;
-  font-size: clamp(18px, 3.6vh, 38px);
-  letter-spacing: 0.01em;
+  font-family: 'DM Serif Display', Georgia, serif;
+  font-weight: 400;
+  font-size: clamp(20px, 3.4vh, 34px);
   line-height: 1;
   color: var(--ink);
 }
+.band-vlabel__disc {
+  writing-mode: sideways-lr;
+  white-space: nowrap;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 500;
+  font-size: clamp(8px, 1.3vh, 12px);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  line-height: 1;
+  color: var(--ink);
+  opacity: 0.5;
+}
+
+/* Index number, top-left of each card. */
+.band-num {
+  position: absolute;
+  top: 5%;
+  left: 6%;
+  z-index: 3;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  color: var(--ink);
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* Collapsed label for the wide peek (TestBench) card. */
+.band-flabel {
+  position: absolute;
+  left: 8%;
+  bottom: 13%;          /* sits clear above the landing footer divider line */
+  z-index: 3;
+  color: var(--ink);
+  pointer-events: none;
+}
+.band-flabel__title {
+  display: block;
+  font-family: 'DM Serif Display', Georgia, serif;
+  font-size: clamp(22px, 7cqw, 40px);
+  line-height: 1;
+}
+.band-flabel__disc {
+  display: block;
+  margin-top: 9px;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 500;
+  font-size: clamp(9px, 2.1cqw, 13px);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  opacity: 0.55;
+}
+
+/* Expanded-state footer: title + discipline + case-study CTA. */
+.band-foot {
+  position: absolute;
+  left: 6%;
+  right: 6%;
+  bottom: 6%;
+  z-index: 3;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  color: var(--ink);
+  pointer-events: none;
+}
+.band-foot__title {
+  display: block;
+  font-family: 'DM Serif Display', Georgia, serif;
+  font-size: clamp(20px, 3.2cqw, 42px);
+  line-height: 1;
+}
+.band-foot__disc {
+  display: block;
+  margin-top: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 500;
+  font-size: clamp(9px, 1cqw, 13px);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  opacity: 0.55;
+}
+.band-foot__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 22px;
+  border: 1px solid rgba(31, 36, 32, 0.45);
+  border-radius: 999px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* Recreated TestBench dashboard peek — sized in cqw so it scales with the
+   card width (the .band has container-type: inline-size). Centred in the
+   space above the label so it fills the tall card instead of floating at
+   the top with empty space below. */
+.band-peek {
+  position: absolute;
+  left: 0; right: 0; top: 6%; bottom: 26%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  pointer-events: none;
+}
+/* Collapsed TestBench artwork — shown fully (contain) and centred in the
+   space above the label, so the whole portrait composition is visible. */
+.band-shot {
+  width: 100%;
+  height: 100%;
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.tb-peek {
+  position: relative;
+  width: 88%;
+  background: #fff;
+  border-radius: 2.4cqw;
+  padding: 3cqw 3.2cqw;
+  box-shadow: 0 10px 30px rgba(20, 30, 60, 0.14);
+}
+.tb-peek__head { display: flex; align-items: center; gap: 1.8cqw; }
+.tb-peek__ic { width: 4.6cqw; height: 4.6cqw; border-radius: 1.4cqw; background: linear-gradient(135deg, #4F7CFF, #1D4ED8); flex-shrink: 0; }
+.tb-peek__nm { font-size: 2.7cqw; font-weight: 600; color: #0F172A; }
+.tb-peek__pill { margin-left: auto; background: #ECFDF5; color: #10B981; border: 1px solid rgba(16,185,129,0.25); font-family: 'JetBrains Mono', monospace; font-size: 2.2cqw; font-weight: 600; padding: 0.5cqw 1.6cqw; border-radius: 100px; }
+.tb-peek__sub { font-family: 'JetBrains Mono', monospace; font-size: 1.85cqw; letter-spacing: 0.08em; color: #94A3B8; text-transform: uppercase; margin: 1.2cqw 0 2.6cqw 6.4cqw; }
+.tb-peek__tiles { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.85cqw; }
+.tb-peek__tile { background: #F8FAFC; border: 1px solid #E8EDF5; border-radius: 1.6cqw; padding: 1.85cqw 2cqw; }
+.tb-peek__tl { display: block; font-family: 'JetBrains Mono', monospace; font-size: 1.6cqw; font-weight: 600; letter-spacing: 0.08em; color: #94A3B8; text-transform: uppercase; }
+.tb-peek__tv { display: flex; align-items: baseline; gap: 1cqw; font-size: 3.7cqw; font-weight: 600; color: #0F172A; margin-top: 0.7cqw; }
+.tb-peek__tv i { font-style: normal; font-size: 1.85cqw; font-weight: 600; color: #10B981; }
+.tb-peek__spark { display: flex; align-items: flex-end; gap: 0.7cqw; height: 6cqw; margin-top: 2.2cqw; }
+.tb-peek__spark span { flex: 1; background: #EFF6FF; border-top: 2px solid #4F7CFF; border-radius: 1px 1px 0 0; }
+.tb-peek__div { height: 1px; background: #EEF1F6; margin: 2.6cqw 0 2cqw; }
+.tb-peek__runs { display: flex; flex-direction: column; gap: 1.9cqw; }
+.tb-peek__run { display: flex; align-items: center; gap: 1.6cqw; }
+.tb-peek__rdot { width: 1.5cqw; height: 1.5cqw; border-radius: 50%; background: #10B981; flex-shrink: 0; }
+.tb-peek__rdot--warn { background: #F59E0B; }
+.tb-peek__rid { font-family: 'JetBrains Mono', monospace; font-size: 1.7cqw; font-weight: 600; color: #475569; }
+.tb-peek__rlbl { flex: 1; font-size: 2cqw; color: #64748B; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tb-peek__rtag { font-family: 'JetBrains Mono', monospace; font-size: 1.5cqw; font-weight: 600; padding: 0.4cqw 1.3cqw; border-radius: 100px; }
+.tb-peek__rtag--ok { background: #ECFDF5; color: #10B981; }
+.tb-peek__rtag--warn { background: #FEF3E2; color: #D97706; }
 /* Titan PEEK — landing state. Typographic + dial-icon teaser. Mirrors
    the floating-white-card aesthetic of the comms peek so the three
    cards read as a coherent system. */
@@ -2225,8 +2483,8 @@ body.locked-scroll { overflow: hidden; height: 100vh; }
 /* Footer */
 .landing__footer {
   position: absolute;
-  left: 64px;
-  right: 18px;
+  left: 6vw;
+  right: 6vw;
   bottom: 30px;
   display: flex;
   align-items: center;
@@ -2236,21 +2494,44 @@ body.locked-scroll { overflow: hidden; height: 100vh; }
   letter-spacing: 0.12em;
   z-index: 7;
 }
-.socials  { display: flex; gap: 56px; align-items: center; }
+.socials  { display: flex; gap: 40px; align-items: center; }
 .socials a,
 .socials__btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   color: inherit;
   text-decoration: none;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.12em;
   font: inherit;
   background: none;
   border: none;
-  padding: 0;
+  padding: 0 0 3px;
   cursor: pointer;
-  transition: opacity 0.2s ease;
 }
-.socials a:hover,
-.socials__btn:hover { opacity: 0.6; }
+/* Animated underline so it clearly reads as a link, without a bulky button. */
+.socials a::after,
+.socials__btn::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.28s ease;
+}
+.socials a:hover::after,
+.socials__btn:hover::after { transform: scaleX(1); }
+.socials__ar {
+  font-size: 0.92em;
+  transition: transform 0.25s ease;
+}
+.socials a:hover .socials__ar,
+.socials__btn:hover .socials__ar { transform: translate(3px, -2px); }
 
 /* --- Black cover that retracts --- */
 .cover {
