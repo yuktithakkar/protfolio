@@ -3,14 +3,12 @@ import { useEffect, useRef } from 'react'
 
 const ease = [0.76, 0, 0.24, 1]
 
-// AKARU-pattern gallery: one large portrait on the LEFT (~50% wide,
-// full height of the hero gallery), two landscape images stacked on
-// the RIGHT (top + bottom). Three images total — the visual rhythm
-// matches akaru.fr's About page.
-const G_LEFT      = '/about/1.jpeg'   // Yukti — portrait, hero of the trio
-const G_RIGHT_TOP = '/about/3.jpeg'   // beach, landscape
-const G_RIGHT_BOT = '/about/2.jpeg'   // sunset/sky, landscape
-const VALUES_IMG  = '/about/4.jpeg'   // 4th picture, used in values section
+// Gallery: a simple two-up — portrait on the LEFT, landscape on the
+// RIGHT, equal heights side by side. The third photo now sits beside
+// the experience timeline below.
+const G_LEFT     = '/about/1.jpeg'   // Yukti — portrait
+const G_RIGHT    = '/about/2.jpeg'   // sunset/sky, landscape
+const VALUES_IMG = '/about/3.jpeg'   // beside the experience timeline
 
 // About panel: slides in from the right when the user clicks the CTA at
 // the end of the splash scroll. It's its own self-contained vertical-
@@ -65,41 +63,27 @@ export default function AboutPanel({ open, onClose }) {
           </div>
         </section>
 
-        <section className="about-gallery">
-          {/* AKARU layout: one big portrait on the left, two landscape
-              images stacked on the right. The right column starts at
-              roughly 1/3 down so it staggers against the left column. */}
-          <div className="g-col g-col--left">
-            <div
-              className="g-img g-img--hero"
-              style={{
-                backgroundImage: `url(${G_LEFT})`,
-                /* Centre the window vertically so the face sits fully in
-                   frame with headroom (verified against the new portrait's
-                   composition). */
-                backgroundPosition: '50% 50%',
-              }}
-            />
-          </div>
-          <div className="g-col g-col--right">
-            <div
-              className="g-img g-img--landscape"
-              style={{
-                backgroundImage: `url(${G_RIGHT_TOP})`,
-                /* Anchor mid-low so the figure has breathing room from
-                   the top edge (85% pulled her too close to it). */
-                backgroundPosition: '50% 65%',
-              }}
-            />
-            <div
-              className="g-img g-img--landscape"
-              style={{
-                backgroundImage: `url(${G_RIGHT_BOT})`,
-                /* Favour the sunset horizon + glow over the dark sky. */
-                backgroundPosition: '50% 70%',
-              }}
-            />
-          </div>
+        <section
+          className="about-gallery"
+          /* Two-up: equal columns, equal heights, side by side. */
+          style={{ gridTemplateColumns: '1fr 1fr', alignItems: 'stretch' }}
+        >
+          <div
+            className="g-img"
+            style={{
+              backgroundImage: `url(${G_LEFT})`,
+              backgroundPosition: '50% 50%',
+              height: 'clamp(400px, 52vh, 560px)',
+            }}
+          />
+          <div
+            className="g-img"
+            style={{
+              backgroundImage: `url(${G_RIGHT})`,
+              backgroundPosition: '50% 60%',
+              height: 'clamp(400px, 52vh, 560px)',
+            }}
+          />
         </section>
 
         <section className="about-values">
