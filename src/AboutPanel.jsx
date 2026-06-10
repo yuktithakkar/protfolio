@@ -8,7 +8,7 @@ const ease = [0.76, 0, 0.24, 1]
 // the experience timeline below.
 const G_LEFT     = '/about/1.jpeg'   // Yukti — portrait
 const G_RIGHT    = '/about/2.jpeg'   // sunset/sky, landscape
-const VALUES_IMG = '/about/3.jpeg'   // beside the experience timeline
+const VALUES_IMG = '/about/4.jpeg'   // beside the experience timeline
 
 // About panel: slides in from the right when the user clicks the CTA at
 // the end of the splash scroll. It's its own self-contained vertical-
