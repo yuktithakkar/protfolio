@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import TitanCrest from './TitanCrest.jsx'
+import useViewport from './useViewport.js'
 
 const ease = [0.76, 0, 0.24, 1]
 
@@ -398,64 +399,6 @@ const ICON_REPLACER_SRC = `
 })();
 `
 
-// ──────────────────────────────────────────────────────────────────────
-//  Auto-switch Canvas → Manual demo
-//  After the canvas flow animation has had time to play (~6s following
-//  mouseenter), flip the view toggle to Manual and gently scroll the
-//  inner manual content so the visitor understands that the screen is
-//  interactive. This nudge replaces the need to read instructions.
-// ──────────────────────────────────────────────────────────────────────
-const AUTO_SWITCH_SRC = `
-(function(){
-  function setup(){
-    var tb=document.getElementById('tb-root');
-    if(!tb)return setTimeout(setup,200);
-    if(tb.__autoSwitched)return;
-    tb.__autoSwitched=true;
-    var fired=false;
-    function trigger(){
-      if(fired)return;fired=true;
-      setTimeout(function(){
-        if(typeof window.showEvalView==='function'){
-          window.showEvalView('manual');
-          setTimeout(function(){
-            var manual=document.getElementById('eval-manual-view');
-            if(!manual)return;
-            var nodes=[].slice.call(manual.querySelectorAll('*'));
-            for(var i=0;i<nodes.length;i++){
-              var el=nodes[i];
-              var cs=getComputedStyle(el);
-              if((cs.overflowY==='auto'||cs.overflowY==='scroll')&&el.scrollHeight>el.clientHeight+8){
-                try{el.scrollTo({top:Math.min(220,el.scrollHeight-el.clientHeight),behavior:'smooth'});}
-                catch(e){el.scrollTop=180;}
-                return;
-              }
-            }
-          },900);
-        }
-      },5500);
-    }
-    tb.addEventListener('mouseenter',trigger,{once:true});
-    /* If the canvas scrolls into view but the user never hovers — e.g.
-       on a touchpad with no cursor movement — kick off the same demo
-       once it has been on-screen for a few seconds. */
-    if('IntersectionObserver' in window){
-      var io=new IntersectionObserver(function(entries){
-        entries.forEach(function(e){
-          if(e.isIntersecting&&e.intersectionRatio>0.5){
-            setTimeout(trigger,800);
-            io.disconnect();
-          }
-        });
-      },{threshold:[0.5]});
-      io.observe(tb);
-    }
-  }
-  if(document.readyState==='complete'||document.readyState==='interactive'){setup();}
-  else{document.addEventListener('DOMContentLoaded',setup);}
-})();
-`
-
 export default function CaseStudyPanel({ activeId, onClose }) {
   const open = !!activeId
   const isNative = open && NATIVE_CASES.has(activeId)
@@ -463,9 +406,16 @@ export default function CaseStudyPanel({ activeId, onClose }) {
   const nativeScrollRef = useRef(null)
   const src = open && !isNative ? CASE_HTML[activeId] : 'about:blank'
 
+  // Case studies render on desktop + landscape tablets. Portrait tablets
+  // and phones get a nudge toward desktop, but can proceed if they insist.
+  const { canViewCaseStudy } = useViewport()
+  const [proceedAnyway, setProceedAnyway] = useState(false)
+  const showNudge = open && !canViewCaseStudy && !proceedAnyway
+
   // Reset scroll position every time the panel reopens.
   useEffect(() => {
-    if (!open) return
+    if (!open) { setProceedAnyway(false); return }
+    setProceedAnyway(false)
     if (isNative) {
       const el = nativeScrollRef.current
       if (el) el.scrollTop = 0
@@ -510,16 +460,6 @@ export default function CaseStudyPanel({ activeId, onClose }) {
       const script = doc.createElement('script')
       script.setAttribute('data-yukti-icons', '')
       script.textContent = ICON_REPLACER_SRC
-      doc.body.appendChild(script)
-    }
-    // Auto-switch canvas demo to Manual mode after the flow animation
-    // plays — only meaningful for the TestBench case study (the only
-    // file that contains #tb-root + showEvalView), but harmless if
-    // missing.
-    if (!doc.querySelector('script[data-yukti-autoswitch]')) {
-      const script = doc.createElement('script')
-      script.setAttribute('data-yukti-autoswitch', '')
-      script.textContent = AUTO_SWITCH_SRC
       doc.body.appendChild(script)
     }
 
@@ -570,6 +510,26 @@ export default function CaseStudyPanel({ activeId, onClose }) {
           className="cs-iframe"
           title="Case study"
         />
+      )}
+      {showNudge && (
+        <div className="cs-nudge" role="dialog" aria-modal="true">
+          <div className="cs-nudge__backdrop" />
+          <div className="cs-nudge__card">
+            <span className="cs-nudge__icon" aria-hidden>
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="2" y="3" width="20" height="14" rx="2" />
+                <path d="M8 21h8M12 17v4" />
+              </svg>
+            </span>
+            <span className="cs-nudge__eyebrow">Desktop experience</span>
+            <h2 className="cs-nudge__title">Best viewed on a<br />bigger screen</h2>
+            <p className="cs-nudge__text">This case study is crafted for desktop. Open it on a laptop or larger display for the full story — meanwhile, the rest of the portfolio is all yours here.</p>
+            <div className="cs-nudge__actions">
+              <button type="button" className="cs-nudge__btn cs-nudge__btn--primary" onClick={onClose}>Back to portfolio</button>
+              <button type="button" className="cs-nudge__btn" onClick={() => setProceedAnyway(true)}>View anyway</button>
+            </div>
+          </div>
+        </div>
       )}
       <button
         className="cs-back"

@@ -1,5 +1,6 @@
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion'
 import { useEffect, useRef, useState } from 'react'
+import useViewport from './useViewport.js'
 
 const ease = [0.76, 0, 0.24, 1]
 
@@ -216,7 +217,7 @@ function VertTiles() {
               height: `${TILE_H}vh`,
               width: `${PIKKO_LEFT_W}vw`,
               backgroundImage: portrait ? undefined : `url(${img})`,
-              '--tile-img': portrait ? `url(${img})` : undefined,
+              '--tile-img': `url(${img})`,
             }}
           />
         )
@@ -336,6 +337,10 @@ function TestBenchPeek() {
 }
 
 function ScrollCard({ card, index, scrollYProgress, show, onCaseOpen }) {
+  // On landscape tablets the expanded card box turns tall-ish, so `cover`
+  // crops the landscape case-study image. Use `contain` there so the full
+  // image shows on the tinted glass.
+  const { isTablet } = useViewport()
   const stages = CARD_STAGES[index]
   const left   = useTransform(scrollYProgress, STAGE_STOPS, stages.map(s => `${s.left}vw`))
   const width  = useTransform(scrollYProgress, STAGE_STOPS, stages.map(s => `${s.width}vw`))
@@ -459,7 +464,7 @@ function ScrollCard({ card, index, scrollYProgress, show, onCaseOpen }) {
           className="band-card band-card--expanded"
           style={{
             backgroundImage: `url(${card.imgExpanded})`,
-            backgroundSize: card.expandedFit === 'contain' ? 'contain' : 'cover',
+            backgroundSize: isTablet ? 'contain' : (card.expandedFit === 'contain' ? 'contain' : 'cover'),
             backgroundRepeat: 'no-repeat',
             opacity: expandedOpacity,
             top: bandCardTop,

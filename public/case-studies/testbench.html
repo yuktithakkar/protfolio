@@ -421,7 +421,7 @@ body h2 { font-family:var(--font-display);letter-spacing:-0.03em; }
     </div>
 
     <!-- Main headline block -->
-    <div style="display:grid;grid-template-columns:1fr 340px;gap:80px;align-items:start;flex:1;">
+    <div style="display:grid;grid-template-columns:1fr 420px;gap:64px;align-items:start;flex:1;">
       <div>
         <div class="pf-rv pf-d1" style="display:inline-flex;align-items:center;gap:8px;margin-bottom:28px;padding:5px 12px 5px 5px;background:#fff;border:1px solid #E8EDF5;border-radius:100px;box-shadow:0 1px 4px rgba(0,0,0,0.04);">
           <span style="background:#4F7CFF;color:#fff;font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:600;padding:3px 8px;border-radius:100px;letter-spacing:0.08em;text-transform:uppercase;">AI Reliability</span>
@@ -456,54 +456,10 @@ body h2 { font-family:var(--font-display);letter-spacing:-0.03em; }
         </div>
       </div>
 
-      <!-- Right: preview card -->
+      <!-- Right: expanded case-study image, cropped to fill the visual area. -->
       <div class="pf-rv pf-d3" style="padding-top:8px;">
-        <!-- mini browser chrome showing a result score -->
-        <div style="background:#fff;border:1px solid #E8EDF5;border-radius:14px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.07),0 1px 4px rgba(0,0,0,0.04);">
-          <div style="height:28px;background:#F7F9FC;border-bottom:1px solid #E8EDF5;display:flex;align-items:center;padding:0 10px;gap:5px;">
-            <div style="width:7px;height:7px;border-radius:50%;background:#FECACA;"></div>
-            <div style="width:7px;height:7px;border-radius:50%;background:#FDE68A;"></div>
-            <div style="width:7px;height:7px;border-radius:50%;background:#A7F3D0;"></div>
-            <div style="flex:1;text-align:center;font-family:'JetBrains Mono',monospace;font-size:8px;color:#C1C9D8;">testbench / results</div>
-          </div>
-          <div style="padding:20px;">
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
-              <div>
-                <div style="font-size:11px;font-weight:600;color:#0A0F1E;margin-bottom:2px;">Acme HR Assistant · v2.3</div>
-                <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#8492A6;">Jan 28 · HR-Safety-v2</div>
-              </div>
-              <div style="text-align:right;">
-                <div style="font-family:'DM Serif Display',serif;font-size:28px;font-weight:400;color:#4F7CFF;line-height:1;letter-spacing:-0.02em;">89%</div>
-                <div style="font-size:9px;color:#10B981;font-weight:500;">↑ 5pts</div>
-              </div>
-            </div>
-            <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:12px;">
-              <div style="text-align:center;padding:8px 0;background:#F0FDF4;border-radius:7px;">
-                <div style="font-size:11px;font-weight:700;color:#16A34A;">94%</div>
-                <div style="font-size:8px;color:#8492A6;margin-top:2px;">Accuracy</div>
-              </div>
-              <div style="text-align:center;padding:8px 0;background:#F0FDF4;border-radius:7px;">
-                <div style="font-size:11px;font-weight:700;color:#16A34A;">88%</div>
-                <div style="font-size:8px;color:#8492A6;margin-top:2px;">Trajectory</div>
-              </div>
-              <div style="text-align:center;padding:8px 0;background:#F0FDF4;border-radius:7px;">
-                <div style="font-size:11px;font-weight:700;color:#16A34A;">91%</div>
-                <div style="font-size:8px;color:#8492A6;margin-top:2px;">Security</div>
-              </div>
-              <div style="text-align:center;padding:8px 0;background:#F0FDF4;border-radius:7px;">
-                <div style="font-size:11px;font-weight:700;color:#16A34A;">97%</div>
-                <div style="font-size:8px;color:#8492A6;margin-top:2px;">Toxicity</div>
-              </div>
-              <div style="text-align:center;padding:8px 0;background:#FEF2F2;border-radius:7px;">
-                <div style="font-size:11px;font-weight:700;color:#DC2626;">72%</div>
-                <div style="font-size:8px;color:#8492A6;margin-top:2px;">Privacy</div>
-              </div>
-            </div>
-            <div style="display:flex;align-items:center;gap:6px;padding:8px 10px;background:#EFF6FF;border-radius:7px;">
-              <div style="width:6px;height:6px;border-radius:50%;background:#EF4444;flex-shrink:0;"></div>
-              <span style="font-size:10px;color:#1D4ED8;line-height:1.4;">Privacy score below threshold, TC-011 salary inquiry exposed PII</span>
-            </div>
-          </div>
+        <div style="width:100%;height:560px;border-radius:14px;overflow:hidden;background:transparent;">
+          <img src="/landing-cards/test-inside.png" alt="TestBench — expanded evaluation view" style="width:100%;height:100%;object-fit:cover;object-position:center;display:block;" />
         </div>
         <div style="padding:12px 4px 0;display:flex;align-items:center;gap:6px;">
           <div style="width:6px;height:6px;border-radius:50%;background:#4F7CFF;flex-shrink:0;"></div>
@@ -981,7 +937,7 @@ body h2 { font-family:var(--font-display);letter-spacing:-0.03em; }
               <div style="display:flex;height:100%;overflow:hidden;">
 
                 <!-- ── LEFT: Config Sections ── -->
-                <div style="flex:1;min-width:0;min-height:0;overflow-y:auto;padding:14px 16px 20px;display:flex;flex-direction:column;gap:10px;background:#F8FAFC;">
+                <div id="manual-scroll" style="flex:1;min-width:0;min-height:0;overflow-y:auto;padding:14px 16px 20px;display:flex;flex-direction:column;gap:10px;background:#F8FAFC;">
 
                   <!-- SECTION 1: Ground Truth Dataset -->
                   <div style="background:#fff;border:1px solid #E2E8F0;border-radius:9px;overflow:hidden;flex-shrink:0;">
@@ -1702,31 +1658,65 @@ document.addEventListener('click', function(e) {
   </div><!-- /section padding -->
 </section>
 <style>
-.cv-card{position:absolute;background:#fff;border:1.5px solid #E2E8F0;border-radius:14px;box-shadow:0 2px 4px rgba(0,0,0,0.04),0 8px 24px rgba(0,0,0,0.06);opacity:0;transform:translateY(14px);transition:opacity 0.55s cubic-bezier(0.22,1,0.36,1),transform 0.55s cubic-bezier(0.34,1.06,0.64,1);}
-.cv-card.in{opacity:1;transform:translateY(0);}
+.cv-card{position:absolute;background:#fff;border:1.5px solid #E2E8F0;border-radius:16px;box-shadow:0 2px 4px rgba(0,0,0,0.04),0 8px 24px rgba(0,0,0,0.06);opacity:0;transform:translateY(16px) scale(0.97);
+  transition:opacity 0.5s cubic-bezier(0.22,1,0.36,1),transform 0.62s cubic-bezier(0.32,1.14,0.6,1),
+             left 0.55s cubic-bezier(0.22,1,0.36,1),top 0.55s cubic-bezier(0.22,1,0.36,1),
+             width 0.45s cubic-bezier(0.22,1,0.36,1),height 0.45s cubic-bezier(0.22,1,0.36,1),
+             box-shadow 0.4s ease;}
+.cv-card.in{opacity:1;transform:translateY(0) scale(1);}
+
+/* ── Dropdowns live permanently in the markup and open/close via a class
+      on the parent card. Recreating them per state change is what made
+      the walkthrough flicker. ── */
+.cv-field{background:#fff;border:1.5px solid #D7DEEC;border-radius:9px;padding:10px 13px;display:flex;align-items:center;justify-content:space-between;font-size:12.5px;transition:border-color 0.22s ease,box-shadow 0.22s ease,color 0.22s ease;}
+.cv-dd-list{position:absolute;left:0;right:0;background:#fff;border:1px solid #E2E8F0;border-radius:11px;box-shadow:0 14px 32px rgba(0,0,0,0.15);padding:5px;z-index:100;
+  opacity:0;visibility:hidden;pointer-events:none;
+  transition:opacity 0.24s ease,transform 0.3s cubic-bezier(0.22,1,0.36,1),visibility 0.24s;}
+.cv-dd-down{top:calc(100% + 7px);transform-origin:top center;transform:translateY(-8px) scale(0.97);}
+.cv-dd-up{bottom:calc(100% + 7px);transform-origin:bottom center;transform:translateY(8px) scale(0.97);}
+.cv-c2.t-open .cv-dd-down,.cv-c2.j-open .cv-dd-up{opacity:1;visibility:visible;pointer-events:auto;transform:translateY(0) scale(1);}
+.cv-c2.t-open .cv-field-t,.cv-c2.j-open .cv-field-j{border-color:#3A57C8;box-shadow:0 0 0 3px rgba(58,87,200,0.10);}
+.cv-ddrow{padding:9px 12px;border-radius:7px;font-size:12.5px;display:flex;justify-content:space-between;color:#1A1A22;}
+.cv-att{animation:cvFade 0.34s cubic-bezier(0.22,1,0.36,1) both;}
+@keyframes cvFade{from{opacity:0;transform:translateY(-3px);}to{opacity:1;transform:translateY(0);}}
+.cv-badge{animation:cvPop 0.42s cubic-bezier(0.32,1.2,0.6,1) both;}
+@keyframes cvPop{from{opacity:0;transform:scale(0.82);}to{opacity:1;transform:scale(1);}}
+
+/* Wires draw themselves in; endpoint nodes fade in just behind the stroke. */
+.cv-wiregroup .cv-wire{stroke-dasharray:700;animation:cvDraw 0.62s cubic-bezier(0.4,0,0.2,1) both;}
+.cv-wiregroup .cv-node{animation:cvNode 0.3s ease 0.34s both;}
+@keyframes cvDraw{from{stroke-dashoffset:700;}to{stroke-dashoffset:0;}}
+@keyframes cvNode{from{opacity:0;}to{opacity:1;}}
 .cv-gt{position:absolute;background:#fff;border-radius:8px;display:flex;align-items:center;gap:6px;padding:6px 11px;font-size:11px;font-weight:600;opacity:0;transform:translateY(6px);transition:opacity 0.38s ease,transform 0.38s cubic-bezier(0.34,1.06,0.64,1);}
 .cv-gt.in{opacity:1;transform:translateY(0);}
 .cv-dd{display:none;position:absolute;background:#fff;border:1px solid #E2E8F0;border-radius:10px;box-shadow:0 12px 32px rgba(0,0,0,0.14);padding:4px;z-index:100;min-width:180px;}
 .cv-opt{padding:8px 12px;font-size:12px;color:#374151;border-radius:6px;transition:background 0.12s;}
 .cv-opt.hl{background:#EFF6FF;color:#1D4ED8;font-weight:600;}
-.cv-mopt{display:flex;align-items:center;justify-content:space-between;padding:7px 10px;border:1.5px solid #E2E8F0;border-radius:7px;font-size:11.5px;color:#374151;margin-bottom:6px;transition:all 0.15s;}
-.cv-mopt.sel{border-color:#3B82F6;background:#EFF6FF;color:#1D4ED8;font-weight:600;}
+.cv-mopt{display:flex;align-items:center;justify-content:space-between;padding:11px 13px;border:1.5px solid #E2E8F0;border-radius:9px;font-size:12px;color:#374151;margin-bottom:9px;cursor:pointer;
+  transition:border-color 0.24s ease,background 0.24s ease,color 0.24s ease,transform 0.24s cubic-bezier(0.32,1.14,0.6,1);}
+.cv-mopt.sel{border-color:#3B82F6;background:#EFF6FF;color:#1D4ED8;font-weight:600;transform:translateX(3px);}
+.cv-box{width:18px;height:18px;border-radius:5px;background:#fff;border:1.5px solid #D7DEEC;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:11px;flex-shrink:0;
+  transition:background 0.22s ease,border-color 0.22s ease;}
+.cv-box.on{background:#3A57C8;border-color:#3A57C8;}
 </style>
 <script>
 (function(){
 const B={pr:"#3A57C8",ln:"#7C95D4",sf:"#E8EDF9",ic:"#4A66CC",bd:"#D5DEF2"};
 const T={c2:2200,c2i:800,to:1500,tp:1300,jo:1300,jp:1300,c3:2000,c3i:700,po:1100,pm:850,pc:1100,md:1300,ag:1400,c4:1500};
 
-// Layout — all row-1 cards share same cy for straight wires
-const CY=230, CH=200, CCY=CY+CH/2;
+// Layout — all row-1 cards share same cy for straight wires.
+// Cards are sized generously: content breathes at ~0.7 canvas scale.
+const CY=71, CH=214, CCY=CY+CH/2;
 const TL={
-  c1:{x:40,  y:CY,      w:250,h:CH},
-  c2:{x:340, y:CCY-120, w:310,h:240},
-  c3:{x:710, y:CY,      w:250,h:CH},
-  c4:{x:1020,y:CY,      w:230,h:CH},
+  c1:{x:40,  y:CY,      w:284,h:CH},
+  c2:{x:380, y:CCY-138, w:344,h:276},
+  c3:{x:780, y:CY,      w:284,h:CH},
+  c4:{x:1120,y:CY,      w:264,h:CH},
 };
-const LW=220,LH=155,LY=495,LG=30;
-const WW=1310,WH=700;
+const LW=246,LH=182,LY=351,LG=36;
+/* World is sized to the content bounds — dead space here just shrinks
+   the fitted scale and makes every card look cramped. */
+const WW=1424,WH=573;
 
 const TMODELS=["GPT-4.7 Turbo","GPT-5 Turbo","Claude Opus 4.7","Gemini 2.5 Pro","Llama 4 405B"];
 const JMODELS=["Claude Opus 4.7","GPT-5 Turbo","GPT-4.7 Turbo","Gemini 2.5 Pro","Command R+"];
@@ -1762,130 +1752,182 @@ function leafPos(){
 }
 function fit(){
   const root=document.getElementById('tb-root');if(!root)return;
-  const w=root.offsetWidth,h=root.offsetHeight,pad=60;
+  const w=root.offsetWidth,h=root.offsetHeight,pad=36;
   sc=Math.min((w-pad)/WW,(h-pad)/WH,1);
   tx=(w-WW*sc)/2; ty=(h-WH*sc)/2;
-  applyT();
+  applyT(true);
 }
-function applyT(){
+/* animate=true glides the viewport (used by the demo's re-fits and the
+   zoom buttons); dragging and wheel-panning must stay 1:1 with the
+   cursor, so they pass nothing and the transition is removed. */
+function applyT(animate){
   const w=document.getElementById('tb-world');
-  if(w)w.style.transform=`translate(${tx}px,${ty}px) scale(${sc})`;
+  if(w){
+    w.style.transition=animate?'transform 0.72s cubic-bezier(0.22,1,0.36,1)':'none';
+    w.style.transform=`translate(${tx}px,${ty}px) scale(${sc})`;
+  }
   const p=document.getElementById('tb-zpct');
   if(p)p.textContent=Math.round(sc*100)+'%';
 }
 
-/* ── SVG ── */
+/* ── SVG ──
+   Emitted as one <g> per connection and reconciled by id, so an already
+   drawn wire is left alone instead of being redrawn on every step. Only
+   a new wire runs the dash-draw animation. */
 function renderSVG(){
   const svg=document.getElementById('tb-svg');if(!svg)return;
   const ll=leafPos();
   const pts=picked.map(id=>ll[id]).filter(Boolean).map(l=>anc(l,"top"));
-  let h='';
   const ln=(x1,y1,x2,y2)=>`
-    <line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${B.ln}" stroke-width="1.6"/>
-    <circle cx="${x1}" cy="${y1}" r="3.5" fill="#fff" stroke="${B.ln}" stroke-width="1.8"/>
-    <circle cx="${x2}" cy="${y2}" r="3.5" fill="#fff" stroke="${B.ln}" stroke-width="1.8"/>`;
-  if(phase>=2){const a=anc(TL.c1,"right"),b=anc(TL.c2,"left");h+=ln(a.x,a.y,b.x,b.y);}
-  if(phase>=3){const a=anc(TL.c2,"right"),b=anc(TL.c3,"left");h+=ln(a.x,a.y,b.x,b.y);}
-  if(phase>=4){const a=anc(TL.c3,"right"),b=anc(TL.c4,"left");h+=ln(a.x,a.y,b.x,b.y);}
+    <line class="cv-wire" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${B.ln}" stroke-width="1.6"/>
+    <circle class="cv-node" cx="${x1}" cy="${y1}" r="3.8" fill="#fff" stroke="${B.ln}" stroke-width="1.8"/>
+    <circle class="cv-node" cx="${x2}" cy="${y2}" r="3.8" fill="#fff" stroke="${B.ln}" stroke-width="1.8"/>`;
+  const groups=[];
+  if(phase>=2){const a=anc(TL.c1,"right"),b=anc(TL.c2,"left");groups.push(['w1',ln(a.x,a.y,b.x,b.y)]);}
+  if(phase>=3){const a=anc(TL.c2,"right"),b=anc(TL.c3,"left");groups.push(['w2',ln(a.x,a.y,b.x,b.y)]);}
+  if(phase>=4){const a=anc(TL.c3,"right"),b=anc(TL.c4,"left");groups.push(['w3',ln(a.x,a.y,b.x,b.y)]);}
   if(dropped&&pts.length){
     const from=anc(TL.c3,"bottom");
     const busY=(from.y+Math.min(...pts.map(t=>t.y)))/2;
     const xs=pts.map(t=>t.x);
-    h+=`<line x1="${from.x}" y1="${from.y}" x2="${from.x}" y2="${busY}" stroke="${B.ln}" stroke-width="1.6"/>`;
-    h+=`<line x1="${Math.min(from.x,...xs)}" y1="${busY}" x2="${Math.max(from.x,...xs)}" y2="${busY}" stroke="${B.ln}" stroke-width="1.6"/>`;
-    h+=`<circle cx="${from.x}" cy="${from.y}" r="3.5" fill="#fff" stroke="${B.ln}" stroke-width="1.8"/>`;
+    let b='';
+    b+=`<line class="cv-wire" x1="${from.x}" y1="${from.y}" x2="${from.x}" y2="${busY}" stroke="${B.ln}" stroke-width="1.6"/>`;
+    b+=`<line class="cv-wire" x1="${Math.min(from.x,...xs)}" y1="${busY}" x2="${Math.max(from.x,...xs)}" y2="${busY}" stroke="${B.ln}" stroke-width="1.6"/>`;
+    b+=`<circle class="cv-node" cx="${from.x}" cy="${from.y}" r="3.8" fill="#fff" stroke="${B.ln}" stroke-width="1.8"/>`;
     pts.forEach(t=>{
-      h+=`<line x1="${t.x}" y1="${busY}" x2="${t.x}" y2="${t.y}" stroke="${B.ln}" stroke-width="1.6"/>`;
-      h+=`<circle cx="${t.x}" cy="${t.y}" r="3.5" fill="#fff" stroke="${B.ln}" stroke-width="1.8"/>`;
+      b+=`<line class="cv-wire" x1="${t.x}" y1="${busY}" x2="${t.x}" y2="${t.y}" stroke="${B.ln}" stroke-width="1.6"/>`;
+      b+=`<circle class="cv-node" cx="${t.x}" cy="${t.y}" r="3.8" fill="#fff" stroke="${B.ln}" stroke-width="1.8"/>`;
     });
+    groups.push(['bus',b]);
   }
-  svg.innerHTML=h;
+  const keep=new Set(groups.map(g=>'g-'+g[0]));
+  Array.from(svg.children).forEach(el=>{if(!keep.has(el.id))el.remove();});
+  groups.forEach(([key,inner])=>{
+    const id='g-'+key;
+    let g=svg.querySelector('#'+id);
+    if(!g){
+      g=document.createElementNS('http://www.w3.org/2000/svg','g');
+      g.setAttribute('id',id);
+      g.setAttribute('class','cv-wiregroup');
+      g.innerHTML=inner;
+      svg.appendChild(g);
+    }else if(g.innerHTML!==inner){
+      g.innerHTML=inner;
+    }
+  });
 }
 
 /* ── card shells ── */
-function card(c,inner,extra=''){
-  return`<div class="cv-card" id="${extra}" style="left:${c.x}px;top:${c.y}px;width:${c.w}px;height:${c.h}px;">
-    <div style="position:absolute;left:0;top:12px;bottom:12px;width:3px;border-radius:0 3px 3px 0;background:${B.pr};opacity:0.5;"></div>
-    <div style="padding:16px 18px 16px 20px;height:100%;box-sizing:border-box;">${inner}</div>
+const PAD='24px 26px 24px 28px';
+function card(c,inner,extra='',cls=''){
+  return`<div class="cv-card ${cls}" id="${extra}" style="left:${c.x}px;top:${c.y}px;width:${c.w}px;height:${c.h}px;">
+    <div style="position:absolute;left:0;top:16px;bottom:16px;width:3px;border-radius:0 3px 3px 0;background:${B.pr};opacity:0.5;"></div>
+    <div style="padding:${PAD};height:100%;box-sizing:border-box;">${inner}</div>
   </div>`;
 }
 function hdr(icon,label,badge=''){
-  return`<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
-    <div style="display:flex;align-items:center;gap:9px;">
-      <div style="width:30px;height:30px;border-radius:8px;background:${B.sf};border:1px solid ${B.bd};display:flex;align-items:center;justify-content:center;font-size:13px;">${icon}</div>
-      <div style="font-size:9.5px;color:#6B7280;letter-spacing:0.8px;text-transform:uppercase;font-weight:700;">${label}</div>
+  return`<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+    <div style="display:flex;align-items:center;gap:11px;">
+      <div style="width:34px;height:34px;border-radius:9px;background:${B.sf};border:1px solid ${B.bd};display:flex;align-items:center;justify-content:center;font-size:15px;">${icon}</div>
+      <div style="font-size:10px;color:#6B7280;letter-spacing:0.9px;text-transform:uppercase;font-weight:700;">${label}</div>
     </div>${badge}</div>`;
+}
+
+/* ── reconcile built HTML into #tb-cards ──
+   Cards are matched by id and updated in place, so a node that already
+   exists keeps its identity and never replays its entry animation.
+   Only genuinely new cards animate in, staggered. */
+function commit(h){
+  const cards=document.getElementById('tb-cards');if(!cards)return;
+  const tmp=document.createElement('div');tmp.innerHTML=h;
+  const next=Array.from(tmp.children);
+  const ids=new Set(next.map(el=>el.id));
+  Array.from(cards.children).forEach(el=>{if(!ids.has(el.id))el.remove();});
+  const fresh=[];
+  next.forEach(el=>{
+    const cur=cards.querySelector('#'+el.id);
+    if(!cur){cards.appendChild(el);fresh.push(el);return;}
+    /* geometry + open-state classes, preserving the entry flag */
+    const wasIn=cur.classList.contains('in');
+    const cls=el.className+(wasIn?' in':'');
+    if(cur.className!==cls)cur.className=cls;
+    if(cur.getAttribute('style')!==el.getAttribute('style'))cur.setAttribute('style',el.getAttribute('style'));
+    const oc=el.getAttribute('onclick');
+    if(oc)cur.setAttribute('onclick',oc);else cur.removeAttribute('onclick');
+    /* body is always the last element child (accent bar precedes it) */
+    const b=cur.lastElementChild,nb=el.lastElementChild;
+    if(b&&nb&&b.innerHTML!==nb.innerHTML)b.innerHTML=nb.innerHTML;
+  });
+  if(!fresh.length)return;
+  requestAnimationFrame(()=>{
+    fresh.forEach((el,i)=>{timers.push(setTimeout(()=>el.classList.add('in'),i*110));});
+  });
 }
 
 /* ── render all cards ── */
 function renderCards(){
   const ll=leafPos();
-  const cards=document.getElementById('tb-cards');if(!cards)return;
   let h='';
 
   if(phase>=1){
     h+=card(TL.c1,
       hdr('🤖','Agent')+
-      `<div style="font-size:17px;font-weight:600;color:#1A1A22;letter-spacing:-0.3px;line-height:1.2;">Acme HR Assistant</div>
-       <div style="font-size:11px;color:#6B7280;margin-top:6px;">Internal HR Q&A · v2.4.1</div>
-       <div style="display:flex;gap:5px;margin-top:12px;">
-         <span style="font-size:9.5px;padding:2px 8px;background:${B.sf};border:1px solid ${B.bd};border-radius:999px;color:${B.ic};font-weight:600;">RAG</span>
-         <span style="font-size:9.5px;padding:2px 8px;background:${B.sf};border:1px solid ${B.bd};border-radius:999px;color:${B.ic};font-weight:600;">Tool-use</span>
+      `<div style="font-size:18px;font-weight:600;color:#1A1A22;letter-spacing:-0.3px;line-height:1.25;">Acme HR Assistant</div>
+       <div style="font-size:11.5px;color:#6B7280;margin-top:9px;line-height:1.5;">Internal HR Q&A · v2.4.1</div>
+       <div style="display:flex;gap:7px;margin-top:18px;">
+         <span style="font-size:10px;padding:4px 10px;background:${B.sf};border:1px solid ${B.bd};border-radius:999px;color:${B.ic};font-weight:600;">RAG</span>
+         <span style="font-size:10px;padding:4px 10px;background:${B.sf};border:1px solid ${B.bd};border-radius:999px;color:${B.ic};font-weight:600;">Tool-use</span>
        </div>`,
       'cv-c1'
     );
   }
 
   if(phase>=2){
-    const badge=configured?`<span style="display:inline-flex;align-items:center;gap:4px;background:${B.pr};color:#fff;font-size:9px;font-weight:700;padding:3px 8px;border-radius:999px;letter-spacing:0.5px;">✓ CONFIGURED</span>`:'';
-    const tField=`<div style="background:#fff;border:1.5px solid ${tOpen?B.pr:'#D7DEEC'};border-radius:8px;padding:7px 10px;display:flex;align-items:center;justify-content:space-between;font-size:12px;color:${tPick?'#1A1A22':'#9AA3B2'};font-weight:${tPick?600:500};">
-      <span>${tPick||'Select model…'}</span><span style="font-size:9px;color:#6B7280;">▾</span></div>`;
-    const tDD=tOpen?`<div style="position:absolute;top:calc(100% + 5px);left:0;right:0;background:#fff;border:1px solid #E2E8F0;border-radius:10px;box-shadow:0 12px 28px rgba(0,0,0,0.14);padding:4px;z-index:100;">
-      ${TMODELS.map((m,i)=>`<div style="padding:8px 11px;border-radius:6px;font-size:12px;background:${i===2?B.sf:'#fff'};font-weight:${i===2?600:500};display:flex;justify-content:space-between;color:#1A1A22;">
-        <span>${m}</span>${i===2?`<span style="color:${B.pr};">✓</span>`:''}</div>`).join('')}</div>`:'';
-    const jField=`<div style="background:#fff;border:1.5px solid ${jOpen?B.pr:'#D7DEEC'};border-radius:8px;padding:7px 10px;display:flex;align-items:center;justify-content:space-between;font-size:12px;color:${jPick?'#1A1A22':'#9AA3B2'};font-weight:${jPick?600:500};">
-      <span>${jPick||'Select model…'}</span><span style="font-size:9px;color:#6B7280;">▾</span></div>`;
-    /* Judge drops UP — positioned above the field */
-    const jDD=jOpen?`<div style="position:absolute;bottom:calc(100% + 5px);left:0;right:0;background:#fff;border:1px solid #E2E8F0;border-radius:10px;box-shadow:0 12px 28px rgba(0,0,0,0.14);padding:4px;z-index:100;">
-      ${JMODELS.map((m,i)=>`<div style="padding:8px 11px;border-radius:6px;font-size:12px;background:${i===1?B.sf:'#fff'};font-weight:${i===1?600:500};display:flex;justify-content:space-between;color:#1A1A22;">
-        <span>${m}</span>${i===1?`<span style="color:${B.pr};">✓</span>`:''}</div>`).join('')}</div>`:'';
+    const badge=configured?`<span class="cv-badge" style="display:inline-flex;align-items:center;gap:5px;background:${B.pr};color:#fff;font-size:9.5px;font-weight:700;padding:5px 10px;border-radius:999px;letter-spacing:0.5px;">✓ CONFIGURED</span>`:'';
+    const fld=(k,val)=>`<div class="cv-field cv-field-${k}" style="color:${val?'#1A1A22':'#9AA3B2'};font-weight:${val?600:500};">
+      <span>${val||'Select model…'}</span><span style="font-size:10px;color:#6B7280;">▾</span></div>`;
+    const list=(dir,models,sel)=>`<div class="cv-dd-list cv-dd-${dir}">
+      ${models.map((m,i)=>`<div class="cv-ddrow" style="background:${i===sel?B.sf:'#fff'};font-weight:${i===sel?600:500};">
+        <span>${m}</span>${i===sel?`<span style="color:${B.pr};">✓</span>`:''}</div>`).join('')}</div>`;
+    const lbl=t=>`<div style="font-size:9.5px;color:#6B7280;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;margin-bottom:7px;">${t}</div>`;
     h+=card(TL.c2,
       hdr('⚙️','Configuration',badge)+
-      `<div style="margin-bottom:10px;">
-         <div style="font-size:9px;color:#6B7280;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;">Tester Model</div>
-         <div style="position:relative;">${tField}${tDD}</div>
+      `<div style="margin-bottom:18px;">
+         ${lbl('Tester Model')}
+         <div style="position:relative;">${fld('t',tPick)}${list('down',TMODELS,2)}</div>
        </div>
        <div>
-         <div style="font-size:9px;color:#6B7280;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;">Judge Model</div>
-         <div style="position:relative;">${jField}${jDD}</div>
+         ${lbl('Judge Model')}
+         <div style="position:relative;">${fld('j',jPick)}${list('up',JMODELS,1)}</div>
        </div>`,
-      'cv-c2'
+      'cv-c2',
+      'cv-c2'+(tOpen?' t-open':'')+(jOpen?' j-open':'')
     );
   }
 
   if(phase>=3){
-    const badge=picked.length?`<span style="font-size:9.5px;font-weight:700;color:${B.ic};background:${B.sf};border:1px solid ${B.bd};padding:2px 8px;border-radius:999px;">${picked.length}/8</span>`:'';
+    const badge=picked.length?`<span style="font-size:10px;font-weight:700;color:${B.ic};background:${B.sf};border:1px solid ${B.bd};padding:4px 10px;border-radius:999px;">${picked.length}/8</span>`:'';
     h+=`<div class="cv-card" id="cv-c3" style="left:${TL.c3.x}px;top:${TL.c3.y}px;width:${TL.c3.w}px;height:${TL.c3.h}px;cursor:${done?'pointer':'default'};" onclick="${done?'cvOpenPanel()':''}">
-      <div style="position:absolute;left:0;top:12px;bottom:12px;width:3px;border-radius:0 3px 3px 0;background:${B.pr};opacity:0.5;"></div>
-      <div style="padding:16px 18px 16px 20px;height:100%;box-sizing:border-box;">
+      <div style="position:absolute;left:0;top:16px;bottom:16px;width:3px;border-radius:0 3px 3px 0;background:${B.pr};opacity:0.5;"></div>
+      <div style="padding:${PAD};height:100%;box-sizing:border-box;">
         ${hdr('◎','Metrics',badge)}
-        <div style="font-size:17px;font-weight:600;color:#1A1A22;letter-spacing:-0.3px;">Evaluation Metrics</div>
-        <div style="font-size:11px;color:#6B7280;margin-top:6px;">${done?'Click to edit':'Pick what to test on'}</div>
-        ${done?`<div style="margin-top:10px;font-size:10px;color:${B.ic};font-weight:600;">Edit selection →</div>`:''}
+        <div style="font-size:18px;font-weight:600;color:#1A1A22;letter-spacing:-0.3px;line-height:1.25;">Evaluation Metrics</div>
+        <div style="font-size:11.5px;color:#6B7280;margin-top:9px;line-height:1.5;">${done?'Click to edit':'Pick what to test on'}</div>
+        ${done?`<div style="margin-top:16px;font-size:10.5px;color:${B.ic};font-weight:600;">Edit selection →</div>`:''}
       </div>
     </div>`;
   }
 
   if(phase>=4){
     h+=`<div class="cv-card" id="cv-c4" style="left:${TL.c4.x}px;top:${TL.c4.y}px;width:${TL.c4.w}px;height:${TL.c4.h}px;background:${B.pr};border-color:${B.pr};">
-      <div style="padding:20px 18px 18px 20px;height:100%;box-sizing:border-box;">
-        <div style="display:flex;align-items:center;gap:9px;margin-bottom:12px;">
-          <div style="width:30px;height:30px;border-radius:8px;background:rgba(255,255,255,0.16);border:1px solid rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:13px;">▶</div>
-          <div style="font-size:9.5px;color:rgba(255,255,255,0.6);letter-spacing:0.8px;text-transform:uppercase;font-weight:700;">Run</div>
+      <div style="padding:${PAD};height:100%;box-sizing:border-box;display:flex;flex-direction:column;">
+        <div style="display:flex;align-items:center;gap:11px;margin-bottom:20px;">
+          <div style="width:34px;height:34px;border-radius:9px;background:rgba(255,255,255,0.16);border:1px solid rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:14px;">▶</div>
+          <div style="font-size:10px;color:rgba(255,255,255,0.62);letter-spacing:0.9px;text-transform:uppercase;font-weight:700;">Run</div>
         </div>
-        <div style="font-size:17px;font-weight:600;color:#fff;letter-spacing:-0.3px;">Run Evaluation</div>
-        <div style="font-size:11px;color:rgba(255,255,255,0.7);margin-top:6px;">All checks pass · ready</div>
-        <div style="margin-top:14px;padding:8px 10px;border-radius:8px;background:rgba(255,255,255,0.95);color:${B.pr};font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:6px;cursor:pointer;">▶ START EVALUATION</div>
+        <div style="font-size:18px;font-weight:600;color:#fff;letter-spacing:-0.3px;line-height:1.25;">Run Evaluation</div>
+        <div style="font-size:11.5px;color:rgba(255,255,255,0.7);margin-top:9px;line-height:1.5;">All checks pass · ready</div>
+        <div style="margin-top:auto;padding:11px 12px;border-radius:9px;background:rgba(255,255,255,0.95);color:${B.pr};font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:7px;cursor:pointer;letter-spacing:0.3px;">▶ START EVALUATION</div>
       </div>
     </div>`;
   }
@@ -1897,19 +1939,19 @@ function renderCards(){
       const m=METRICS.find(x=>x.id===id);
       const att=!!attached[id];
       const isTraj=id==='trajectory';
-      const attRow=(type,name)=>`<div style="padding:6px 9px;border-radius:7px;background:${att?B.sf:'#fff'};border:1px ${att?'solid':'dashed'} ${att?B.bd:'#D7DEEC'};display:flex;align-items:center;gap:7px;font-size:10.5px;margin-top:6px;">
+      const attRow=(type,name)=>`<div class="cv-att" style="padding:9px 11px;border-radius:8px;background:${att?B.sf:'#fff'};border:1px ${att?'solid':'dashed'} ${att?B.bd:'#D7DEEC'};display:flex;align-items:center;gap:8px;font-size:10.5px;margin-top:8px;">
         <span>${att?(type==='json'?'{}':'📄'):'📎'}</span>
         <span style="flex:1;font-weight:${att?600:500};color:${att?'#1A1A22':'#9AA3B2'};">${att?name:(type==='json'?'Attach JSON':'Attach ground truth')}</span>
         ${att?`<span style="color:${B.pr};font-weight:700;font-size:11px;">✓</span>`:''}
       </div>`;
       h+=`<div class="cv-card" id="cv-${id}" style="left:${l.x}px;top:${l.y}px;width:${l.w}px;height:${l.h}px;background:#FBFCFE;border-color:${B.bd};">
-        <div style="position:absolute;left:0;top:12px;bottom:12px;width:3px;border-radius:0 3px 3px 0;background:${B.pr};opacity:0.5;"></div>
-        <div style="padding:14px 16px 14px 18px;box-sizing:border-box;">
-          <div style="display:flex;align-items:center;gap:9px;margin-bottom:10px;">
-            <div style="width:28px;height:28px;border-radius:7px;background:${B.sf};border:1px solid ${B.bd};display:flex;align-items:center;justify-content:center;font-size:13px;">${m.icon}</div>
+        <div style="position:absolute;left:0;top:16px;bottom:16px;width:3px;border-radius:0 3px 3px 0;background:${B.pr};opacity:0.5;"></div>
+        <div style="padding:20px 22px 20px 24px;height:100%;box-sizing:border-box;">
+          <div style="display:flex;align-items:center;gap:11px;margin-bottom:16px;">
+            <div style="width:32px;height:32px;border-radius:8px;background:${B.sf};border:1px solid ${B.bd};display:flex;align-items:center;justify-content:center;font-size:14px;">${m.icon}</div>
             <div>
-              <div style="font-size:8.5px;color:#9AA3B2;letter-spacing:0.5px;text-transform:uppercase;font-weight:700;">Metric</div>
-              <div style="font-size:14px;font-weight:600;color:#1A1A22;letter-spacing:-0.2px;">${m.label}</div>
+              <div style="font-size:9px;color:#9AA3B2;letter-spacing:0.6px;text-transform:uppercase;font-weight:700;">Metric</div>
+              <div style="font-size:14.5px;font-weight:600;color:#1A1A22;letter-spacing:-0.2px;margin-top:2px;">${m.label}</div>
             </div>
           </div>
           ${attRow('csv','ground_truth.csv')}
@@ -1919,28 +1961,34 @@ function renderCards(){
     });
   }
 
-  cards.innerHTML=h;
-  /* Make all cards visible next tick */
-  requestAnimationFrame(()=>{
-    cards.querySelectorAll('.cv-card').forEach(el=>{if(!el.classList.contains('in'))el.classList.add('in');});
-  });
+  commit(h);
 }
 
-/* ── metrics panel ── */
+/* ── metrics panel ──
+   Built once; later renders only toggle state so each row's own
+   transition runs instead of the row being replaced wholesale. */
+let panelBuilt=false;
 function renderPanel(){
   const panel=document.getElementById('cv-panel');if(!panel)return;
   panel.style.transform=panelOpen?'translateX(0)':'translateX(100%)';
   panel.style.opacity=panelOpen?'1':'0';
   const list=document.getElementById('cv-panel-list');if(!list)return;
-  list.innerHTML=METRICS.map(m=>{
-    const ip=picked.includes(m.id);
-    return`<div class="cv-mopt${ip?' sel':''}" onclick="cvToggle('${m.id}')">
-      <span style="display:flex;align-items:center;gap:7px;">
-        <span style="font-size:13px;">${m.icon}</span>${m.label}
+  if(!panelBuilt){
+    list.innerHTML=METRICS.map(m=>`<div class="cv-mopt" data-m="${m.id}" onclick="cvToggle('${m.id}')">
+      <span style="display:flex;align-items:center;gap:9px;">
+        <span style="font-size:14px;">${m.icon}</span>${m.label}
       </span>
-      <span style="width:16px;height:16px;border-radius:4px;background:${ip?B.pr:'#fff'};border:1.5px solid ${ip?B.pr:'#D7DEEC'};display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:11px;">${ip?'✓':''}</span>
-    </div>`;
-  }).join('');
+      <span class="cv-box"></span>
+    </div>`).join('');
+    panelBuilt=true;
+  }
+  METRICS.forEach(m=>{
+    const row=list.querySelector(`[data-m="${m.id}"]`);if(!row)return;
+    const ip=picked.includes(m.id);
+    row.classList.toggle('sel',ip);
+    const box=row.querySelector('.cv-box');
+    if(box){box.classList.toggle('on',ip);box.textContent=ip?'✓':'';}
+  });
 }
 
 function render(){renderSVG();renderCards();renderPanel();}
@@ -1985,6 +2033,11 @@ function runDemo(){
   t+=650;   at(t,()=>{attached={...attached,security:true};render();});
   t+=T.ag;  at(t,()=>{phase=4;render();fit();});
   t+=T.c4;  at(t,()=>{done=true;render();});
+  /* Whole canvas walkthrough is now finished. ONLY here — at the very end —
+     do we switch to the Manual view, then scroll the manual form down to
+     reveal the full configuration. Nothing switches mid-demo. */
+  t+=1600;  at(t,()=>{ if(typeof showEvalView==='function') showEvalView('manual'); });
+  t+=750;   at(t,()=>{ var ms=document.getElementById('manual-scroll'); if(ms) ms.scrollTo({top:ms.scrollHeight,behavior:'smooth'}); });
 }
 
 /* ── pan & zoom ── */
@@ -1998,7 +2051,7 @@ function setupPan(){
   });
   document.addEventListener('mousemove',e=>{
     if(!dragging)return;
-    tx+=e.clientX-lmx;ty+=e.clientY-lmy;lmx=e.clientX;lmy=e.clientY;applyT();
+    tx+=e.clientX-lmx;ty+=e.clientY-lmy;lmx=e.clientX;lmy=e.clientY;applyT(false);
   });
   document.addEventListener('mouseup',()=>dragging=false);
   root.addEventListener('wheel',e=>{
@@ -2011,7 +2064,7 @@ function setupPan(){
       const wx=(px-tx)/sc,wy=(py-ty)/sc;
       tx=px-wx*ns;ty=py-wy*ns;sc=ns;
     }else{tx+=-e.deltaX;ty+=-e.deltaY;}
-    applyT();
+    applyT(false);
   },{passive:false,capture:true});
 }
 
@@ -2033,9 +2086,9 @@ document.addEventListener('DOMContentLoaded',()=>{
       <div id="cv-panel-list"></div>
     </div>
     <div style="position:absolute;right:16px;bottom:16px;z-index:50;display:flex;align-items:center;background:rgba(255,255,255,0.95);border:1px solid #E5EAF2;border-radius:10px;padding:3px;box-shadow:0 4px 14px rgba(0,0,0,0.08);">
-      <button onclick="sc=Math.max(0.25,sc*0.8);applyT();" style="width:30px;height:30px;display:flex;align-items:center;justify-content:center;background:transparent;border:none;cursor:pointer;border-radius:6px;font-size:16px;color:#4B5563;">−</button>
+      <button onclick="sc=Math.max(0.25,sc*0.8);applyT(true);" style="width:30px;height:30px;display:flex;align-items:center;justify-content:center;background:transparent;border:none;cursor:pointer;border-radius:6px;font-size:16px;color:#4B5563;">−</button>
       <div id="tb-zpct" style="font-family:monospace;font-size:10px;color:#4B5563;min-width:36px;text-align:center;font-weight:600;">74%</div>
-      <button onclick="sc=Math.min(2.2,sc*1.25);applyT();" style="width:30px;height:30px;display:flex;align-items:center;justify-content:center;background:transparent;border:none;cursor:pointer;border-radius:6px;font-size:16px;color:#4B5563;">+</button>
+      <button onclick="sc=Math.min(2.2,sc*1.25);applyT(true);" style="width:30px;height:30px;display:flex;align-items:center;justify-content:center;background:transparent;border:none;cursor:pointer;border-radius:6px;font-size:16px;color:#4B5563;">+</button>
       <div style="width:1px;height:16px;background:#E5EAF2;margin:0 3px;"></div>
       <button onclick="fit();" style="width:30px;height:30px;display:flex;align-items:center;justify-content:center;background:transparent;border:none;cursor:pointer;border-radius:6px;font-size:13px;color:#4B5563;">⊡</button>
     </div>`;
@@ -2044,13 +2097,19 @@ document.addEventListener('DOMContentLoaded',()=>{
   render();
   fit();
 
-  /* Trigger animation on mouseenter */
+  /* Trigger the walkthrough once — on hover, or when the canvas has
+     scrolled properly into view (trackpad users never move the cursor). */
   let triggered=false;
-  root.addEventListener('mouseenter',()=>{
-    if(triggered)return;
-    triggered=true;
-    runDemo();
-  },{once:true});
+  const trigger=()=>{ if(triggered)return; triggered=true; runDemo(); };
+  root.addEventListener('mouseenter',trigger,{once:true});
+  if('IntersectionObserver' in window){
+    const io=new IntersectionObserver(es=>{
+      es.forEach(e=>{
+        if(e.isIntersecting&&e.intersectionRatio>=0.55){ io.disconnect(); trigger(); }
+      });
+    },{threshold:[0.55]});
+    io.observe(root);
+  }
 });
 })();
 </script>

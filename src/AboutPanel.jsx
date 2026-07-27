@@ -148,7 +148,8 @@ export default function AboutPanel({ open, onClose }) {
           <aside className="values-aside">
             <div
               className="values-aside__img"
-              style={{ backgroundImage: `url(${VALUES_IMG})` }}
+              /* Anchor to the top so the subject isn't cropped off the top edge. */
+              style={{ backgroundImage: `url(${VALUES_IMG})`, backgroundPosition: 'center top' }}
             />
             <div className="values-aside__year">
               <span>2022</span>
@@ -163,7 +164,7 @@ export default function AboutPanel({ open, onClose }) {
             <h2 className="about-footer__headline">
               Still here?<br />Let&rsquo;s talk.
             </h2>
-            <a className="about-footer__cta" href="mailto:yuktithakkar247@gmail.com">
+            <a className="about-footer__cta" href="mailto:yuktithakkar247@gmail.com?subject=Hello%20Yukti&body=Hi%20Yukti%2C">
               <span>SAY HELLO</span>
               <span className="about-footer__cta-dot" />
             </a>
