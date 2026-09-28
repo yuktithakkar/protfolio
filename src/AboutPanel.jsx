@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
 import { useEffect, useRef } from 'react'
+import useOverlay from './useOverlay.js'
 
 const ease = [0.76, 0, 0.24, 1]
 
@@ -16,6 +17,9 @@ const VALUES_IMG = '/about/4.jpeg'   // beside the experience timeline
 // the splash scroll.
 export default function AboutPanel({ open, onClose }) {
   const scrollRef = useRef(null)
+  const panelRef = useRef(null)
+  useOverlay(panelRef, open, onClose)
+
   // Reset the panel's internal scroll every time it's closed so reopening
   // always starts at the top.
   useEffect(() => {
@@ -24,13 +28,22 @@ export default function AboutPanel({ open, onClose }) {
     }
   }, [open])
 
+  // Move focus into the panel on open so the keyboard path continues here
+  // rather than back at the top of the document.
+  useEffect(() => {
+    if (open) panelRef.current?.querySelector('.about-back')?.focus()
+  }, [open])
+
   return (
     <motion.div
+      ref={panelRef}
       className="about-panel"
+      role="dialog"
+      aria-modal={open || undefined}
+      aria-label="About Yukti Thakkar"
       initial={false}
       animate={{ x: open ? '0%' : '100%' }}
       transition={{ duration: 1.05, ease }}
-      aria-hidden={!open}
     >
       <div className="about-scroll" ref={scrollRef}>
         <header className="about-nav">
@@ -63,26 +76,17 @@ export default function AboutPanel({ open, onClose }) {
           </div>
         </section>
 
-        <section
-          className="about-gallery"
-          /* Two-up: equal columns, equal heights, side by side. */
-          style={{ gridTemplateColumns: '1fr 1fr', alignItems: 'stretch' }}
-        >
+        {/* Two-up: equal columns, equal heights. Sizing lives in CSS so the
+            phone breakpoint can stack them — inline styles used to win over
+            the media queries and left two 170px-wide slivers at 390px. */}
+        <section className="about-gallery">
           <div
-            className="g-img"
-            style={{
-              backgroundImage: `url(${G_LEFT})`,
-              backgroundPosition: '50% 50%',
-              height: 'clamp(400px, 52vh, 560px)',
-            }}
+            className="g-img g-img--portrait"
+            style={{ backgroundImage: `url(${G_LEFT})` }}
           />
           <div
-            className="g-img"
-            style={{
-              backgroundImage: `url(${G_RIGHT})`,
-              backgroundPosition: '50% 60%',
-              height: 'clamp(400px, 52vh, 560px)',
-            }}
+            className="g-img g-img--landscape"
+            style={{ backgroundImage: `url(${G_RIGHT})` }}
           />
         </section>
 

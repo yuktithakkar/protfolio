@@ -1,0 +1,23 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "overused-font",
+        "value": "inter",
+        "createdAt": "2026-09-05T18:06:18.492Z",
+        "reason": "user confirmed: incumbent body face in a deliberate four-face system (Anton display / DM Serif editorial / JetBrains Mono labels / Inter body), loaded in index.html and used inside both case-study HTML files"
+      },
+      {
+        "rule": "layout-transition",
+        "value": "*",
+        "files": [
+          "src/styles.css"
+        ],
+        "createdAt": "2026-09-05T18:06:34.763Z",
+        "reason": "user confirmed: .yukti-hero splash transition only; transform:scale would distort the Anton letterforms and break clip-path alignment with the cover bars"
+      }
+    ]
+  }
+}

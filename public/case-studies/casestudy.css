@@ -1,0 +1,454 @@
+/* ============================================================
+   CASE STUDY SYSTEM
+   One type scale and one section rhythm, shared by every case
+   study — the two HTML documents and the native Titan Crest page.
+
+   It exists because each study previously carried its own inline
+   styles, which is why CaseStudyPanel had to inject ~280 lines of
+   !important overrides to make them look related. Scoped to
+   .cs-doc so it cannot touch the product screenshots and demos
+   embedded inside a study — those are the artefact on display and
+   keep their own styling.
+
+   Deliberately absent, because the craft floor refuses them:
+   no eyebrow/kicker class, no metric-tile class, no generic card.
+   ============================================================ */
+
+.cs-doc {
+  /* ---- type ---- */
+  --cs-display: 'DM Serif Display', 'Times New Roman', Georgia, serif;
+  --cs-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --cs-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  --cs-d1: clamp(40px, 5.2vw, 76px);
+  --cs-d2: clamp(30px, 3.4vw, 46px);
+  --cs-d3: clamp(21px, 2.0vw, 27px);
+  --cs-lede: clamp(18px, 1.35vw, 21px);
+  --cs-body: 17px;
+  --cs-small: 15px;
+  --cs-micro: 12.5px;
+
+  /* ---- ink. Secondary tones are tinted from the ink, not grey,
+       and every one clears 4.5:1 on --cs-bg. ---- */
+  --cs-ink: #0A0F1E;
+  --cs-ink-2: #454F63;
+  --cs-ink-3: #5C6678;
+  --cs-line: #E2E6EE;
+  --cs-line-strong: #C9D0DD;
+  --cs-bg: #FAFAF9;
+  --cs-bg-soft: #F2F4F8;
+  --cs-bg-deep: #0A0F1E;
+  --cs-accent: #2456C8;
+
+  /* ---- rhythm ---- */
+  --cs-section-y: clamp(72px, 8vw, 124px);
+  --cs-wrap: 1200px;
+  --cs-pad: clamp(24px, 4vw, 64px);
+
+  font-family: var(--cs-sans);
+  color: var(--cs-ink);
+  background: var(--cs-bg);
+}
+
+/* ---------- structure ---------- */
+.cs-doc .cs-wrap {
+  max-width: var(--cs-wrap);
+  margin: 0 auto;
+  padding-left: var(--cs-pad);
+  padding-right: var(--cs-pad);
+}
+.cs-doc .cs-section { padding: var(--cs-section-y) 0; }
+.cs-doc .cs-section--tight { padding: calc(var(--cs-section-y) * 0.6) 0; }
+.cs-doc .cs-section--dark {
+  background: var(--cs-bg-deep);
+  color: #EDEFF4;
+}
+.cs-doc .cs-section--dark .cs-lede,
+.cs-doc .cs-section--dark .cs-body { color: #B6BECD; }
+.cs-doc .cs-section--dark .cs-h2 { color: #FFF; }
+
+/* ---------- type ---------- */
+.cs-doc .cs-h1,
+.cs-doc .cs-h2,
+.cs-doc .cs-h3 {
+  font-family: var(--cs-display);
+  font-weight: 400;
+  color: var(--cs-ink);
+  text-wrap: balance;
+  margin: 0;
+}
+.cs-doc .cs-h1 {
+  font-size: var(--cs-d1);
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  max-width: 16ch;
+}
+.cs-doc .cs-h2 {
+  font-size: var(--cs-d2);
+  line-height: 1.06;
+  letter-spacing: -0.018em;
+  max-width: 20ch;
+}
+.cs-doc .cs-h3 {
+  font-size: var(--cs-d3);
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+/* The one accent the display face gets: a contrasting italic clause. */
+.cs-doc .cs-h1 em,
+.cs-doc .cs-h2 em {
+  font-style: italic;
+  color: var(--cs-accent);
+}
+
+.cs-doc .cs-lede {
+  font-size: var(--cs-lede);
+  line-height: 1.55;
+  color: var(--cs-ink-2);
+  max-width: 58ch;
+  margin: 22px 0 0;
+}
+.cs-doc .cs-body {
+  font-size: var(--cs-body);
+  line-height: 1.65;
+  color: var(--cs-ink-2);
+  max-width: 68ch;
+  margin: 18px 0 0;
+}
+.cs-doc .cs-h2 + .cs-lede { margin-top: 24px; }
+
+/* Small caps label. Not an eyebrow — it never sits above a heading;
+   it labels a figure, a column or a metadata row. */
+.cs-doc .cs-label {
+  font-family: var(--cs-mono);
+  font-size: var(--cs-micro);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--cs-ink-3);
+}
+
+/* ---------- spec row ----------
+   Replaces the four-up "2wk / 3+ / 0 / ↑" strip. Facts about the
+   engagement, at reading size — a 44px zero is not a finding. */
+.cs-doc .cs-spec {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin: clamp(32px, 4vw, 48px) 0 0;
+  padding: 0;
+  border-top: 1px solid var(--cs-line-strong);
+}
+.cs-doc .cs-spec > div {
+  padding: 16px 28px 16px 0;
+  border-bottom: 1px solid var(--cs-line);
+}
+.cs-doc .cs-spec > div:nth-child(odd) {
+  border-right: 1px solid var(--cs-line);
+  padding-right: 28px;
+}
+.cs-doc .cs-spec > div:nth-child(even) { padding-left: 28px; }
+.cs-doc .cs-spec dt {
+  font-family: var(--cs-mono);
+  font-size: var(--cs-micro);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--cs-ink-3);
+  margin: 0 0 6px;
+}
+.cs-doc .cs-spec dd {
+  font-size: var(--cs-small);
+  font-weight: 500;
+  color: var(--cs-ink);
+  margin: 0;
+}
+
+/* ---------- figures: a product screen plus what it proves ---------- */
+.cs-doc .cs-figure { margin: clamp(36px, 4.5vw, 64px) 0 0; }
+.cs-doc .cs-figure__cap {
+  display: block;
+  margin: 18px 0 0;
+  font-size: var(--cs-small);
+  line-height: 1.6;
+  color: var(--cs-ink-3);
+  max-width: 62ch;
+}
+
+/* ---------- comparison: rows, not red-vs-green boxes ---------- */
+.cs-doc .cs-compare {
+  margin: clamp(32px, 4vw, 56px) 0 0;
+  border-top: 1px solid var(--cs-line-strong);
+}
+.cs-doc .cs-compare__row {
+  display: grid;
+  grid-template-columns: minmax(120px, 1fr) 1.4fr 1.4fr;
+  gap: clamp(16px, 3vw, 48px);
+  padding: 22px 0;
+  border-bottom: 1px solid var(--cs-line);
+  align-items: baseline;
+}
+.cs-doc .cs-compare__axis {
+  font-size: var(--cs-small);
+  font-weight: 500;
+  color: var(--cs-ink);
+}
+.cs-doc .cs-compare__was,
+.cs-doc .cs-compare__now {
+  font-size: var(--cs-small);
+  line-height: 1.55;
+  color: var(--cs-ink-2);
+}
+.cs-doc .cs-compare__was { color: var(--cs-ink-3); }
+.cs-doc .cs-compare__head .cs-compare__was,
+.cs-doc .cs-compare__head .cs-compare__now {
+  font-family: var(--cs-mono);
+  font-size: var(--cs-micro);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--cs-ink-3);
+}
+.cs-doc .cs-compare__head .cs-compare__now { color: var(--cs-accent); }
+
+/* ---------- numbered narrative list (replaces card rows) ---------- */
+.cs-doc .cs-steps {
+  list-style: none;
+  margin: clamp(32px, 4vw, 56px) 0 0;
+  padding: 0;
+  border-top: 1px solid var(--cs-line);
+}
+.cs-doc .cs-steps > li {
+  display: grid;
+  grid-template-columns: 56px 1fr;
+  gap: clamp(12px, 2vw, 28px);
+  padding: 24px 0;
+  border-bottom: 1px solid var(--cs-line);
+  align-items: baseline;
+}
+.cs-doc .cs-steps__n {
+  font-family: var(--cs-mono);
+  font-size: var(--cs-micro);
+  letter-spacing: 0.1em;
+  color: var(--cs-ink-3);
+}
+.cs-doc .cs-steps__t {
+  font-size: var(--cs-body);
+  font-weight: 500;
+  color: var(--cs-ink);
+}
+.cs-doc .cs-steps__d {
+  font-size: var(--cs-small);
+  line-height: 1.6;
+  color: var(--cs-ink-2);
+  margin: 5px 0 0;
+  max-width: 60ch;
+}
+
+/* ---------- pull quote: the words, no decorative glyph ---------- */
+.cs-doc .cs-quote {
+  margin: clamp(40px, 5vw, 72px) 0 0;
+  padding: 0 0 0 clamp(20px, 3vw, 40px);
+  border-left: 1px solid var(--cs-accent);
+}
+.cs-doc .cs-quote p {
+  font-family: var(--cs-display);
+  font-size: clamp(22px, 2.4vw, 32px);
+  line-height: 1.3;
+  letter-spacing: -0.012em;
+  color: var(--cs-ink);
+  margin: 0;
+  max-width: 32ch;
+}
+.cs-doc .cs-section--dark .cs-quote p { color: #FFF; }
+.cs-doc .cs-quote footer {
+  margin: 18px 0 0;
+  font-family: var(--cs-mono);
+  font-size: var(--cs-micro);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--cs-ink-3);
+}
+
+/* ---------- aside note: hairline, the label carries the accent ---------- */
+.cs-doc .cs-note {
+  margin: clamp(28px, 3.5vw, 44px) 0 0;
+  padding: 0 0 0 20px;
+  border-left: 1px solid var(--cs-line-strong);
+  max-width: 46ch;
+}
+.cs-doc .cs-note__t {
+  display: block;
+  font-size: var(--cs-small);
+  font-weight: 500;
+  color: var(--cs-accent);
+  margin: 0 0 6px;
+}
+.cs-doc .cs-note p {
+  font-size: var(--cs-small);
+  line-height: 1.6;
+  color: var(--cs-ink-2);
+  margin: 0;
+}
+
+/* ---------- two-column narrative ---------- */
+.cs-doc .cs-two {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(32px, 5vw, 88px);
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .cs-doc .cs-two { grid-template-columns: 1fr; }
+  .cs-doc .cs-compare__row { grid-template-columns: 1fr; gap: 6px; padding: 18px 0; }
+  .cs-doc .cs-compare__head { display: none; }
+  .cs-doc .cs-compare__was::before { content: 'Before — '; color: var(--cs-ink-3); }
+  .cs-doc .cs-compare__now::before { content: 'TestBench — '; color: var(--cs-accent); }
+  .cs-doc .cs-steps > li { grid-template-columns: 40px 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cs-doc .reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
+}
+
+/* ---------- hero ---------- */
+.cs-doc .cs-hero { padding-top: clamp(96px, 10vw, 148px); }
+.cs-doc .cs-hero__grid { grid-template-columns: 1fr 0.72fr; align-items: start; }
+.cs-doc .cs-hero__fig { margin-top: 6px; }
+.cs-doc .cs-hero__fig img {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  display: block;
+  border-radius: 3px;
+  background: var(--cs-bg-soft);
+}
+@media (max-width: 900px) {
+  .cs-doc .cs-hero__grid { grid-template-columns: 1fr; }
+  .cs-doc .cs-spec > div { padding-right: 24px; margin-right: 24px; }
+}
+
+/* Rules stop near the text they organise, not at the far page edge. */
+.cs-doc .cs-steps { max-width: 900px; }
+/* A heading followed by a list or block needs the same air a lede gets. */
+.cs-doc .cs-h2 + div,
+.cs-doc .cs-h2 + ul,
+.cs-doc .cs-h2 + ol,
+.cs-doc .cs-h3 + div { margin-top: 24px; }
+
+/* ============================================================
+   ALIGNMENT
+   Before this block the page had three left edges (144 / 160 / 178)
+   and six right edges, because the rewritten sections used .cs-wrap
+   while the untouched ones kept their own inline max-width + padding.
+   Everything textual now starts on one line and ends on one of two:
+   the reading measure, or the full container for structures.
+   ============================================================ */
+
+/* Legacy wrappers (inline max-width:1200px) adopt the same gutter.
+   Inline styles can only be beaten with !important. */
+.cs-doc section > div[style*="max-width:1200px"],
+.cs-doc div[style*="max-width:1200px"][style*="margin:0 auto"] {
+  padding-left: var(--cs-pad) !important;
+  padding-right: var(--cs-pad) !important;
+}
+
+/* --- one reading measure --- */
+.cs-doc {
+  --cs-measure: 760px;
+  --cs-measure-wide: 980px;
+}
+.cs-doc .cs-h1 { max-width: min(18ch, var(--cs-measure)); }
+.cs-doc .cs-h2 { max-width: min(26ch, var(--cs-measure)); }
+.cs-doc .cs-lede { max-width: var(--cs-measure); }
+.cs-doc .cs-body { max-width: var(--cs-measure); }
+
+/* Structures run to the wider column so their rules relate to each
+   other rather than each stopping somewhere different. */
+.cs-doc .cs-steps,
+.cs-doc .cs-compare { max-width: var(--cs-measure-wide); }
+.cs-doc .cs-steps__d { max-width: none; }
+.cs-doc .cs-spec { max-width: var(--cs-measure); }
+
+/* The hero is the one deliberate two-column moment; its text column
+   keeps its own measure so the figure beside it has room. */
+.cs-doc .cs-hero .cs-h1 { max-width: none; }   /* breaks on its own <br> */
+.cs-doc .cs-hero .cs-lede,
+.cs-doc .cs-hero .cs-spec { max-width: none; }
+
+/* Legacy section-intro wrappers carry their own inline max-width
+   (640 / 680 / 700px), which gave four different lede right-edges.
+   Where a wrapper holds a heading, the measure comes from the system. */
+.cs-doc .reveal:has(> .cs-h2),
+.cs-doc .pf-rv:has(> .cs-h2) { max-width: none !important; }
+
+/* ============================================================
+   COMMUNICATION CENTER — legacy hooks adopted into the system
+   The five-moment walkthrough and the flow section keep their own
+   markup; only their type joins the scale.
+   ============================================================ */
+.cs-doc .ss-h,
+.cs-doc .iflow-card__name {
+  font-family: var(--cs-display) !important;
+  font-weight: 400 !important;
+  font-size: var(--cs-d3) !important;
+  line-height: 1.2 !important;
+  letter-spacing: -0.01em !important;
+  color: var(--cs-ink) !important;
+}
+.cs-doc .ss-h { font-size: clamp(24px, 2.4vw, 34px) !important; }
+.cs-doc .ss-body { color: var(--cs-ink-2) !important; }
+/* Step counter: sequence the reader actually needs (01 of 05). */
+.cs-doc .ss-step {
+  font-family: var(--cs-mono) !important;
+  font-size: var(--cs-micro) !important;
+  letter-spacing: 0.14em !important;
+  color: var(--cs-ink-3) !important;
+}
+.cs-doc .iflow-h { max-width: min(26ch, var(--cs-measure)); }
+
+/* ============================================================
+   DARK SECTIONS
+   Several legacy sections set a dark background inline. Without this
+   the system's ink colour rendered headings near-black on near-black
+   — "Not a messaging tool." disappeared entirely.
+   ============================================================ */
+.cs-doc [style*="background:#0A0F1E"] .cs-h1,
+.cs-doc [style*="background:#0A0F1E"] .cs-h2,
+.cs-doc [style*="background:#0A0F1E"] .cs-h3,
+.cs-doc [style*="background:#111827"] .cs-h2,
+.cs-doc .pf-sec-dk .cs-h2 { color: #FFFFFF; }
+
+.cs-doc [style*="background:#0A0F1E"] .cs-lede,
+.cs-doc [style*="background:#0A0F1E"] .cs-body,
+.cs-doc [style*="background:#111827"] .cs-lede { color: #B6BECD; }
+
+.cs-doc [style*="background:#0A0F1E"] .cs-h1 em,
+.cs-doc [style*="background:#0A0F1E"] .cs-h2 em,
+.cs-doc [style*="background:#111827"] .cs-h2 em { color: #7FA6FF; }
+
+/* Legacy intro paragraphs that sit under a converted heading get the
+   lede's spacing, so the two are not jammed together. */
+.cs-doc .cs-h2 + p { margin-top: 24px; }
+
+/* Legacy intro paragraphs carry inline margin:0, so the gap after a
+   converted heading needs to win. */
+.cs-doc .cs-h2 + p { margin-top: 24px !important; }
+
+/* The information-flow section keeps its own 40px gutter; bring it onto
+   the shared one so its heading starts on the same line as every other. */
+.cs-doc .iflow-head,
+.cs-doc .iflow-grid,
+.cs-doc .iflow-foot,
+.cs-doc .iflow-gates {
+  padding-left: var(--cs-pad) !important;
+  padding-right: var(--cs-pad) !important;
+}
+/* The design-principles strip: heading above its three rules, not
+   squeezed into a 240px column beside them. */
+.cs-doc .cc-principles-rules { margin-top: 28px; }
+
+/* The information-flow rail runs an infinite shimmer. Same rule as the
+   Titan marquee: motion that never stops has to stop under this setting. */
+@media (prefers-reduced-motion: reduce) {
+  .cs-doc .iflow-track::after,
+  .cs-doc [class*="marquee"],
+  .cs-doc [style*="animation"] { animation: none !important; }
+}

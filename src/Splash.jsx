@@ -1,6 +1,6 @@
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion'
 import { useEffect, useRef, useState } from 'react'
-import useViewport from './useViewport.js'
+import PROJECTS from './projects.js'
 
 const ease = [0.76, 0, 0.24, 1]
 
@@ -11,12 +11,6 @@ const ease = [0.76, 0, 0.24, 1]
    text, same coords as the landing's letters → alignment is guaranteed. */
 const STROKE_VBX = [207.9, 447.2, 773.2, 1159.2, 1355.9]
 const STROKE_W = 8   // viewBox-unit width of each bar strip
-
-const BAND_IMAGES = [
-  '/testbench-cover.png',
-  'https://picsum.photos/id/1015/1200/900',
-  'https://picsum.photos/id/64/900/1400',
-]
 
 /* Phase timeline (ms):
      0  – 1000  idle      bars centred, black
@@ -58,7 +52,7 @@ function Landing({ phase, trackRef, onAboutOpen, onCaseOpen }) {
   // Since the page is exactly the 1000vh scroll-track, this directly
   // maps to our stage stops.
   const { scrollYProgress } = useScroll()
-  // YUKTI exits left fully by stage 1 — so when Archidomo expands flush
+  // YUKTI exits left fully by stage 1 — so when the first card expands flush
   // to viewport-left, no cream/YUKTI sliver is visible behind it.
   // YUKTI exits left during the very first expansion (stop 0 → 1) and
   // stays off-screen for the rest of the timeline. One output value per
@@ -75,16 +69,16 @@ function Landing({ phase, trackRef, onAboutOpen, onCaseOpen }) {
 
   // Vertical-phase choreography. Tiles are 50vh tall (2 visible at a time).
   //   • The next tile starts peeking in from below AT THE SAME TIME as
-  //     Projets index slides in — so the screen never looks "static".
-  //   • Pikko fully exits over the following scrolls, then we scroll
+  //     Selected Work index slides in — so the screen never looks "static".
+  //   • the hero card fully exits over the following scrolls, then we scroll
   //     through the rest of the 6 tiles.
   //
   //   scrollY   leftStackY   what user sees
   //   ───────   ──────────   ─────────────────────────────────────────
-  //   0.40      0            Pikko full visible; Projets begins entering
+  //   0.40      0            the hero card full visible; Projets begins entering
   //   0.50      -15vh        Projets full; tile-0 peeking ~15vh from below
-  //   0.60      -50vh        tile-0 half-visible at bottom; Pikko top 50vh
-  //   0.70      -100vh       Pikko gone; tiles 0,1 visible (2 × 50vh)
+  //   0.60      -50vh        tile-0 half-visible at bottom; the hero card top 50vh
+  //   0.70      -100vh       the hero card gone; tiles 0,1 visible (2 × 50vh)
   //   0.80      -150vh       tiles 1,2
   //   0.90      -200vh       tiles 2,3
   //   1.00      -300vh       tiles 4,5 (last 2)
@@ -106,20 +100,22 @@ function Landing({ phase, trackRef, onAboutOpen, onCaseOpen }) {
       `${-FH - 3 * TILE_H}vh`,        // 1.00: tiles 4,5 — flush at viewport bottom
     ],
   )
-  // Projets index slides in from the right immediately after Pikko shifts
-  // to the left. The tile peek (above) begins at the SAME scroll point
-  // so the user feels there's more content waiting below.
+  // Selected Work index slides in from the right as the hero card shrinks
+  // from 70vw to 50vw and moves left (0.35 → 0.40). It used to start only
+  // at 0.40, which left the entire right half of the viewport blank for
+  // ~90vh of scrolling — a dead beat right before the payoff. Now the
+  // index fills the space at the same moment the space opens.
   const projetsX = useTransform(
     scrollYProgress,
-    [0.40, 0.50],
+    [0.35, 0.44],
     ['100%', '0%'],
   )
-  // About CTA appears together with the Projects index — so when the
+  // About CTA appears together with the Selected Work index — so when the
   // user lands on the project list they immediately see "About me" as
   // the natural next step, not buried at the bottom of scroll.
   const aboutCtaOpacity = useTransform(
     scrollYProgress,
-    [0.40, 0.50],
+    [0.38, 0.46],
     [0, 1],
   )
 
@@ -172,7 +168,7 @@ function Landing({ phase, trackRef, onAboutOpen, onCaseOpen }) {
         <BandsArea scrollYProgress={scrollYProgress} show={bandsIn} onCaseOpen={onCaseOpen} />
         <VertTilesGroup scrollYProgress={scrollYProgress} />
       </motion.div>
-      {/* Projets index slides in from right when Pikko exits. */}
+      {/* Selected Work index slides in from right when the hero card exits. */}
       <ProjetsIndex x={projetsX} ctaOpacity={aboutCtaOpacity} onAboutOpen={onAboutOpen} onCaseOpen={onCaseOpen} />
       <motion.div style={{ opacity: chromeOpacity }}>
         <Copy show={chromeIn} />
@@ -199,9 +195,9 @@ function VertTilesGroup({ scrollYProgress }) {
 }
 
 function VertTiles() {
-  // 6 image-only tiles below Pikko. Each is positioned absolutely at
+  // 6 image-only tiles below the hero card. Each is positioned absolutely at
   // top: FH + i * TILE_H so the stack forms a continuous vertical strip
-  // starting where Pikko's bottom would be at stage 4 (= top: 100vh).
+  // starting where the hero card's bottom would be at stage 4 (= top: 100vh).
   // 5.png (index 4) is a portrait composition — flag it so CSS can use
   // a blurred-backdrop fill instead of cropping or leaving white margins.
   return (
@@ -215,7 +211,7 @@ function VertTiles() {
             style={{
               top: `${FH + i * TILE_H}vh`,
               height: `${TILE_H}vh`,
-              width: `${PIKKO_LEFT_W}vw`,
+              width: `${HERO_LEFT_W}vw`,
               backgroundImage: portrait ? undefined : `url(${img})`,
               '--tile-img': `url(${img})`,
             }}
@@ -227,31 +223,25 @@ function VertTiles() {
 }
 
 function ProjetsIndex({ x, ctaOpacity, onAboutOpen, onCaseOpen }) {
-  const ROWS = [
-    { n: '01', label: 'TESTBENCH',          sub: 'AI EVALUATION PLATFORM',     caseId: 'testbench' },
-    { n: '02', label: 'COMMUNICATION CENTER', sub: 'IP LIFECYCLE SAAS',        caseId: 'comms' },
-    { n: '03', label: 'TITAN CREST 2.0',    sub: 'SMARTWATCH FACE SYSTEM',     caseId: 'titan-crest' },
-  ]
   const handle = (caseId) => () => { if (onCaseOpen) onCaseOpen(caseId) }
   return (
     <motion.aside className="projets-aside" style={{ x }}>
       <h2 className="projets-aside__title">Selected Work</h2>
       <ul className="projets-aside__list">
-        {ROWS.map((r) => (
-          <li
-            key={r.n}
-            className="projets-aside__row projets-aside__row--clickable"
-            role="button"
-            tabIndex={0}
-            onClick={handle(r.caseId)}
-            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handle(r.caseId)() } }}
-          >
-            <span className="projets-aside__num">{r.n}</span>
-            <span className="projets-aside__label">
-              {r.label}
-              <span className="projets-aside__sub">{r.sub}</span>
-            </span>
-            <span className="projets-aside__arrow" aria-hidden>→</span>
+        {PROJECTS.map((p) => (
+          <li key={p.id} className="projets-aside__row">
+            <button
+              type="button"
+              className="projets-aside__btn"
+              onClick={handle(p.id)}
+            >
+              <span className="projets-aside__num">{p.num}</span>
+              <span className="projets-aside__label">
+                {p.name}
+                <span className="projets-aside__sub">{p.sub}</span>
+              </span>
+              <span className="projets-aside__arrow" aria-hidden>→</span>
+            </button>
           </li>
         ))}
       </ul>
@@ -289,82 +279,23 @@ function BandsArea({ scrollYProgress, show, onCaseOpen }) {
   )
 }
 
-/* Recreated TestBench product dashboard — a crisp HTML/CSS "peek" of the
-   real case-study screen (agent header + score + metric tiles + trend),
-   sized in cqw so it scales with the card. Used as the collapsed visual. */
-function TestBenchPeek() {
-  return (
-    <div className="tb-peek">
-      <div className="tb-peek__head">
-        <span className="tb-peek__ic" />
-        <span className="tb-peek__nm">Customer Support Agent</span>
-        <span className="tb-peek__pill">94%</span>
-      </div>
-      <div className="tb-peek__sub">Production · v2 · cs-prod-001</div>
-      <div className="tb-peek__tiles">
-        <div className="tb-peek__tile"><span className="tb-peek__tl">Accuracy</span><span className="tb-peek__tv">92%<i>+3</i></span></div>
-        <div className="tb-peek__tile"><span className="tb-peek__tl">Safety</span><span className="tb-peek__tv">95%<i>+1</i></span></div>
-        <div className="tb-peek__tile"><span className="tb-peek__tl">Pass rate</span><span className="tb-peek__tv">91%</span></div>
-      </div>
-      <div className="tb-peek__spark">
-        {[40, 60, 45, 75, 65, 88, 72, 95].map((h, i) => (
-          <span key={i} style={{ height: `${h}%` }} />
-        ))}
-      </div>
-      <div className="tb-peek__div" />
-      <div className="tb-peek__runs">
-        <div className="tb-peek__run">
-          <span className="tb-peek__rdot" />
-          <span className="tb-peek__rid">TC-014</span>
-          <span className="tb-peek__rlbl">Refund policy</span>
-          <span className="tb-peek__rtag tb-peek__rtag--ok">Pass</span>
-        </div>
-        <div className="tb-peek__run">
-          <span className="tb-peek__rdot tb-peek__rdot--warn" />
-          <span className="tb-peek__rid">TC-011</span>
-          <span className="tb-peek__rlbl">PII exposure</span>
-          <span className="tb-peek__rtag tb-peek__rtag--warn">Flag</span>
-        </div>
-        <div className="tb-peek__run">
-          <span className="tb-peek__rdot" />
-          <span className="tb-peek__rid">TC-009</span>
-          <span className="tb-peek__rlbl">Tone &amp; empathy</span>
-          <span className="tb-peek__rtag tb-peek__rtag--ok">Pass</span>
-        </div>
-      </div>
-    </div>
-  )
-}
+/* Vertical offset of the collapsed thumbnail + name, per landing slot.
+   Positional, not per-project: the three cards sit staggered high-to-low
+   across the landing regardless of which work occupies which slot. */
+const LABEL_TOPS = ['12%', '27%', '42%']
+const INTRO_DELAYS = [0.16, 0.08, 0.00]
 
 function ScrollCard({ card, index, scrollYProgress, show, onCaseOpen }) {
-  // On landscape tablets the expanded card box turns tall-ish, so `cover`
-  // crops the landscape case-study image. Use `contain` there so the full
-  // image shows on the tinted glass.
-  const { isTablet } = useViewport()
   const stages = CARD_STAGES[index]
   const left   = useTransform(scrollYProgress, STAGE_STOPS, stages.map(s => `${s.left}vw`))
   const width  = useTransform(scrollYProgress, STAGE_STOPS, stages.map(s => `${s.width}vw`))
   const top    = useTransform(scrollYProgress, STAGE_STOPS, stages.map(s => `${s.top}vh`))
   const height = useTransform(scrollYProgress, STAGE_STOPS, stages.map(s => `${s.height}vh`))
 
-  // Image translateY: starts at the card's `landingY` on landing, moves
-  // back to 0 the moment that card hits its own expansion stage. After
-  // that stage it stays at 0 (image stays top-aligned even when the card
-  // shrinks again on the left).
   const activeStop = REACH_STOPS[index]
-  const imageY = useTransform(
-    scrollYProgress,
-    [0, activeStop],
-    [`${card.landingY}%`, '0%'],
-  )
-  // Crossfade between the portrait landing artwork and the landscape
-  // expanded artwork as the card grows. The collapsed (portrait) layer
-  // fades OUT 0→1 → 1→0 across the same window the expanded layer fades
-  // in. This means once expansion happens, only the landscape composition
-  // is visible — no ghosting of the portrait behind it.
-  // Snappy crossfade near the END of the expansion so the collapsed
-  // layer (image for TestBench, vertical label for Comms/Titan) and the
-  // expanded image overlap only briefly — minimal ghosting.
+  // Crossfade between the collapsed thumbnail and the full case-study
+  // artwork as the card grows. Snappy, near the END of the expansion, so
+  // the two layers overlap only briefly — minimal ghosting.
   const expandedOpacity = useTransform(
     scrollYProgress,
     [activeStop - 0.03, activeStop - 0.005],
@@ -375,54 +306,43 @@ function ScrollCard({ card, index, scrollYProgress, show, onCaseOpen }) {
     [activeStop - 0.03, activeStop - 0.005],
     [1, 0],
   )
-  // Info row fades in as the card becomes active.
+  // Footer (title + discipline + CTA) fades in as the card becomes active.
   const infoOpacity = useTransform(
     scrollYProgress,
     [activeStop - 0.06, activeStop],
     [0, 1],
   )
-  // Title fades in with the info row, but for Pikko (index 2) it fades
-  // back out once it shifts to the left in stage 4 — per the akaru.fr
-  // reference, only the image + info row are visible in that state.
-  const isPikko = index === 2
-  const titleOpacity = isPikko
-    ? useTransform(
-        scrollYProgress,
-        [activeStop - 0.06, activeStop, HERO_STOP - 0.05, HERO_STOP],
-        [0, 1, 1, 0],
-      )
-    : infoOpacity
 
-  // Pikko (Titan) morphs into an image-only tile at stage 5. The band's
-  // height already shrinks via CARD_STAGES, but the band-card itself is
-  // padded inside (top 8%, side 7%). In tile mode we collapse those
-  // paddings so the image fills the whole tile cleanly. Info row also
-  // fades out in tile mode.
-  // Hooks must be called unconditionally — we compute the transforms
-  // always and only USE them when isPikko.
+  // The last card carries the hero beat: after its own expansion it shifts
+  // full-height to the left, then morphs into the first image tile of the
+  // vertical strip. Its footer fades back out as it becomes a tile, and
+  // the artwork loses its inset padding to fill the tile edge to edge.
+  // Every transform is computed unconditionally — hooks cannot be called
+  // inside a branch — and only USED when this is the hero card.
+  const isHeroCard = index === 2
   const tileModeProgress = useTransform(scrollYProgress, [HERO_STOP, TILE_STOP], [0, 1])
   const tileTopMV    = useTransform(tileModeProgress, [0, 1], ['4%', '0%'])
-  const tileLeftMV   = useTransform(tileModeProgress, [0, 1], ['0%', '0%'])
-  const tileRightMV  = useTransform(tileModeProgress, [0, 1], ['0%', '0%'])
   const tileHeightMV = useTransform(tileModeProgress, [0, 1], ['70%', '100%'])
-  const pikkoInfoMV  = useTransform(
+  const heroInfoMV   = useTransform(
     scrollYProgress,
     [activeStop - 0.06, activeStop, HERO_STOP - 0.05, HERO_STOP],
     [0, 1, 1, 0],
   )
-  // AKARU-pattern: band-card spans the full width of the band (no
-  // horizontal padding), starts a bit below the top edge, and reaches
-  // down to leave space for the title row.
-  const bandCardTop    = isPikko ? tileTopMV    : '4%'
-  const bandCardLeft   = isPikko ? tileLeftMV   : '0%'
-  const bandCardRight  = isPikko ? tileRightMV  : '0%'
-  const bandCardHeight = isPikko ? tileHeightMV : '70%'
-  const pikkoInfoOpacity = isPikko ? pikkoInfoMV : infoOpacity
+  // Artwork fit. `cover` was slicing every composition — the expanded
+  // reveal cut words mid-glyph on all three cards ("HIGH PRIORI…",
+  // "reimag…"). These are authored compositions with type baked in, so
+  // the whole frame has to be visible: contain, floated on the card's own
+  // tinted glass. The one exception is the hero card once it morphs into
+  // a tile, where it sits in a strip of `cover` tiles and has to match.
+  const artworkFit = useTransform(scrollYProgress, (v) =>
+    (isHeroCard && v >= HERO_STOP ? 'cover' : 'contain'))
 
-  // Intro slide-in (during splash 'shift'): card enters from right.
-  const introDelay = [0.16, 0.08, 0.00][index]
-  const clickable = !!(card.caseId && onCaseOpen)
-  const handleClick = clickable ? () => onCaseOpen(card.caseId) : undefined
+  const bandCardTop    = isHeroCard ? tileTopMV    : '4%'
+  const bandCardHeight = isHeroCard ? tileHeightMV : '70%'
+  const footOpacity    = isHeroCard ? heroInfoMV   : infoOpacity
+
+  const clickable = !!onCaseOpen
+  const handleClick = clickable ? () => onCaseOpen(card.id) : undefined
   return (
     <motion.div
       className={`band band--glass band--${index + 1}${clickable ? ' is-clickable' : ''}`}
@@ -433,9 +353,10 @@ function ScrollCard({ card, index, scrollYProgress, show, onCaseOpen }) {
       }}
       initial={{ x: '100vw' }}
       animate={show ? { x: 0 } : { x: '100vw' }}
-      transition={{ duration: 0.85, delay: introDelay, ease }}
+      transition={{ duration: 0.85, delay: INTRO_DELAYS[index], ease }}
       onClick={handleClick}
       role={clickable ? 'button' : undefined}
+      aria-label={clickable ? `${card.name} — view case study` : undefined}
       tabIndex={clickable ? 0 : undefined}
       onKeyDown={
         clickable
@@ -448,214 +369,42 @@ function ScrollCard({ card, index, scrollYProgress, show, onCaseOpen }) {
           expands and the full case-study image takes over. */}
       <motion.div
         className="band-collapsed"
-        style={{ opacity: collapsedOpacity, top: card.labelTop }}
+        style={{ opacity: collapsedOpacity, top: LABEL_TOPS[index] }}
       >
         <div
-          className={`band-thumb${card.thumb ? ' has-thumb' : ''}`}
-          style={card.thumb ? { backgroundImage: `url(${card.thumb})` } : undefined}
+          className="band-thumb has-thumb"
+          style={{ backgroundImage: `url(${card.thumb})` }}
         />
         <div className="band-vname">
-          <span className="band-vname__title">{card.title}</span>
+          <span className="band-vname__title">{card.name}</span>
           <span className="band-vname__disc">{card.discipline}</span>
         </div>
       </motion.div>
-      {card.imgExpanded && (
-        <motion.div
-          className="band-card band-card--expanded"
-          style={{
-            backgroundImage: `url(${card.imgExpanded})`,
-            backgroundSize: isTablet ? 'contain' : (card.expandedFit === 'contain' ? 'contain' : 'cover'),
-            backgroundRepeat: 'no-repeat',
-            opacity: expandedOpacity,
-            top: bandCardTop,
-            left: bandCardLeft,
-            right: bandCardRight,
-            height: bandCardHeight,
-          }}
-        />
-      )}
+      <motion.div
+        className="band-card band-card--expanded"
+        style={{
+          backgroundImage: `url(${card.imgExpanded})`,
+          backgroundSize: artworkFit,
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+          opacity: expandedOpacity,
+          top: bandCardTop,
+          left: '0%',
+          right: '0%',
+          height: bandCardHeight,
+        }}
+      />
       {/* Expanded footer: title + discipline + a clear case-study CTA so
           it's obvious the card is clickable. */}
-      <motion.div className="band-foot" style={{ opacity: pikkoInfoOpacity }}>
+      <motion.div className="band-foot" style={{ opacity: footOpacity }}>
         <div className="band-foot__txt">
-          <span className="band-foot__title">{card.title}</span>
+          <span className="band-foot__title">{card.name}</span>
           <span className="band-foot__disc">{card.discipline}</span>
         </div>
         <span className="band-foot__cta">View case study <span aria-hidden>&rarr;</span></span>
       </motion.div>
-      <span className="band-num">{`0${index + 1}`}</span>
+      <span className="band-num">{card.num}</span>
     </motion.div>
-  )
-}
-
-/* Titan card — peek + reveal.
-   Landing state: a quiet typographic + dial-icon peek matching the
-   density of the test-1 and comms-peek landing artworks.
-   Expanded state: the full crest-2 landscape image. */
-function ComposedTitanCard({ imageY, collapsedOpacity, expandedOpacity, expandedImg }) {
-  return (
-    <>
-      {/* PEEK — landing state */}
-      <motion.div
-        className="band-card band-card--titan-peek"
-        style={{ y: imageY, opacity: collapsedOpacity }}
-      >
-        <div className="titan-peek">
-          <div className="titan-peek__head">
-            <span className="titan-peek__chip">Watch face</span>
-            <span className="titan-peek__num">06 faces</span>
-          </div>
-          <div className="titan-peek__dial">
-            <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="50" cy="50" r="48" stroke="rgba(15,23,42,0.55)" strokeWidth="1.2" />
-              <circle cx="50" cy="50" r="42" stroke="rgba(15,23,42,0.18)" strokeWidth="0.6" />
-              {[0,30,60,90,120,150,180,210,240,270,300,330].map((deg) => (
-                <line
-                  key={deg}
-                  x1="50" y1="6" x2="50" y2={deg % 90 === 0 ? 12 : 10}
-                  stroke="rgba(15,23,42,0.7)"
-                  strokeWidth={deg % 90 === 0 ? 1.4 : 0.8}
-                  transform={`rotate(${deg} 50 50)`}
-                />
-              ))}
-              <line x1="50" y1="50" x2="50" y2="20" stroke="rgba(15,23,42,0.85)" strokeWidth="1.6" strokeLinecap="round" />
-              <line x1="50" y1="50" x2="70" y2="50" stroke="rgba(15,23,42,0.85)" strokeWidth="1.2" strokeLinecap="round" />
-              <circle cx="50" cy="50" r="2" fill="rgba(15,23,42,0.9)" />
-              <text x="50" y="36" textAnchor="middle" fontFamily="Inter" fontSize="6" fontWeight="500" fill="rgba(15,23,42,0.7)">TITAN</text>
-            </svg>
-          </div>
-          <div className="titan-peek__meta">
-            <span>Analogue</span>
-            <span className="titan-peek__sep">+</span>
-            <span>Smart UI</span>
-          </div>
-          <div className="titan-peek__strip">
-            <span /><span /><span /><span /><span /><span />
-          </div>
-        </div>
-      </motion.div>
-
-      {/* REVEAL — full landscape image on expand */}
-      <motion.div
-        className="band-card band-card--expanded"
-        style={{
-          backgroundImage: `url(${expandedImg})`,
-          backgroundSize: 'cover',
-          backgroundRepeat: 'no-repeat',
-          backgroundPosition: 'center',
-          opacity: expandedOpacity,
-        }}
-      />
-    </>
-  )
-}
-
-/* Comms Center card — peek + reveal.
-   Landing state: a quiet sneak-peek showing the system's primitive
-   element (one message bubble + a hint of the thread) inside a vertical
-   composition that mirrors the portrait density of the TestBench and
-   Titan landing artwork.
-   Expanded state: the full dense thread mockup with customer, multiple
-   teams, External/Full toggle, and the primary CTA. */
-function ComposedCommsCard({ imageY, collapsedOpacity, expandedOpacity }) {
-  return (
-    <>
-      {/* PEEK — landing state, matches portrait density of cards 1 + 3 */}
-      <motion.div
-        className="band-card band-card--comms-peek"
-        style={{ y: imageY, opacity: collapsedOpacity }}
-      >
-        <div className="comms-peek">
-          <div className="comms-peek__head">
-            <span className="comms-peek__chip">Thread</span>
-            <span className="comms-peek__status">
-              <span className="comms-peek__dot" />
-              Reopened
-            </span>
-          </div>
-          <div className="comms-peek__title">
-            Delivery failure, token rotation
-          </div>
-          <div className="comms-peek__bubble">
-            <span className="comms-peek__av">PM</span>
-            <div className="comms-peek__bubble-body">
-              <span className="comms-peek__tag">Decision</span>
-              <div className="comms-peek__text">Fresh package rebuilt. ETA <strong>2h</strong>.</div>
-            </div>
-          </div>
-          <div className="comms-peek__ghost">
-            <span className="comms-peek__ghost-line" />
-            <span className="comms-peek__ghost-line" />
-          </div>
-        </div>
-      </motion.div>
-
-      {/* REVEAL — expanded state, the full system at a glance */}
-      <motion.div
-        className="band-card band-card--comms band-card--expanded"
-        style={{ opacity: expandedOpacity }}
-      >
-        <div className="comms-card">
-          <div className="comms-card__head">
-            <span className="comms-card__customer">Omega Electronics &middot; Delivery</span>
-            <span className="comms-card__status">
-              <span className="comms-card__dot" />
-              Reopened
-            </span>
-          </div>
-          <div className="comms-card__title">
-            Delivery failure, token rotation
-          </div>
-          <div className="comms-card__avstack">
-            <span className="comms-card__sm-av" style={{ background: '#5572E8' }}>BO</span>
-            <span className="comms-card__sm-av" style={{ background: '#3A9ED0' }}>PM</span>
-            <span className="comms-card__sm-av" style={{ background: '#C05878' }}>LT</span>
-            <span className="comms-card__avstack-meta">3 internal</span>
-          </div>
-
-          <div className="comms-card__thread">
-            <div className="comms-card__msg" style={{ '--sender': '#2563EB' }}>
-              <span className="comms-card__av" style={{ background: '#3A9ED0' }}>PM</span>
-              <div className="comms-card__msg-body">
-                <div className="comms-card__msg-head">
-                  <span>PM</span>
-                  <span className="comms-card__tag comms-card__tag--update">Update</span>
-                </div>
-                <div className="comms-card__msg-text">Token rotation queued.</div>
-              </div>
-            </div>
-            <div className="comms-card__msg" style={{ '--sender': '#EA580C' }}>
-              <span className="comms-card__av" style={{ background: '#3A9ED0' }}>PM</span>
-              <div className="comms-card__msg-body">
-                <div className="comms-card__msg-head">
-                  <span>PM</span>
-                  <span className="comms-card__tag comms-card__tag--decision">Decision</span>
-                </div>
-                <div className="comms-card__msg-text">Fresh package rebuilt. ETA <strong>2h</strong>.</div>
-              </div>
-            </div>
-            <div className="comms-card__msg" style={{ '--sender': '#DC2626' }}>
-              <span className="comms-card__av" style={{ background: '#C05878' }}>LT</span>
-              <div className="comms-card__msg-body">
-                <div className="comms-card__msg-head">
-                  <span>LT</span>
-                  <span className="comms-card__tag comms-card__tag--concern">Concern</span>
-                </div>
-                <div className="comms-card__msg-text">Escalation risk, 6 days.</div>
-              </div>
-            </div>
-          </div>
-
-          <div className="comms-card__foot">
-            <div className="comms-card__toggle">
-              <span className="is-on">External 1</span>
-              <span>Full 4</span>
-            </div>
-            <span className="comms-card__cta">Start Customer Thread &rarr;</span>
-          </div>
-        </div>
-      </motion.div>
-    </>
   )
 }
 
@@ -718,45 +467,12 @@ function YuktiWord({ centred, variant = 'full' }) {
   )
 }
 
-/* Each card carries its landing image-translateY (in % of card height).
-   On the landing screen the images sit STAGGERED — card 1 image at ~10%
-   down, card 2 at ~38% down, card 3 at ~52% down. As the user scrolls
-   and a card becomes "active" (its expansion stage), its image
-   translateY animates back to 0, so the image moves UP to the top of
-   the now-larger card. Text below the image fades in at the same time. */
 /* Three tinted-glass cards (frosted over the fluid background). Collapsed,
    each shows a square thumbnail + vertical name at a STAGGERED start; on
-   scroll the card expands and crossfades to the full case-study image.
-   Ordered by name length so the widest card carries the longest name. */
-const CARDS = [
-  { id: 'comms',
-    glass: 'rgba(160, 176, 214, 0.40)',          // periwinkle
-    thumb: '/landing-cards/comm-thumb.png',
-    imgExpanded: '/landing-cards/comm-3.png',
-    labelTop: '12%',
-    title: 'Communication Center',
-    discipline: 'UX · SaaS',
-    caseId: 'comms',
-    expandedFit: 'cover' },
-  { id: 'titan',
-    glass: 'rgba(190, 172, 206, 0.40)',          // lilac
-    thumb: '/landing-cards/crest-thumb.png',
-    imgExpanded: '/landing-cards/crest-3.png',
-    labelTop: '27%',
-    title: 'Titan Crest 2.0',
-    discipline: 'UI · Watch Faces',
-    caseId: 'titan-crest',
-    expandedFit: 'cover' },
-  { id: 'testbench',
-    glass: 'rgba(170, 190, 152, 0.40)',          // sage
-    thumb: '/landing-cards/test-1.png',
-    imgExpanded: '/landing-cards/test-3.png',
-    labelTop: '42%',
-    title: 'Test Bench',
-    discipline: 'Product Design · AI',
-    caseId: 'testbench',
-    expandedFit: 'cover' },
-]
+   scroll the card expands and crossfades to the full case-study artwork.
+   Order, names, numbers and tints all come from the shared project record
+   so the landing and the Selected Work index can never disagree again. */
+const CARDS = PROJECTS
 
 /* Each card has 4 stages it interpolates through as the user scrolls:
      stage 0  – landing       (3 cards staggered, small)
@@ -768,7 +484,7 @@ const CARDS = [
 const SHRUNK = 14         // vw — width of a card after its expansion is done
 const EXPANDED = 70       // vw — every active card reaches this same width
 const GUTTER = 1          // vw — consistent gap between every adjacent card
-const PIKKO_LEFT_W = 50   // vw — width of Pikko once it slides to the left
+const HERO_LEFT_W = 50   // vw — width of the hero card once it slides to the left
 const TILE_H = 50         // vh — height of each vertical tile (2 visible)
 /* Each card stage = { left, width, top, height } in vw/vh. */
 const _e = EXPANDED, _s = SHRUNK, _g = GUTTER
@@ -778,7 +494,7 @@ const FH = 100   // full-height (vh)
    expanded state so a card sits STEADY for a beat before the next one
    takes over (see STAGE_STOPS / HOLD_SEQ). */
 const CARD_KEY_STAGES = [
-  // Archidomo (index 0)
+  // slot 0 — landing: widest, highest
   [
     { left: 56.5,              width: 18, top: 0, height: FH },        // 0: landing (CC, widest)
     { left: 0,                 width: _e, top: 0, height: FH },        // 1: expanded
@@ -787,7 +503,7 @@ const CARD_KEY_STAGES = [
     { left: -(_s + _g),        width: _s, top: 0, height: FH },        // 4: off-screen
     { left: -(_s + _g),        width: _s, top: 0, height: FH },        // 5: off-screen
   ],
-  // Orlinski (index 1)
+  // slot 1 — landing: middle
   [
     { left: 74.5,              width: 13.5, top: 0, height: FH },     // 0: landing (Titan, middle)
     { left: _e + _g,           width: _s, top: 0, height: FH },
@@ -796,8 +512,8 @@ const CARD_KEY_STAGES = [
     { left: -(_s + _g),        width: _s, top: 0, height: FH },
     { left: -(_s + _g),        width: _s, top: 0, height: FH },
   ],
-  // Pikko (index 2). After expansion (stage 3) it shifts to the left at
-  // PIKKO_LEFT_W width and full height (stage 4). At stage 5, as the
+  // the hero card (index 2). After expansion (stage 3) it shifts to the left at
+  // HERO_LEFT_W width and full height (stage 4). At stage 5, as the
   // vertical-tile phase begins, the card morphs into an image-only tile:
   // height collapses from 100vh → TILE_H (50vh), title + info fade out
   // (handled in JSX), and the leftStackY scroll continues to push the
@@ -807,8 +523,8 @@ const CARD_KEY_STAGES = [
     { left: _e + _g + _s + _g, width: _s,           top: 0, height: FH },
     { left: _s + _g + _e + _g, width: _s,           top: 0, height: FH },
     { left: 2 * (_s + _g),     width: _e,           top: 0, height: FH },
-    { left: 0,                 width: PIKKO_LEFT_W, top: 0, height: FH },     // stage 4 — full hero
-    { left: 0,                 width: PIKKO_LEFT_W, top: 0, height: TILE_H }, // stage 5 — morphs to a tile
+    { left: 0,                 width: HERO_LEFT_W, top: 0, height: FH },     // stage 4 — full hero
+    { left: 0,                 width: HERO_LEFT_W, top: 0, height: TILE_H }, // stage 5 — morphs to a tile
   ],
 ]
 /* Held timeline. Each expanded card now DWELLS (stays fully expanded
@@ -834,9 +550,9 @@ const CARD_STAGES = CARD_KEY_STAGES.map((stages) => HOLD_SEQ.map((i) => stages[i
    Titan — i.e. the first stop whose held state == that card grown. */
 const REACH_STOPS = [STAGE_STOPS[1], STAGE_STOPS[3], STAGE_STOPS[5]]
 
-/* The 6 image-only tiles that stack BELOW Pikko in the vertical phase.
-   Each tile is PIKKO_LEFT_W vw wide × TILE_H vh tall, positioned at
-   top: FH (just below Pikko) + i * TILE_H so they form a vertical strip. */
+/* The 6 image-only tiles that stack BELOW the hero card in the vertical phase.
+   Each tile is HERO_LEFT_W vw wide × TILE_H vh tall, positioned at
+   top: FH (just below the hero card) + i * TILE_H so they form a vertical strip. */
 const VERT_TILES = [
   '/landing-tiles/1.jpg',
   '/landing-tiles/2.png',
@@ -845,31 +561,6 @@ const VERT_TILES = [
   '/landing-tiles/5.png',
   '/landing-tiles/6.png',
 ]
-
-function Nav({ show }) {
-  const items = [
-    ['dot-projets',    'Projects'],
-    ['dot-expertises', 'Expertise'],
-    ['dot-agence',     'Studio'],
-    ['dot-contact',    'Contact'],
-  ]
-  return (
-    <nav className="landing__nav">
-      {items.map(([cls, label], i) => (
-        <motion.div
-          key={label}
-          className={`nav-item ${cls}`}
-          initial={{ opacity: 0, y: -6 }}
-          animate={show ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5, delay: 0.05 * i, ease }}
-        >
-          <span className="dot" />
-          <span>{label}</span>
-        </motion.div>
-      ))}
-    </nav>
-  )
-}
 
 function Copy({ show }) {
   return (

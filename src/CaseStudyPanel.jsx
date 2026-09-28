@@ -2,6 +2,8 @@ import { motion } from 'framer-motion'
 import { useEffect, useRef, useState } from 'react'
 import TitanCrest from './TitanCrest.jsx'
 import useViewport from './useViewport.js'
+import useOverlay from './useOverlay.js'
+import { PROJECT_BY_ID } from './projects.js'
 
 const ease = [0.76, 0, 0.24, 1]
 
@@ -22,31 +24,22 @@ const NATIVE_CASES = new Set(['titan-crest'])
 // widths, and a small amount of vertical padding so the layout fills
 // modern viewports instead of feeling zoomed-out on a desktop screen.
 const FONT_OVERRIDE_CSS = `
-  /* ────────── FONT SWAP (display font → Anton) ────────── */
-  [style*='DM Serif Display'],
-  [style*='DM Serif'],
-  blockquote {
-    font-family: 'Anton', 'Bebas Neue', Impact, sans-serif !important;
-    font-weight: 400 !important;
-    font-style: normal !important;
-    letter-spacing: -0.02em !important;
-  }
-  [style*='DM Serif'] em,
-  blockquote em,
-  .cc-h1 em, .cc-h2 em, .cc-h2-lt em, .cc-lrn-t em {
-    font-family: 'Inter', ui-sans-serif, sans-serif !important;
-    font-style: italic !important;
-    font-weight: 300 !important;
-    letter-spacing: -0.01em !important;
-  }
-  .h2, .h3, .hero-h,
-  .cc-h1, .cc-h2, .cc-h2-lt,
-  .cc-lrn-n, .cc-stat-n,
-  .pf-stat-n, .pf-h2, .pf-h2-lt {
-    font-family: 'Anton', 'Bebas Neue', Impact, sans-serif !important;
-    font-weight: 400 !important;
-    letter-spacing: -0.02em !important;
-  }
+  /* The Anton font-swap that used to live here is gone. It forced a
+     condensed display face onto some headings and not others, which is
+     why one screen showed DM Serif and the next showed Anton. Both
+     documents now share casestudy.css, which owns the display face. */
+
+  /* ────────── THE DOCUMENT DOES NOT DRAW ITS OWN HEADER ──────────
+     The portfolio renders one header for every case study, outside this
+     iframe. Each document used to draw its own fixed 52px bar with its own
+     type and its own meta line, so the three studies disagreed with each
+     other and the back control had to float on top. Hide the bar and
+     reclaim the space it was holding. */
+  .pf-nav, .cc-nav { display: none !important; }
+  /* Only reclaim the space the hidden bar was holding. The hero keeps its
+     own top padding — zeroing it put the headline against the header. */
+  body { padding-top: 0 !important; }
+  #pf-hero-main { min-height: 0 !important; }
 
   /* ────────── CONTAINER PADDING ──────────
      Keep the original 1200px content max-width — that's what the screen
@@ -221,7 +214,8 @@ const FONT_OVERRIDE_CSS = `
     padding: 22px 26px !important;
     font-size: 15px !important;
     line-height: 1.7 !important;
-    border-left-width: 4px !important;
+    /* Hairline, not a 4px slab — the label already carries the accent. */
+    border-left-width: 1px !important;
     border-radius: 0 10px 10px 0 !important;
   }
   .note-lbl {
@@ -404,7 +398,9 @@ export default function CaseStudyPanel({ activeId, onClose }) {
   const isNative = open && NATIVE_CASES.has(activeId)
   const iframeRef = useRef(null)
   const nativeScrollRef = useRef(null)
+  const panelRef = useRef(null)
   const src = open && !isNative ? CASE_HTML[activeId] : 'about:blank'
+  useOverlay(panelRef, open, onClose)
 
   // Case studies render on desktop + landscape tablets. Portrait tablets
   // and phones get a nudge toward desktop, but can proceed if they insist.
@@ -426,6 +422,12 @@ export default function CaseStudyPanel({ activeId, onClose }) {
       }
     }
   }, [activeId, open, isNative])
+
+  // Land the keyboard inside the panel on open. Without this, focus stays
+  // on the project card behind it and Tab walks the splash, not the study.
+  useEffect(() => {
+    if (open) panelRef.current?.querySelector('.cs-back')?.focus()
+  }, [open, activeId])
 
   const handleLoad = (e) => {
     const iframe = e.target
@@ -491,60 +493,76 @@ export default function CaseStudyPanel({ activeId, onClose }) {
 
   return (
     <motion.div
+      ref={panelRef}
       className="cs-panel"
+      role="dialog"
+      aria-modal={open || undefined}
+      aria-label={activeId ? `${PROJECT_BY_ID[activeId].name} case study` : 'Case study'}
       initial={false}
       animate={{ y: open ? '0%' : '100%' }}
       transition={{ duration: 1.05, ease }}
-      aria-hidden={!open}
     >
-      {isNative ? (
-        <div className="cs-native" ref={nativeScrollRef}>
-          {activeId === 'titan-crest' && <TitanCrest scrollRef={nativeScrollRef} />}
-        </div>
-      ) : (
-        <iframe
-          ref={iframeRef}
-          key={activeId || 'blank'}
-          src={src}
-          onLoad={handleLoad}
-          className="cs-iframe"
-          title="Case study"
-        />
-      )}
+      <div className="cs-panel__body">
+        {isNative ? (
+          <div className="cs-native" ref={nativeScrollRef}>
+            {activeId === 'titan-crest' && <TitanCrest scrollRef={nativeScrollRef} />}
+          </div>
+        ) : (
+          <iframe
+            ref={iframeRef}
+            key={activeId || 'blank'}
+            src={src}
+            onLoad={handleLoad}
+            className="cs-iframe"
+            title="Case study"
+          />
+        )}
+      </div>
       {showNudge && (
-        <div className="cs-nudge" role="dialog" aria-modal="true">
+        <div className="cs-nudge">
           <div className="cs-nudge__backdrop" />
           <div className="cs-nudge__card">
             <span className="cs-nudge__icon" aria-hidden>
-              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
                 <rect x="2" y="3" width="20" height="14" rx="2" />
                 <path d="M8 21h8M12 17v4" />
               </svg>
             </span>
-            <span className="cs-nudge__eyebrow">Desktop experience</span>
-            <h2 className="cs-nudge__title">Best viewed on a<br />bigger screen</h2>
-            <p className="cs-nudge__text">This case study is crafted for desktop. Open it on a laptop or larger display for the full story — meanwhile, the rest of the portfolio is all yours here.</p>
+            <h2 className="cs-nudge__title">Best viewed on a bigger screen</h2>
+            <p className="cs-nudge__text">
+              {PROJECT_BY_ID[activeId].name} is a wide, detailed case study built for a
+              laptop or larger display. Open it there for the full story — the rest of
+              the portfolio reads fine right here.
+            </p>
             <div className="cs-nudge__actions">
               <button type="button" className="cs-nudge__btn cs-nudge__btn--primary" onClick={onClose}>Back to portfolio</button>
-              <button type="button" className="cs-nudge__btn" onClick={() => setProceedAnyway(true)}>View anyway</button>
+              <button type="button" className="cs-nudge__btn" onClick={() => setProceedAnyway(true)}>Open it anyway</button>
             </div>
           </div>
         </div>
       )}
-      <button
-        className="cs-back"
-        onClick={onClose}
-        aria-label="Back to projects"
-        type="button"
-      >
-        <span className="cs-back__icon" aria-hidden>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M19 12H5" />
-            <path d="m12 19-7-7 7-7" />
-          </svg>
-        </span>
-        <span className="cs-back__label">Portfolio</span>
-      </button>
+      {/* One header for every case study, owned by the portfolio rather
+          than drawn separately inside each document. Each HTML study used
+          to render its own 52px bar — different type, different meta, and
+          the floating back pill sat on top of it. */}
+      <header className="cs-head">
+        <button className="cs-back" onClick={onClose} type="button">
+          <span className="cs-back__icon" aria-hidden>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M19 12H5" />
+              <path d="m12 19-7-7 7-7" />
+            </svg>
+          </span>
+          <span className="cs-back__label">Back to portfolio</span>
+        </button>
+        {activeId && (
+          <div className="cs-head__id">
+            <span className="cs-head__num">{PROJECT_BY_ID[activeId].num}</span>
+            <span className="cs-head__name">{PROJECT_BY_ID[activeId].name}</span>
+            <span className="cs-head__meta">{PROJECT_BY_ID[activeId].meta}</span>
+          </div>
+        )}
+      </header>
     </motion.div>
   )
 }

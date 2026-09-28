@@ -115,22 +115,29 @@ body.locked-scroll { overflow: hidden; height: 100vh; }
   line-height: 0.9;
 }
 .projets-aside__list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 14px; }
-.projets-aside__row {
+.projets-aside__row { border-bottom: 1px solid rgba(0,0,0,0.4); }
+/* A real <button>, not a div with role="button" — native keyboard
+   activation, native focus, and one place for the hover/focus treatment. */
+.projets-aside__btn {
+  width: 100%;
   display: grid;
   grid-template-columns: 32px 1fr auto;
   gap: 16px;
   align-items: baseline;
-  padding-bottom: 12px;
-  border-bottom: 1px solid rgba(0,0,0,0.4);
+  padding: 0 0 12px;
+  background: none;
+  border: none;
+  font: inherit;
   font-size: 13px;
   letter-spacing: 0.10em;
-}
-.projets-aside__row--clickable {
+  text-transform: uppercase;
+  color: var(--ink);
+  text-align: inherit;
   cursor: pointer;
-  transition: transform 0.25s ease, opacity 0.25s ease;
+  transition: transform 0.25s ease;
 }
-.projets-aside__row--clickable:hover { transform: translateX(-4px); }
-.projets-aside__row--clickable:hover .projets-aside__arrow { transform: translateX(4px); opacity: 1; }
+.projets-aside__btn:hover { transform: translateX(-4px); }
+.projets-aside__btn:hover .projets-aside__arrow { transform: translateX(4px); opacity: 1; }
 .projets-aside__num { color: rgba(0,0,0,0.7); }
 .projets-aside__label {
   text-align: right;
@@ -142,7 +149,7 @@ body.locked-scroll { overflow: hidden; height: 100vh; }
 .projets-aside__sub {
   font-size: 10px;
   letter-spacing: 0.14em;
-  color: rgba(0,0,0,0.45);
+  color: rgba(0,0,0,0.55);
   font-weight: 400;
 }
 .projets-aside__arrow {
@@ -317,45 +324,30 @@ body.locked-scroll { overflow: hidden; height: 100vh; }
   display: inline-block;
 }
 
-/* AKARU-pattern gallery: one big image on the LEFT, two landscape
-   images STACKED on the right. All three share the SAME vertical
-   extent — left top aligns with right-top top, left bottom aligns with
-   right-bottom bottom. Combined right column ≈ 70% of the left. */
+/* Gallery: a two-up — portrait on the left, landscape on the right, equal
+   heights side by side. Column tracks and padding match .about-values
+   below it, so the photos and the experience image line up on the same
+   vertical edges. (The component sets its own equal 1fr 1fr override.) */
 .about-gallery {
   /* Normal left margin, generous right whitespace — the photos do NOT
      run edge-to-edge. */
   padding: 24px clamp(120px, 13vw, 260px) 88px 56px;
   display: grid;
-  grid-template-columns: 1fr 0.76fr;   /* wide hero, narrower right column */
+  grid-template-columns: 1fr 1fr;
   gap: 24px;
-  /* Bottom-align both columns: the hero and the LOWER-right image share
-     one baseline, and the AKARU stagger appears at the TOP (the right
-     column's shorter stack sits lower than the hero's top). */
-  align-items: end;
+  align-items: stretch;
 }
-.g-col {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  min-height: 0;
-}
-.g-col--right { /* stagger handled by align-items: end on the grid */ }
 .g-img {
+  height: clamp(400px, 52vh, 560px);
   background-size: cover;
   background-position: center;
   background-color: #d8d4cc;
   border-radius: 2px;
   image-orientation: from-image;
 }
-/* Left hero — one tall portrait; moderate height (not oversized). */
-.g-img--hero {
-  height: clamp(420px, 62vh, 680px);
-}
-/* Right column landscapes — narrower; the lower one's bottom lines up
-   with the hero's bottom. */
-.g-col--right .g-img--landscape {
-  height: clamp(180px, 26vh, 300px);
-}
+/* Each photo's subject sits at a different height in frame. */
+.g-img--portrait  { background-position: 50% 50%; }
+.g-img--landscape { background-position: 50% 60%; }
 
 /* Experience section — a real timeline on the left, image + year on
    the right. align-items: stretch so the columns share height; inner
@@ -382,7 +374,7 @@ body.locked-scroll { overflow: hidden; height: 100vh; }
   font-size: 11px;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: rgba(15,23,42,0.45);
+  color: rgba(15,15,16,0.62);
   margin: 0 0 18px;
 }
 .timeline {
@@ -448,7 +440,7 @@ body.locked-scroll { overflow: hidden; height: 100vh; }
   font-family: 'JetBrains Mono', monospace;
   font-size: 11px;
   letter-spacing: 0.14em;
-  color: rgba(15,23,42,0.55);
+  color: rgba(15,15,16,0.68);
   text-transform: uppercase;
 }
 .timeline-row__body { min-width: 0; }
@@ -466,13 +458,13 @@ body.locked-scroll { overflow: hidden; height: 100vh; }
   font-size: 11px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: rgba(15,23,42,0.55);
+  color: rgba(15,15,16,0.68);
   margin: 0 0 14px;
 }
 .timeline-row__note {
   font-size: 15px;
   line-height: 1.65;
-  color: rgba(15,23,42,0.72);
+  color: rgba(15,15,16,0.75);
   margin: 0;
   max-width: 52ch;
 }
@@ -628,13 +620,8 @@ body.locked-scroll { overflow: hidden; height: 100vh; }
 
 @media (max-width: 900px) {
   .about-hero, .about-values { grid-template-columns: 1fr; padding: 56px 28px; }
-  /* Keep the 3-image grid (left portrait + two stacked landscapes) at all
-     widths — the right column stretches to the left's height and its two
-     images flex to fill, so their combined height matches the portrait. */
-  .about-gallery { padding: 20px 28px 40px; align-items: stretch; }
-  .g-img--hero { height: clamp(360px, 56vw, 520px); }
-  .g-col--right { padding-top: 0; }
-  .g-col--right .g-img--landscape { flex: 1; height: auto; min-height: 0; }
+  .about-gallery { padding: 20px 28px 40px; }
+  .g-img { height: clamp(320px, 42vw, 460px); }
   .timeline-row { column-gap: 36px; }
   .values-aside { margin-top: 8px; }
   .about-nav { padding: 20px 28px; }
@@ -648,11 +635,16 @@ body.locked-scroll { overflow: hidden; height: 100vh; }
 /* Phones — tighter rhythm, stacked timeline (no rail/dot), smaller type. */
 @media (max-width: 640px) {
   .about-hero, .about-values { padding: 44px 20px; }
-  .about-gallery { padding: 16px 20px 32px; }
   .about-hero__title { font-size: clamp(54px, 16vw, 88px); }
   .about-hero__lede { font-size: 16px; }
-  .g-img--hero { height: clamp(280px, 72vw, 400px); }
-  .g-col--right .g-img--landscape { flex: 1; height: auto; min-height: 0; }
+  /* Two portrait-ish columns at 390px leaves each photo ~170px wide and
+     400px tall. Stack them instead and let each keep a sane aspect. */
+  .about-gallery {
+    padding: 16px 20px 32px;
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .g-img { height: clamp(240px, 62vw, 360px); }
 
   /* Timeline collapses to a single column: year + range sit inline above
      the body; the vertical rail and node dots are dropped. */
@@ -669,7 +661,8 @@ body.locked-scroll { overflow: hidden; height: 100vh; }
   .about-footer__headline { font-size: clamp(40px, 12vw, 64px); }
   .about-footer__cta { padding: 15px 28px; }
   .about-footer__bottom { flex-direction: column; align-items: flex-start; gap: 12px; }
-  .about-back { padding: 0; }
+  /* Trim the pill but keep it a real touch target, not a 26px icon. */
+  .about-back { padding: 8px 14px 8px 8px; }
 }
 
 /* ====================================================================
@@ -715,7 +708,7 @@ body.locked-scroll { overflow: hidden; height: 100vh; }
 .cs-nudge__backdrop {
   position: absolute;
   inset: 0;
-  background: rgba(250, 250, 249, 0.72);
+  background: rgba(235, 231, 224, 0.82);
   -webkit-backdrop-filter: blur(14px);
   backdrop-filter: blur(14px);
   animation: cs-nudge-fade 0.4s ease both;
@@ -724,51 +717,40 @@ body.locked-scroll { overflow: hidden; height: 100vh; }
   position: relative;
   max-width: 380px;
   width: 100%;
-  padding: 38px 34px 30px;
+  padding: 36px 32px 28px;
   text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: rgba(255, 255, 255, 0.86);
-  border: 1px solid rgba(232, 237, 245, 0.9);
-  border-radius: 22px;
-  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.14), 0 2px 8px rgba(15, 23, 42, 0.05);
+  background: #fbfaf7;
+  border: 1px solid rgba(15, 15, 16, 0.10);
+  border-radius: 4px;
+  box-shadow: 0 22px 54px rgba(15, 15, 16, 0.16), 0 2px 6px rgba(15, 15, 16, 0.06);
   animation: cs-nudge-pop 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 .cs-nudge__icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 54px;
-  height: 54px;
-  border-radius: 16px;
-  background: linear-gradient(180deg, #fff, #F4F7FC);
-  border: 1px solid #E8EDF5;
-  color: #2563EB;
-  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.12);
-  margin-bottom: 18px;
-}
-.cs-nudge__eyebrow {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 10px;
-  font-weight: 500;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: #2563EB;
-  margin-bottom: 12px;
+  color: var(--ink);
+  opacity: 0.55;
+  margin-bottom: 20px;
 }
 .cs-nudge__title {
   font-family: 'DM Serif Display', Georgia, serif;
-  font-size: 28px;
+  font-size: 30px;
   font-weight: 400;
-  line-height: 1.12;
-  color: #0A0F1E;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  max-width: 15ch;
   margin: 0 0 14px;
 }
 .cs-nudge__text {
-  font-size: 13.5px;
-  line-height: 1.65;
-  color: #64748B;
+  font-size: 14px;
+  line-height: 1.6;
+  color: rgba(15, 15, 16, 0.7);
+  max-width: 34ch;
   margin: 0 0 26px;
 }
 .cs-nudge__actions {
@@ -777,26 +759,28 @@ body.locked-scroll { overflow: hidden; height: 100vh; }
   gap: 10px;
   width: 100%;
 }
+/* Same pill vocabulary as .about-cta — this is portfolio chrome, so it
+   speaks the portfolio's language, not the case study's. */
 .cs-nudge__btn {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 11.5px;
-  letter-spacing: 0.06em;
-  padding: 13px 20px;
-  border-radius: 11px;
-  border: 1px solid #E8EDF5;
-  background: rgba(255, 255, 255, 0.7);
-  color: #475569;
+  font-family: inherit;
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding: 13px 22px;
+  border-radius: 999px;
+  border: 1px solid rgba(15, 15, 16, 0.55);
+  background: transparent;
+  color: var(--ink);
   cursor: pointer;
-  transition: background 0.15s, border-color 0.15s, color 0.15s;
+  transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease;
 }
-.cs-nudge__btn:hover { background: #F1F5F9; color: #0A0F1E; }
+.cs-nudge__btn:hover { background: rgba(15, 15, 16, 0.06); }
 .cs-nudge__btn--primary {
-  background: #2563EB;
-  border-color: #2563EB;
-  color: #fff;
-  box-shadow: 0 6px 18px rgba(37, 99, 235, 0.28);
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--bg-cream);
 }
-.cs-nudge__btn--primary:hover { background: #1D4ED8; color: #fff; }
+.cs-nudge__btn--primary:hover { background: #2a2a2c; border-color: #2a2a2c; color: var(--bg-cream); }
 
 @keyframes cs-nudge-fade {
   from { opacity: 0; }
@@ -807,48 +791,51 @@ body.locked-scroll { overflow: hidden; height: 100vh; }
   to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-.cs-back--on-dark {
-  background: rgba(255, 255, 255, 0.08);
-  color: rgba(255, 255, 255, 0.92);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-}
-.cs-back--on-dark:hover {
-  background: rgba(255, 255, 255, 0.16);
-  border-color: rgba(255, 255, 255, 0.32);
+/* ====================================================================
+   CASE STUDY HEADER
+   One bar for all three studies, rendered by the portfolio. The HTML
+   documents used to draw their own (each differently) with the back
+   control floating on top of it.
+   ==================================================================== */
+.cs-head {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  z-index: 6;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 0 clamp(16px, 2.2vw, 28px);
+  background: rgba(255, 255, 255, 0.86);
+  -webkit-backdrop-filter: saturate(1.6) blur(14px);
+  backdrop-filter: saturate(1.6) blur(14px);
+  border-bottom: 1px solid rgba(10, 15, 30, 0.09);
 }
 .cs-back {
-  position: absolute;
-  top: 20px;
-  left: 24px;
-  z-index: 5;
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  padding: 10px 18px 10px 12px;
-  background: rgba(255, 255, 255, 0.92);
-  color: var(--tc-ink, #0a0a0a);
-  border: 1px solid rgba(10, 10, 10, 0.1);
+  gap: 9px;
+  padding: 7px 14px 7px 7px;
+  background: transparent;
+  color: #0A0F1E;
+  border: 1px solid rgba(10, 15, 30, 0.14);
   border-radius: 999px;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Inter', system-ui, sans-serif;
   font-weight: 500;
   font-size: 13px;
-  letter-spacing: 0.01em;
+  letter-spacing: 0.005em;
   cursor: pointer;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  transition: background 0.25s ease, transform 0.25s ease,
-              box-shadow 0.25s ease;
+  flex-shrink: 0;
+  transition: background 0.22s ease, border-color 0.22s ease;
 }
-.cs-back:hover {
-  background: #fff;
-  transform: translateX(-2px);
-  box-shadow: 0 10px 28px rgba(0,0,0,0.12);
-}
+.cs-back:hover { background: rgba(10, 15, 30, 0.05); border-color: rgba(10, 15, 30, 0.26); }
 .cs-back__icon {
-  width: 26px; height: 26px;
+  width: 22px; height: 22px;
   border-radius: 50%;
-  background: var(--tc-ink, #0a0a0a);
+  background: #0A0F1E;
   color: #fff;
   display: inline-flex;
   align-items: center;
@@ -856,6 +843,50 @@ body.locked-scroll { overflow: hidden; height: 100vh; }
   flex-shrink: 0;
 }
 .cs-back__label { line-height: 1; }
+
+/* Study identity, right side: number, name, then the engagement meta. */
+.cs-head__id {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  min-width: 0;
+}
+.cs-head__num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  color: rgba(10, 15, 30, 0.45);
+}
+.cs-head__name {
+  font-family: 'DM Serif Display', Georgia, serif;
+  font-size: 17px;
+  color: #0A0F1E;
+  line-height: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.cs-head__meta {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(10, 15, 30, 0.5);
+  white-space: nowrap;
+}
+@media (max-width: 720px) {
+  .cs-head__meta { display: none; }
+  .cs-back__label { display: none; }
+  .cs-back { padding: 7px; }
+}
+
+/* The scrolling document sits below the header, not under it. */
+.cs-iframe, .cs-native { padding-top: 0; }
+.cs-panel__body {
+  position: absolute;
+  top: 60px;
+  left: 0; right: 0; bottom: 0;
+}
 
 /* Project card clickable affordance — .bands-area has pointer-events:
    none so the YUKTI hero text behind it stays clickable during the
@@ -904,11 +935,11 @@ body.locked-scroll { overflow: hidden; height: 100vh; }
   /* Wider than the other case studies on purpose — TitanCrest is
      image-heavy and the moodboard / collection / campaign rows need
      more horizontal room to breathe. */
-  max-width: 1480px;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 0 32px;
+  padding: 0 clamp(24px, 4vw, 64px);
 }
-.tc-section { padding: 80px 0; position: relative; }
+.tc-section { padding: clamp(72px, 8vw, 124px) 0; position: relative; }
 
 /* Section header pattern: eyebrow + Anton title + sub */
 .tc-section-head { margin-bottom: 48px; max-width: 760px; }
@@ -931,18 +962,18 @@ body.locked-scroll { overflow: hidden; height: 100vh; }
 .tc-section-title {
   font-family: 'DM Serif Display', 'Times New Roman', serif;
   font-weight: 400;
-  font-size: clamp(36px, 4.0vw, 60px);
-  line-height: 1.02;
-  letter-spacing: -0.015em;
+  font-size: clamp(30px, 3.4vw, 46px);
+  line-height: 1.06;
+  letter-spacing: -0.018em;
   color: var(--tc-ink);
   margin: 0;
   text-transform: none;
 }
 .tc-section-sub {
   margin: 24px 0 0;
-  max-width: 620px;
-  font-size: 16px;
-  line-height: 1.65;
+  max-width: 58ch;
+  font-size: clamp(18px, 1.35vw, 21px);
+  line-height: 1.55;
   color: var(--tc-ink-mute);
 }
 .tc-section-head--center .tc-section-sub {
@@ -1189,14 +1220,14 @@ body.locked-scroll { overflow: hidden; height: 100vh; }
 .tc-persona__head { margin-bottom: 24px; }
 .tc-persona__head .tc-eyebrow { margin-bottom: 8px; }
 .tc-persona__title {
-  font-family: 'Anton', sans-serif;
+  font-family: 'DM Serif Display', 'Times New Roman', serif;
   font-weight: 400;
   font-size: clamp(26px, 2.6vw, 36px);
   letter-spacing: -0.02em;
   color: var(--tc-ink);
   margin: 0;
   line-height: 1.05;
-  text-transform: uppercase;
+  text-transform: none;
 }
 .tc-persona__grid {
   display: grid;
@@ -1205,7 +1236,7 @@ body.locked-scroll { overflow: hidden; height: 100vh; }
 }
 .tc-persona__cell {
   padding-right: 14px;
-  border-left: 2px solid var(--tc-accent);
+  border-left: 1px solid var(--tc-line);
   padding-left: 14px;
 }
 .tc-persona__label {
@@ -1276,12 +1307,12 @@ body.locked-scroll { overflow: hidden; height: 100vh; }
     linear-gradient(160deg, #9a5d3c 0%, #5a3520 100%);
 }
 .tc-swatch__name {
-  font-family: 'Anton', sans-serif;
+  font-family: 'DM Serif Display', 'Times New Roman', serif;
   font-size: 20px;
   letter-spacing: 0.02em;
   color: var(--tc-ink);
   line-height: 1;
-  text-transform: uppercase;
+  text-transform: none;
 }
 .tc-swatch__sub {
   font-family: 'JetBrains Mono', monospace;
@@ -1347,9 +1378,9 @@ body.locked-scroll { overflow: hidden; height: 100vh; }
 /* ─── 08  ANATOMY — diagram + 4 callouts ────────────────────── */
 .tc-anatomy { padding: 96px 0 120px; background: var(--tc-bg); }
 .tc-anatomy__inner {
-  max-width: 1280px;
+  max-width: 1200px;
   margin: 32px auto 0;
-  padding: 0 32px;
+  padding: 0 clamp(24px, 4vw, 64px);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1443,13 +1474,13 @@ body.locked-scroll { overflow: hidden; height: 100vh; }
   justify-content: center;
 }
 .tc-callout__title {
-  font-family: 'Anton', sans-serif;
+  font-family: 'DM Serif Display', 'Times New Roman', serif;
   font-size: 17px;
   letter-spacing: 0.01em;
   color: var(--tc-ink);
   margin-bottom: 6px;
   line-height: 1.05;
-  text-transform: uppercase;
+  text-transform: none;
 }
 .tc-callout__desc {
   font-size: 12.5px;
@@ -1698,10 +1729,14 @@ body.locked-scroll { overflow: hidden; height: 100vh; }
   inset: 0;
   overflow: hidden;
   /* Fluid colour field that the glass cards frost over. */
+  /* Each pool sits under the card that shares its tint: sage under the
+     first slot (~56vw), periwinkle under the second, lilac under the
+     third at the right edge. Reordered along with the project order —
+     the cards read as condensations of the field behind them. */
   background:
     radial-gradient(40% 48% at 14% 24%, rgba(160,176,214,0.50), transparent 70%),
-    radial-gradient(42% 46% at 58% 70%, rgba(190,172,206,0.42), transparent 70%),
-    radial-gradient(48% 52% at 90% 24%, rgba(170,190,152,0.50), transparent 70%),
+    radial-gradient(42% 46% at 58% 70%, rgba(170,190,152,0.44), transparent 70%),
+    radial-gradient(48% 52% at 90% 24%, rgba(190,172,206,0.50), transparent 70%),
     radial-gradient(38% 40% at 36% 92%, rgba(186,198,220,0.40), transparent 70%),
     #E8E9E4;
 }
@@ -1955,78 +1990,10 @@ body.locked-scroll { overflow: hidden; height: 100vh; }
      fills the band-card edge-to-edge. */
 }
 
-/* Placeholder block when an image hasn't been provided yet. */
-.band-card--placeholder {
-  background: rgba(15,23,42,0.04);
-  border: 1px dashed rgba(15,23,42,0.16);
-}
-.band-card__placeholder {
-  width: 100%; height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  text-align: center;
-  padding: 0 8%;
-  color: rgba(15,23,42,0.45);
-}
-.band-card__placeholder span {
-  font-family: 'Inter', sans-serif;
-  font-weight: 500;
-  font-size: clamp(10px, 1.6cqw, 16px);
-  color: rgba(15,23,42,0.65);
-}
-.band-card__placeholder small {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: clamp(7px, 1.0cqw, 10px);
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: rgba(15,23,42,0.30);
-}
 .band-card--expanded {
   z-index: 3;
   pointer-events: none;
 }
-/* Vertical title label for the thin collapsed Comms / Titan cards. The
-   name is rotated so it reads up the narrow column, and sized in vh so
-   the full name stays readable at any screen resolution (the collapsed
-   card is full viewport height, so it always has room). Fades out as the
-   card expands and its image takes over. */
-.band-vlabel {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: row;       /* serif title + discipline as two vertical lines */
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
-  overflow: hidden;
-  z-index: 2;
-  pointer-events: none;
-}
-.band-vlabel__title {
-  writing-mode: sideways-lr;       /* rotated sideways, glyph tops facing LEFT */
-  white-space: nowrap;
-  font-family: 'DM Serif Display', Georgia, serif;
-  font-weight: 400;
-  font-size: clamp(20px, 3.4vh, 34px);
-  line-height: 1;
-  color: var(--ink);
-}
-.band-vlabel__disc {
-  writing-mode: sideways-lr;
-  white-space: nowrap;
-  font-family: 'JetBrains Mono', monospace;
-  font-weight: 500;
-  font-size: clamp(8px, 1.3vh, 12px);
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  line-height: 1;
-  color: var(--ink);
-  opacity: 0.5;
-}
-
 /* Index number, top-left of each card. */
 .band-num {
   position: absolute;
@@ -2040,32 +2007,6 @@ body.locked-scroll { overflow: hidden; height: 100vh; }
   color: var(--ink);
   opacity: 0.5;
   pointer-events: none;
-}
-
-/* Collapsed label for the wide peek (TestBench) card. */
-.band-flabel {
-  position: absolute;
-  left: 8%;
-  bottom: 13%;          /* sits clear above the landing footer divider line */
-  z-index: 3;
-  color: var(--ink);
-  pointer-events: none;
-}
-.band-flabel__title {
-  display: block;
-  font-family: 'DM Serif Display', Georgia, serif;
-  font-size: clamp(22px, 7cqw, 40px);
-  line-height: 1;
-}
-.band-flabel__disc {
-  display: block;
-  margin-top: 9px;
-  font-family: 'JetBrains Mono', monospace;
-  font-weight: 500;
-  font-size: clamp(9px, 2.1cqw, 13px);
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  opacity: 0.55;
 }
 
 /* Expanded-state footer: title + discipline + case-study CTA. */
@@ -2113,534 +2054,7 @@ body.locked-scroll { overflow: hidden; height: 100vh; }
   white-space: nowrap;
 }
 
-/* Recreated TestBench dashboard peek — sized in cqw so it scales with the
-   card width (the .band has container-type: inline-size). Centred in the
-   space above the label so it fills the tall card instead of floating at
-   the top with empty space below. */
-.band-peek {
-  position: absolute;
-  left: 0; right: 0; top: 6%; bottom: 26%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 2;
-  pointer-events: none;
-}
-/* Collapsed TestBench artwork — shown fully (contain) and centred in the
-   space above the label, so the whole portrait composition is visible. */
-.band-shot {
-  width: 100%;
-  height: 100%;
-  background-size: contain;
-  background-position: center;
-  background-repeat: no-repeat;
-}
-.tb-peek {
-  position: relative;
-  width: 88%;
-  background: #fff;
-  border-radius: 2.4cqw;
-  padding: 3cqw 3.2cqw;
-  box-shadow: 0 10px 30px rgba(20, 30, 60, 0.14);
-}
-.tb-peek__head { display: flex; align-items: center; gap: 1.8cqw; }
-.tb-peek__ic { width: 4.6cqw; height: 4.6cqw; border-radius: 1.4cqw; background: linear-gradient(135deg, #4F7CFF, #1D4ED8); flex-shrink: 0; }
-.tb-peek__nm { font-size: 2.7cqw; font-weight: 600; color: #0F172A; }
-.tb-peek__pill { margin-left: auto; background: #ECFDF5; color: #10B981; border: 1px solid rgba(16,185,129,0.25); font-family: 'JetBrains Mono', monospace; font-size: 2.2cqw; font-weight: 600; padding: 0.5cqw 1.6cqw; border-radius: 100px; }
-.tb-peek__sub { font-family: 'JetBrains Mono', monospace; font-size: 1.85cqw; letter-spacing: 0.08em; color: #94A3B8; text-transform: uppercase; margin: 1.2cqw 0 2.6cqw 6.4cqw; }
-.tb-peek__tiles { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.85cqw; }
-.tb-peek__tile { background: #F8FAFC; border: 1px solid #E8EDF5; border-radius: 1.6cqw; padding: 1.85cqw 2cqw; }
-.tb-peek__tl { display: block; font-family: 'JetBrains Mono', monospace; font-size: 1.6cqw; font-weight: 600; letter-spacing: 0.08em; color: #94A3B8; text-transform: uppercase; }
-.tb-peek__tv { display: flex; align-items: baseline; gap: 1cqw; font-size: 3.7cqw; font-weight: 600; color: #0F172A; margin-top: 0.7cqw; }
-.tb-peek__tv i { font-style: normal; font-size: 1.85cqw; font-weight: 600; color: #10B981; }
-.tb-peek__spark { display: flex; align-items: flex-end; gap: 0.7cqw; height: 6cqw; margin-top: 2.2cqw; }
-.tb-peek__spark span { flex: 1; background: #EFF6FF; border-top: 2px solid #4F7CFF; border-radius: 1px 1px 0 0; }
-.tb-peek__div { height: 1px; background: #EEF1F6; margin: 2.6cqw 0 2cqw; }
-.tb-peek__runs { display: flex; flex-direction: column; gap: 1.9cqw; }
-.tb-peek__run { display: flex; align-items: center; gap: 1.6cqw; }
-.tb-peek__rdot { width: 1.5cqw; height: 1.5cqw; border-radius: 50%; background: #10B981; flex-shrink: 0; }
-.tb-peek__rdot--warn { background: #F59E0B; }
-.tb-peek__rid { font-family: 'JetBrains Mono', monospace; font-size: 1.7cqw; font-weight: 600; color: #475569; }
-.tb-peek__rlbl { flex: 1; font-size: 2cqw; color: #64748B; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.tb-peek__rtag { font-family: 'JetBrains Mono', monospace; font-size: 1.5cqw; font-weight: 600; padding: 0.4cqw 1.3cqw; border-radius: 100px; }
-.tb-peek__rtag--ok { background: #ECFDF5; color: #10B981; }
-.tb-peek__rtag--warn { background: #FEF3E2; color: #D97706; }
-/* Titan PEEK — landing state. Typographic + dial-icon teaser. Mirrors
-   the floating-white-card aesthetic of the comms peek so the three
-   cards read as a coherent system. */
-.band-card--titan-peek {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: transparent;
-  overflow: hidden;
-  padding: 3cqw 5cqw;
-}
-.titan-peek {
-  width: 100%;
-  max-width: 280px;
-  align-self: stretch;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2.4cqw;
-  padding: 5cqw 4cqw 4cqw;
-  background: linear-gradient(180deg, rgba(255,255,255,0.92) 0%, rgba(255,255,255,0.78) 100%);
-  border: 1px solid rgba(15,23,42,0.05);
-  border-radius: 2.2cqw;
-  box-shadow:
-    0 1cqw 2.4cqw rgba(15,23,42,0.06),
-    0 0.3cqw 0.8cqw rgba(15,23,42,0.04),
-    inset 0 1px 0 rgba(255,255,255,0.6);
-}
-.titan-peek__head {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.titan-peek__chip {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: clamp(6px, 1.2cqw, 10.5px);
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: rgba(15,23,42,0.42);
-}
-.titan-peek__num {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: clamp(5px, 1.0cqw, 9.5px);
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: rgba(15,23,42,0.40);
-}
-.titan-peek__dial {
-  width: 60%;
-  aspect-ratio: 1 / 1;
-  margin: 1cqw 0;
-}
-.titan-peek__dial svg {
-  width: 100%;
-  height: 100%;
-  display: block;
-}
-.titan-peek__meta {
-  display: inline-flex;
-  align-items: center;
-  gap: 1.4cqw;
-  font-family: 'Inter', sans-serif;
-  font-style: italic;
-  font-size: clamp(8px, 1.6cqw, 14px);
-  color: rgba(15,23,42,0.78);
-}
-.titan-peek__sep {
-  font-family: 'JetBrains Mono', monospace;
-  font-style: normal;
-  font-size: clamp(7px, 1.4cqw, 12px);
-  color: rgba(15,23,42,0.30);
-}
-.titan-peek__strip {
-  width: 100%;
-  display: flex;
-  gap: 0.6cqw;
-  padding-top: 1cqw;
-}
-.titan-peek__strip span {
-  flex: 1;
-  height: 1.6cqw;
-  border-radius: 0.4cqw;
-  background: rgba(15,23,42,0.06);
-}
-.titan-peek__strip span:nth-child(2) { background: rgba(15,23,42,0.14); }
 
-/* Comms PEEK — landing state. A vertical composition mirroring the
-   density of the test-1 and crest-1 portrait artworks. Floating-card
-   style with macro whitespace and one focal bubble. */
-.band-card--comms-peek {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: transparent;
-  overflow: hidden;
-  padding: 3cqw 5cqw;
-}
-.comms-peek {
-  width: 100%;
-  max-width: 280px;
-  align-self: stretch;
-  display: flex;
-  flex-direction: column;
-  gap: 2.4cqw;
-  padding: 5cqw 4cqw;
-  background: linear-gradient(180deg, rgba(255,255,255,0.92) 0%, rgba(255,255,255,0.78) 100%);
-  border: 1px solid rgba(15,23,42,0.05);
-  border-radius: 2.2cqw;
-  box-shadow:
-    0 1cqw 2.4cqw rgba(15,23,42,0.06),
-    0 0.3cqw 0.8cqw rgba(15,23,42,0.04),
-    inset 0 1px 0 rgba(255,255,255,0.6);
-}
-.comms-peek__head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.comms-peek__chip {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: clamp(6px, 1.2cqw, 10.5px);
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: rgba(15,23,42,0.42);
-}
-.comms-peek__status {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6cqw;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: clamp(5px, 1.0cqw, 9.5px);
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: #EA580C;
-}
-.comms-peek__dot {
-  width: 1cqw; height: 1cqw;
-  min-width: 5px; min-height: 5px;
-  max-width: 7px; max-height: 7px;
-  border-radius: 50%;
-  background: #EA580C;
-  box-shadow: 0 0 0 2px rgba(234,88,12,0.18);
-}
-.comms-peek__title {
-  font-family: 'Inter', sans-serif;
-  font-weight: 600;
-  font-size: clamp(11px, 2.2cqw, 18px);
-  letter-spacing: -0.01em;
-  line-height: 1.2;
-  color: #0F172A;
-}
-.comms-peek__bubble {
-  display: flex;
-  gap: 1.6cqw;
-  padding: 2cqw 2.2cqw;
-  background: #F7F4ED;
-  border-radius: 1.4cqw;
-  position: relative;
-  margin-top: 1cqw;
-}
-.comms-peek__bubble::before {
-  content: "";
-  position: absolute;
-  left: 0; top: 1cqw; bottom: 1cqw;
-  width: 0.4cqw;
-  border-radius: 100px;
-  background: #EA580C;
-}
-.comms-peek__av {
-  width: 4cqw; height: 4cqw;
-  min-width: 20px; min-height: 20px;
-  max-width: 28px; max-height: 28px;
-  border-radius: 50%;
-  background: #3A9ED0;
-  color: #fff;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: clamp(6px, 1.2cqw, 10px);
-  font-weight: 600;
-  flex-shrink: 0;
-}
-.comms-peek__bubble-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 0.6cqw; }
-.comms-peek__tag {
-  align-self: flex-start;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: clamp(5px, 1.0cqw, 9px);
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  padding: 0.3cqw 1cqw;
-  border-radius: 100px;
-  background: rgba(234,88,12,0.10);
-  color: #EA580C;
-}
-.comms-peek__text {
-  font-family: 'Inter', sans-serif;
-  font-size: clamp(7px, 1.4cqw, 12px);
-  line-height: 1.45;
-  color: #334155;
-}
-.comms-peek__text strong { color: #0F172A; font-weight: 600; }
-.comms-peek__ghost {
-  display: flex;
-  flex-direction: column;
-  gap: 1cqw;
-  padding-top: 1cqw;
-  opacity: 0.4;
-}
-.comms-peek__ghost-line {
-  height: 4cqw;
-  border-radius: 1cqw;
-  background: linear-gradient(90deg, rgba(15,23,42,0.05) 0%, rgba(15,23,42,0.02) 100%);
-}
-.comms-peek__ghost-line:nth-child(2) { width: 70%; }
-
-/* Composed comms card (no image) — dense thread mockup that fills the
-   card and reads as the full system at a glance. */
-.band-card--comms {
-  display: flex;
-  align-items: stretch;
-  justify-content: center;
-  background: transparent;
-  overflow: hidden;
-  padding: 2cqw;
-}
-.comms-card {
-  width: 100%;
-  max-width: 380px;
-  align-self: stretch;
-  background: #fff;
-  border: 1px solid rgba(15,23,42,0.06);
-  border-radius: 1.8cqw;
-  box-shadow: 0 1.5cqw 4cqw rgba(15,23,42,0.08), 0 0.4cqw 1cqw rgba(15,23,42,0.04);
-  padding: 2.4cqw 2.6cqw 2.2cqw;
-  display: flex;
-  flex-direction: column;
-  gap: 1.6cqw;
-}
-.comms-card__head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.comms-card__customer {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: clamp(6px, 1.2cqw, 11px);
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: rgba(15,23,42,0.55);
-}
-.comms-card__status {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.8cqw;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: clamp(6px, 1.1cqw, 10.5px);
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: #EA580C;
-  background: rgba(234,88,12,0.08);
-  padding: 0.4cqw 1.4cqw;
-  border-radius: 100px;
-}
-.comms-card__dot {
-  width: 1.2cqw; height: 1.2cqw;
-  min-width: 5px; min-height: 5px;
-  max-width: 7px; max-height: 7px;
-  border-radius: 50%;
-  background: #EA580C;
-}
-.comms-card__title {
-  font-family: 'Inter', sans-serif;
-  font-weight: 600;
-  font-size: clamp(10px, 2.0cqw, 17px);
-  letter-spacing: -0.005em;
-  color: #0F172A;
-  line-height: 1.25;
-}
-.comms-card__avstack {
-  display: flex;
-  align-items: center;
-  gap: 0.4cqw;
-}
-.comms-card__sm-av {
-  width: 3.4cqw; height: 3.4cqw;
-  min-width: 16px; min-height: 16px;
-  max-width: 22px; max-height: 22px;
-  border-radius: 50%;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  color: #fff;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: clamp(5px, 1.0cqw, 9px);
-  font-weight: 600;
-  border: 1.5px solid #fff;
-  margin-left: -0.6cqw;
-}
-.comms-card__sm-av:first-child { margin-left: 0; }
-.comms-card__avstack-meta {
-  margin-left: 1cqw;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: clamp(5px, 1.0cqw, 9.5px);
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: rgba(15,23,42,0.40);
-}
-.comms-card__thread {
-  display: flex;
-  flex-direction: column;
-  gap: 1.2cqw;
-  padding-top: 0.6cqw;
-}
-.comms-card__msg {
-  display: flex;
-  gap: 1.4cqw;
-  padding: 1.6cqw 1.8cqw;
-  background: #F8F6F1;
-  border-radius: 1.2cqw;
-  position: relative;
-}
-.comms-card__msg::before {
-  content: "";
-  position: absolute;
-  left: 0; top: 1cqw; bottom: 1cqw;
-  width: 0.35cqw;
-  border-radius: 100px;
-  background: var(--sender, #EA580C);
-}
-.comms-card__av {
-  width: 4cqw; height: 4cqw;
-  min-width: 18px; min-height: 18px;
-  max-width: 26px; max-height: 26px;
-  border-radius: 50%;
-  background: #3A9ED0;
-  color: #fff;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: clamp(6px, 1.2cqw, 10px);
-  font-weight: 600;
-  flex-shrink: 0;
-}
-.comms-card__msg-body { flex: 1; min-width: 0; }
-.comms-card__msg-head {
-  display: flex;
-  align-items: center;
-  gap: 1cqw;
-  margin-bottom: 0.5cqw;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: clamp(7px, 1.2cqw, 10.5px);
-  font-weight: 600;
-  color: #0F172A;
-}
-.comms-card__tag {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: clamp(5px, 0.95cqw, 9px);
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  font-weight: 500;
-  padding: 0.25cqw 1cqw;
-  border-radius: 100px;
-}
-.comms-card__tag--update   { background: rgba(37,99,235,0.10); color: #2563EB; }
-.comms-card__tag--decision { background: rgba(234,88,12,0.10); color: #EA580C; }
-.comms-card__tag--concern  { background: rgba(220,38,38,0.10); color: #DC2626; }
-.comms-card__msg-text {
-  font-family: 'Inter', sans-serif;
-  font-size: clamp(7px, 1.35cqw, 12px);
-  line-height: 1.45;
-  color: #334155;
-}
-.comms-card__msg-text strong { color: #0F172A; font-weight: 600; }
-.comms-card__foot {
-  margin-top: auto;
-  padding-top: 1.6cqw;
-  border-top: 1px solid rgba(15,23,42,0.08);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1cqw;
-}
-.comms-card__toggle {
-  display: inline-flex;
-  background: #F1EFEA;
-  border-radius: 100px;
-  padding: 0.3cqw;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: clamp(5px, 1.0cqw, 9.5px);
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-.comms-card__toggle span {
-  padding: 0.5cqw 1.4cqw;
-  border-radius: 100px;
-  color: rgba(15,23,42,0.50);
-}
-.comms-card__toggle span.is-on {
-  background: #2563EB;
-  color: #fff;
-}
-.comms-card__cta {
-  font-family: 'Inter', sans-serif;
-  font-size: clamp(7px, 1.3cqw, 11.5px);
-  font-weight: 500;
-  color: #EA580C;
-  white-space: nowrap;
-}
-
-/* Project info row + title sit below the image at the bottom of each
-   card. Opacities are driven by scroll in JS. Text sizes use `cqw`
-   (container-query width) so they scale with the card itself. */
-.band-info {
-  position: absolute;
-  left: 7%;
-  right: 7%;
-  /* Sits in the clear coloured band BELOW the image (image ends at 74%),
-     so the IP-lifecycle / type / desc row never overlaps the artwork. */
-  bottom: 21%;
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  gap: clamp(4px, 1.5cqw, 16px);
-  align-items: center;
-  font-size: clamp(7px, 1.2cqw, 13px);
-  letter-spacing: 0.10em;
-  color: var(--ink);
-  z-index: 3;
-  pointer-events: none;
-}
-.band-year {
-  border: 1px solid var(--ink);
-  border-radius: 999px;
-  padding: clamp(2px, 0.4cqw, 5px) clamp(5px, 1.2cqw, 14px);
-}
-.band-type { justify-self: center; }
-.band-desc {
-  justify-self: end;
-  max-width: 30cqw;
-  line-height: 1.3;
-  text-transform: uppercase;
-}
-/* Hide the secondary text in narrow (shrunk) cards. */
-@container (max-width: 25vw) {
-  .band-desc, .band-type { display: none; }
-}
-.band-title {
-  position: absolute;
-  left: 7%;
-  right: 7%;
-  bottom: 4%;
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  font-weight: 400;
-  font-size: clamp(12px, 8cqw, 90px);
-  margin: 0;
-  letter-spacing: -0.02em;
-  color: var(--ink);
-  line-height: 1;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  z-index: 3;
-  pointer-events: none;
-}
-
-.band-page {
-  position: absolute;
-  bottom: 46px;
-  right: 18px;
-  font-size: 13px;
-  letter-spacing: 0.14em;
-  color: rgba(0,0,0,0.78);
-  z-index: 3;
-}
 
 /* Footer */
 .landing__footer {
@@ -2706,31 +2120,194 @@ body.locked-scroll { overflow: hidden; height: 100vh; }
   will-change: clip-path;
 }
 
-/* --- 5 bars at the viewport centre, top:50% y-centred --- */
-.bars {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
+
+/* ====================================================================
+   KEYBOARD FOCUS
+   The stylesheet had no :focus-visible rule anywhere, so every custom
+   pill, card and index row fell back to whatever ring the browser felt
+   like drawing. One token, one treatment, themed from the palette —
+   offset outlines on light ground, inverted on the dark footer.
+   ==================================================================== */
+:root {
+  --focus:      #b35528;                 /* the site's warm accent */
+  --focus-dark: rgba(244, 240, 232, 0.9);
 }
-.bar {
-  position: absolute;
-  top: 50%;
-  margin-top: -11vh;   /* center vertically without transform — framer-motion
-                          uses transform for scaleY and would override translate */
-  margin-left: -3px;   /* center horizontally on `left: X%` */
-  width: 6px;
-  height: 22vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  will-change: transform, opacity;
+
+.about-cta:focus-visible,
+.about-hero__cta:focus-visible,
+.about-back:focus-visible,
+.projets-aside__btn:focus-visible,
+.socials a:focus-visible,
+.socials__btn:focus-visible,
+.cs-back:focus-visible,
+.cs-nudge__btn:focus-visible,
+.band.is-clickable:focus-visible,
+.tc-anatomy__replay:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+  border-radius: 4px;
 }
-.bar::before, .bar::after {
-  content: '';
+/* Pills already carry their own radius — match it so the ring hugs. */
+.about-cta:focus-visible,
+.about-hero__cta:focus-visible,
+.about-back:focus-visible,
+.cs-back:focus-visible,
+.tc-anatomy__replay:focus-visible { border-radius: 999px; }
+.cs-nudge__btn:focus-visible { border-radius: 999px; }
+
+/* On the dark footer the warm accent is too close to the ground. */
+.about-footer__cta:focus-visible,
+.about-footer__nav a:focus-visible,
+.about-footer__navlink:focus-visible {
+  outline: 2px solid var(--focus-dark);
+  outline-offset: 3px;
+}
+/* The index arrow tracks the row's hover state; make it track focus too. */
+.projets-aside__btn:focus-visible .projets-aside__arrow {
+  transform: translateX(4px);
+  opacity: 1;
+}
+
+/* Browser surfaces the design never claimed. */
+::selection {
+  background: rgba(179, 85, 40, 0.22);
+  color: var(--ink);
+}
+.about-footer ::selection,
+.stage ::selection {
+  background: rgba(179, 85, 40, 0.35);
+}
+
+/* ====================================================================
+   SHRUNK CARDS
+   Once a card collapses to 14vw on the left stack, its footer still
+   rendered the full title, discipline and "View case study" CTA — the
+   title wrapped to three lines and the CTA was clipped by the next
+   card. The card is a spine at that width, not a label: keep the
+   number, drop the rest.
+   ==================================================================== */
+@container (max-width: 26vw) {
+  .band-foot__cta,
+  .band-foot__disc { display: none; }
+  .band-foot {
+    left: 8%;
+    right: 8%;
+    bottom: 5%;
+  }
+  .band-foot__title {
+    font-size: clamp(11px, 7cqw, 15px);
+    line-height: 1.15;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
+
+/* ====================================================================
+   REDUCED MOTION
+   The splash already short-circuits via useReducedMotion. These are the
+   pieces that kept moving regardless: the global smooth-scroll, the
+   Titan Crest section reveals, and its 44s infinite watch marquee.
+   ==================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .tc-reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .tc-collection__track { animation: none; }
+  .tc-mb img,
+  .tc-collection__item { transition: none; }
+  .band,
+  .left-stack { will-change: auto; }
+}
+/* Moving content has to be stoppable by keyboard too, not only by hover. */
+.tc-collection__viewport:focus-within .tc-collection__track {
+  animation-play-state: paused;
+}
+
+/* Marquee control — same ghost pill as the anatomy replay button. */
+.tc-collection__track.is-paused { animation-play-state: paused; }
+.tc-collection__toggle {
   display: block;
-  width: 100%;
-  height: 47%;
-  background: var(--bar);
-  border-radius: 3px;
+  margin: 28px auto 0;
+  padding: 10px 22px;
+  background: transparent;
+  color: var(--tc-ink-mute);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  border: 1px solid var(--tc-line);
+  border-radius: 100px;
+  cursor: pointer;
+  transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+}
+.tc-collection__toggle:hover {
+  background: var(--tc-ink);
+  color: #fff;
+  border-color: var(--tc-ink);
+}
+.tc-collection__toggle:focus-visible {
+  outline: 2px solid var(--tc-accent);
+  outline-offset: 3px;
+}
+
+/* Titan process: a sequence of rows, matching the step lists in the
+   other two case studies. */
+.tc-steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--tc-line);
+  max-width: 900px;
+}
+.tc-steps__row {
+  display: grid;
+  grid-template-columns: 56px 1fr;
+  gap: clamp(12px, 2vw, 28px);
+  padding: 24px 0;
+  border-bottom: 1px solid var(--tc-line);
+  align-items: baseline;
+}
+.tc-steps__n {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12.5px;
+  letter-spacing: 0.1em;
+  color: var(--tc-ink-faint);
+}
+.tc-steps__t {
+  font-family: 'Inter', sans-serif;
+  font-size: 17px;
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  color: var(--tc-ink);
+  margin: 0;
+  text-transform: none;
+}
+.tc-steps__list {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 20px;
+}
+.tc-steps__list li {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--tc-ink-mute);
+  position: relative;
+  padding-left: 16px;
+}
+.tc-steps__list li::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0.6em;
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--tc-accent);
 }

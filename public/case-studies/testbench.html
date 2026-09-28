@@ -380,8 +380,9 @@ body h2 { font-family:var(--font-display);letter-spacing:-0.03em; }
 
 /* ─── SECTION TRANSITIONS via IntersectionObserver ─── */
 </style>
+<link rel="stylesheet" href="/case-studies/casestudy.css">
 </head>
-<body class="bg-white text-zinc-900 antialiased">
+<body class="cs-doc">
 
 <!-- ═══════════════════════════════════════════════
      HERO
@@ -400,336 +401,124 @@ body h2 { font-family:var(--font-display);letter-spacing:-0.03em; }
   <span class="pf-nav-r">Under NDA · TestBench</span>
 </nav>
 
-<section style="min-height:100vh;background:#FAFAF9;display:flex;flex-direction:column;padding-top:52px;position:relative;overflow:hidden;" id="pf-hero-main">
-  <!-- subtle grid -->
-  <div style="position:absolute;inset:0;background-image:linear-gradient(#E8EDF5 1px,transparent 1px),linear-gradient(90deg,#E8EDF5 1px,transparent 1px);background-size:72px 72px;opacity:0.4;pointer-events:none;"></div>
-  <!-- fade out grid at bottom -->
-  <div style="position:absolute;bottom:0;left:0;right:0;height:40%;background:linear-gradient(to top,#FAFAF9,transparent);pointer-events:none;"></div>
-
-  <div style="max-width:1200px;margin:0 auto;padding:72px 40px 0;width:100%;position:relative;z-index:2;flex:1;display:flex;flex-direction:column;">
-    <!-- Top row: breadcrumb + meta -->
-    <div class="pf-rv" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:64px;">
-      <div style="display:flex;align-items:center;gap:8px;">
-        <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#8492A6;letter-spacing:0.06em;">Portfolio</span>
-        <span style="color:#C1C9D8;font-size:11px;">/</span>
-        <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#4F7CFF;letter-spacing:0.06em;">Case Study 01</span>
-      </div>
-      <div style="display:flex;align-items:center;gap:6px;">
-        <div style="width:6px;height:6px;border-radius:50%;background:#10B981;"></div>
-        <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#8492A6;letter-spacing:0.08em;text-transform:uppercase;">Under NDA · 2024</span>
-      </div>
-    </div>
-
-    <!-- Main headline block -->
-    <div style="display:grid;grid-template-columns:1fr 420px;gap:64px;align-items:start;flex:1;">
+<section class="cs-section cs-hero" id="pf-hero-main">
+  <div class="cs-wrap">
+    <div class="cs-two cs-hero__grid">
       <div>
-        <div class="pf-rv pf-d1" style="display:inline-flex;align-items:center;gap:8px;margin-bottom:28px;padding:5px 12px 5px 5px;background:#fff;border:1px solid #E8EDF5;border-radius:100px;box-shadow:0 1px 4px rgba(0,0,0,0.04);">
-          <span style="background:#4F7CFF;color:#fff;font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:600;padding:3px 8px;border-radius:100px;letter-spacing:0.08em;text-transform:uppercase;">AI Reliability</span>
-          <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#8492A6;letter-spacing:0.06em;">Internal SaaS · Product Designer</span>
-        </div>
-
-        <h1 class="pf-rv pf-d2" style="font-family:'DM Serif Display',Georgia,serif;font-size:clamp(42px,6vw,76px);font-weight:400;color:#0A0F1E;line-height:1.05;letter-spacing:-0.02em;margin:0 0 24px;">
-          Designing the<br>
-          <em style="font-style:italic;color:#4F7CFF;">Evaluation Layer</em>
-        </h1>
-
-        <p class="pf-rv pf-d3" style="font-family:'Inter',sans-serif;font-size:17px;line-height:1.72;color:#64748B;max-width:480px;margin:0 0 48px;">How TestBench became the trust infrastructure enterprise AI teams were missing, from zero to a working product in 3 months.</p>
-
-        <!-- Stats strip — matching CC format -->
-        <div class="pf-rv pf-d4" style="display:flex;gap:0;border:1px solid #E8EDF5;border-radius:12px;overflow:hidden;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,0.04);width:fit-content;">
-          <div style="padding:14px 24px;border-right:1px solid #E8EDF5;">
-            <div style="font-family:'DM Serif Display',serif;font-size:32px;font-weight:400;color:#0A0F1E;line-height:1;letter-spacing:-0.03em;margin-bottom:4px;">2wk</div>
-            <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#8492A6;text-transform:uppercase;letter-spacing:0.08em;">Timeline</div>
-          </div>
-          <div style="padding:14px 24px;border-right:1px solid #E8EDF5;">
-            <div style="font-family:'DM Serif Display',serif;font-size:32px;font-weight:400;color:#0A0F1E;line-height:1;letter-spacing:-0.03em;margin-bottom:4px;">3+</div>
-            <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#8492A6;text-transform:uppercase;letter-spacing:0.08em;">Yrs experience</div>
-          </div>
-          <div style="padding:14px 24px;border-right:1px solid #E8EDF5;">
-            <div style="font-family:'DM Serif Display',serif;font-size:32px;font-weight:400;color:#C1C9D8;line-height:1;letter-spacing:-0.03em;margin-bottom:4px;">0</div>
-            <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#8492A6;text-transform:uppercase;letter-spacing:0.08em;">Prior eval tools</div>
-          </div>
-          <div style="padding:14px 24px;background:rgba(79,124,255,0.04);">
-            <div style="font-family:'DM Serif Display',serif;font-size:32px;font-weight:400;color:#4F7CFF;line-height:1;letter-spacing:-0.03em;margin-bottom:4px;">↑</div>
-            <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#4F7CFF;text-transform:uppercase;letter-spacing:0.08em;opacity:0.8;">Enterprise demos</div>
-          </div>
-        </div>
+        <h1 class="cs-h1 pf-rv">Designing the<br><em>Evaluation Layer</em></h1>
+        <p class="cs-lede pf-rv">How TestBench became the trust infrastructure enterprise AI teams were missing &mdash; from zero to a working product their customers could run on day one.</p>
+        <dl class="cs-spec pf-rv">
+          <div><dt>Role</dt><dd>Product Designer, solo</dd></div>
+          <div><dt>Scope</dt><dd>Internal SaaS &middot; AI reliability</dd></div>
+          <div><dt>Duration</dt><dd>3 months</dd></div>
+          <div><dt>Status</dt><dd>Under NDA &middot; 2024</dd></div>
+        </dl>
       </div>
-
-      <!-- Right: expanded case-study image, cropped to fill the visual area. -->
-      <div class="pf-rv pf-d3" style="padding-top:8px;">
-        <div style="width:100%;height:560px;border-radius:14px;overflow:hidden;background:transparent;">
-          <img src="/landing-cards/test-inside.png" alt="TestBench — expanded evaluation view" style="width:100%;height:100%;object-fit:cover;object-position:center;display:block;" />
-        </div>
-        <div style="padding:12px 4px 0;display:flex;align-items:center;gap:6px;">
-          <div style="width:6px;height:6px;border-radius:50%;background:#4F7CFF;flex-shrink:0;"></div>
-          <span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#8492A6;letter-spacing:0.06em;">Live result view from the evaluation canvas</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Scroll hint -->
-    <div class="pf-rv pf-d4" style="padding:32px 0 40px;display:flex;align-items:center;gap:12px;position:relative;z-index:2;">
-      <div style="width:1px;height:32px;background:linear-gradient(to bottom,#E8EDF5,transparent);"></div>
-      <span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#C1C9D8;letter-spacing:0.12em;text-transform:uppercase;">Scroll to explore</span>
+      <figure class="cs-figure cs-hero__fig pf-rv">
+        <img src="/landing-cards/test-inside.png" alt="TestBench evaluation results view, showing an agent scorecard, metric breakdown and test-case table" />
+        <figcaption class="cs-figure__cap">The live result view from the evaluation canvas.</figcaption>
+      </figure>
     </div>
   </div>
 </section>
 
-
-<div class="pf-divider" style="padding-top:0">
-  <span class="pf-divider-num">01</span>
-  <div class="pf-divider-line"></div>
-  <span class="pf-divider-label">Problem Space</span>
-</div>
-<section style="background:#FAFAF9;">
-  <div style="max-width:1200px;margin:0 auto;padding:72px 24px;">
-
-    <!-- Label -->
-    <div class="reveal" style="transition-delay:0.05s;">
-      <h2 style="font-size:clamp(28px,3.5vw,44px);font-weight:700;color:#0F172A;letter-spacing:-0.02em;line-height:1.1;margin:0 0 14px;">AI Was Shipping Faster<br>Than Trust Could Keep Up</h2>
-      <p style="font-size:16px;color:#6B7280;line-height:1.7;max-width:600px;margin:0 0 48px;">Every enterprise runs multiple AI agents: HR assistants, support bots, internal copilots. But once they moved beyond demos, teams hit the same wall.</p>
-    </div>
-
-    <!-- Three-column balanced layout -->
-    <div class="reveal" style="display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:start;transition-delay:0.1s;">
-      
-      <!-- Col 1: Alert signals + key questions -->
-      <div>
-        <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:24px;">
-          <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;background:#FFFBEB;border:1px solid #FDE68A;border-radius:8px;">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M12 2L4 6v6c0 5.5 3.8 10.7 8 12 4.2-1.3 8-6.5 8-12V6l-8-4z"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-            <span style="font-size:11px;font-weight:500;color:#92400E;font-family:monospace;">Sensitive data exposed in response</span>
-          </div>
-          <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;background:#FFFBEB;border:1px solid #FDE68A;border-radius:8px;">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-            <span style="font-size:11px;font-weight:500;color:#92400E;font-family:monospace;">Compliance violation undetected</span>
-          </div>
-          <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;background:#FFFBEB;border:1px solid #FDE68A;border-radius:8px;">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><circle cx="6" cy="6" r="2"/><circle cx="18" cy="18" r="2"/><circle cx="6" cy="18" r="2"/><path d="M18 16v-4a4 4 0 0 0-4-4H8"/><path d="M6 8v8"/></svg>
-            <span style="font-size:11px;font-weight:500;color:#92400E;font-family:monospace;">Unexpected multi-step response path</span>
-          </div>
-        </div>
-        <div style="border-left:2px solid #E5E7EB;padding-left:16px;display:flex;flex-direction:column;gap:8px;">
-          <p style="font-size:12px;color:#374151;margin:0;font-style:italic;">"What should this agent <strong>never</strong> say?"</p>
-          <p style="font-size:12px;color:#374151;margin:0;font-style:italic;">"How do we test across <strong>multiple steps</strong>?"</p>
-          <p style="font-size:12px;color:#374151;margin:0;font-style:italic;">"How do we <strong>prove compliance</strong> before launch?"</p>
-        </div>
-      </div>
-
-      <!-- Col 2: 4 persona cards -->
-      <div style="display:flex;flex-direction:column;gap:8px;">
-        <div style="padding:12px 14px;background:#fff;border:1px solid #E5E7EB;border-radius:8px;">
-          <div style="font-size:11px;font-weight:600;color:#0F172A;margin-bottom:3px;">Product & AI Engineers</div>
-          <div style="font-size:11px;color:#6B7280;font-style:italic;">"Can't debug multi-step failures."</div>
-        </div>
-        <div style="padding:12px 14px;background:#fff;border:1px solid #E5E7EB;border-radius:8px;">
-          <div style="font-size:11px;font-weight:600;color:#0F172A;margin-bottom:3px;">QA Teams</div>
-          <div style="font-size:11px;color:#6B7280;font-style:italic;">"Manual testing doesn't scale."</div>
-        </div>
-        <div style="padding:12px 14px;background:#fff;border:1px solid #E5E7EB;border-radius:8px;">
-          <div style="font-size:11px;font-weight:600;color:#0F172A;margin-bottom:3px;">Security & Compliance</div>
-          <div style="font-size:11px;color:#6B7280;font-style:italic;">"We need proof, not promises."</div>
-        </div>
-        <div style="padding:12px 14px;background:#fff;border:1px solid #E5E7EB;border-radius:8px;">
-          <div style="font-size:11px;font-weight:600;color:#0F172A;margin-bottom:3px;">Ops & Leadership</div>
-          <div style="font-size:11px;color:#6B7280;font-style:italic;">"We see issues after customers do."</div>
-        </div>
-      </div>
-
-      
-    </div>
-
+<section class="cs-section">
+  <div class="cs-wrap">
+    <h2 class="cs-h2 pf-rv">AI was shipping faster than trust could keep up</h2>
+    <p class="cs-lede pf-rv">Every enterprise runs multiple AI agents &mdash; HR assistants, support bots, internal copilots. Once they moved past the demo, every team hit the same wall.</p>
+    <p class="cs-body pf-rv">Nothing on the market could test multi-turn agent behaviour at scale. Teams could not answer what an agent should never say, how to test a decision made across several steps, or how to prove compliance before launch. Four roles were blocked by the same missing capability, each for a different reason.</p>
+    <ul class="cs-steps pf-rv">
+      <li>
+        <span class="cs-steps__n">01</span>
+        <div><span class="cs-steps__t">Product &amp; AI engineers</span>
+        <p class="cs-steps__d">Needed to debug failures that only appear partway through a multi-step exchange, where the last reply looks fine.</p></div>
+      </li>
+      <li>
+        <span class="cs-steps__n">02</span>
+        <div><span class="cs-steps__t">QA teams</span>
+        <p class="cs-steps__d">Were testing by hand. Every model or prompt change meant repeating the work, so coverage never held.</p></div>
+      </li>
+      <li>
+        <span class="cs-steps__n">03</span>
+        <div><span class="cs-steps__t">Security &amp; compliance</span>
+        <p class="cs-steps__d">Needed evidence they could show an auditor, not an assurance from the team that shipped the agent.</p></div>
+      </li>
+      <li>
+        <span class="cs-steps__n">04</span>
+        <div><span class="cs-steps__t">Ops &amp; leadership</span>
+        <p class="cs-steps__d">Found out about regressions from customers, because nothing watched an agent's quality between releases.</p></div>
+      </li>
+    </ul>
   </div>
 </section>
 
-
-
-
-<!-- ═══ VISUAL: PROBLEM INSIGHT ═══ -->
-<div style="background:#0A0F1E;padding:80px 0;overflow:hidden;position:relative;">
-  <div style="position:absolute;left:-20px;top:50%;transform:translateY(-50%);font-family:'DM Serif Display',serif;font-size:180px;font-weight:800;color:rgba(79,124,255,0.05);letter-spacing:-0.06em;line-height:1;pointer-events:none;user-select:none;">TRUST</div>
-  <div style="max-width:1200px;margin:0 auto;padding:0 40px;position:relative;z-index:1;">
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;">
-      <div class="pf-rv">
-        <div style="width:40px;height:3px;background:#4F7CFF;margin-bottom:28px;"></div>
-        <blockquote style="font-family:'DM Serif Display',sans-serif;font-size:clamp(22px,3vw,36px);font-weight:700;color:rgba(255,255,255,0.9);line-height:1.25;letter-spacing:-0.02em;margin:0 0 24px;">
-          "AI was shipping<br>faster than trust<br><em style='font-style:normal;color:rgba(79,124,255,0.9)'>could keep up.</em>"
-        </blockquote>
-        <p style="font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;color:rgba(255,255,255,0.3);letter-spacing:0.12em;text-transform:uppercase;">Core design problem</p>
-      </div>
-      <div class="pf-rv pf-d2" style="display:flex;flex-direction:column;gap:1px;">
-        <div style="padding:22px 24px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:12px 12px 2px 2px;display:flex;align-items:center;gap:20px;">
-          <div style="font-family:'DM Serif Display',sans-serif;font-size:44px;font-weight:800;color:rgba(79,124,255,0.85);line-height:1;letter-spacing:-0.04em;min-width:80px;">0</div>
-          <div style="font-size:13px;color:rgba(255,255,255,0.45);line-height:1.6">Existing tools that could test multi-turn AI agent behavior at scale</div>
-        </div>
-        <div style="padding:22px 24px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:2px;display:flex;align-items:center;gap:20px;">
-          <div style="font-family:'DM Serif Display',sans-serif;font-size:44px;font-weight:800;color:rgba(234,88,12,0.85);line-height:1;letter-spacing:-0.04em;min-width:80px;">4+</div>
-          <div style="font-size:13px;color:rgba(255,255,255,0.45);line-height:1.6">Distinct user roles blocked by the same absence of reliable evaluation</div>
-        </div>
-        <div style="padding:22px 24px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:2px 2px 12px 12px;display:flex;align-items:center;gap:20px;">
-          <div style="font-family:'DM Serif Display',sans-serif;font-size:44px;font-weight:800;color:rgba(79,124,255,0.85);line-height:1;letter-spacing:-0.04em;min-width:80px;">3mo</div>
-          <div style="font-size:13px;color:rgba(255,255,255,0.45);line-height:1.6">From zero to a working platform enterprise teams could demo on day one</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="pf-divider">
-  <span class="pf-divider-num">02</span>
-  <div class="pf-divider-line"></div>
-  <span class="pf-divider-label">Design Challenge + Solution</span>
-</div>
 <!-- ═══════════════════════════════════════════════
      SECTION B — DESIGN CHALLENGE + SOLUTION
      (narrative → transition)
 ════════════════════════════════════════════════ -->
-<section style="background:#FAFAF9;">
-  <div style="max-width:1200px;margin:0 auto;padding:72px 24px;">
+<section class="cs-section">
+  <div class="cs-wrap">
+    <h2 class="cs-h2 pf-rv">How do you test something that <em>thinks</em>?</h2>
+    <p class="cs-lede pf-rv">Traditional QA was built for deterministic software: same input, same output, pass or fail. An AI agent is probabilistic, multi-turn and context-aware, so the question changes from &ldquo;did it return the right value&rdquo; to &ldquo;did it reason acceptably, every time, across the whole exchange&rdquo;.</p>
 
-    <div class="reveal" style="display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start;">
-      <!-- Left: Design Challenge -->
-      <div>
-        <h2 style="font-size:clamp(22px,2.5vw,30px);font-weight:700;color:#0F172A;letter-spacing:-0.02em;margin:0 0 12px;">How Do You Test<br>Something That Thinks?</h2>
-        <p style="font-size:14px;color:#6B7280;line-height:1.65;margin:0 0 24px;">Traditional QA tools were built for deterministic software. AI agents are probabilistic, multi-turn, and context-aware.</p>
-        <!-- Side-by-side comparison -->
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-          <div style="padding:14px 16px;background:#FEF2F2;border:1px solid #FECACA;border-radius:8px;">
-            <div style="font-size:10px;font-weight:700;color:#DC2626;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px;">Traditional QA</div>
-            <div style="display:flex;flex-direction:column;gap:7px;">
-              <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:#6B7280;">
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2.5" style="flex-shrink:0;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-                Deterministic only
-              </div>
-              <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:#6B7280;">
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2.5" style="flex-shrink:0;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-                No multi-turn testing
-              </div>
-              <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:#6B7280;">
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2.5" style="flex-shrink:0;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-                No trajectory analysis
-              </div>
-            </div>
-          </div>
-          <div style="padding:14px 16px;background:#F0FDF4;border:1px solid #86EFAC;border-radius:8px;">
-            <div style="font-size:10px;font-weight:700;color:#16A34A;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px;">TestBench</div>
-            <div style="display:flex;flex-direction:column;gap:7px;">
-              <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:#374151;">
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#22C55E" stroke-width="2.5" style="flex-shrink:0;"><polyline points="20 6 9 17 4 12"/></svg>
-                Real agent behavior
-              </div>
-              <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:#374151;">
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#22C55E" stroke-width="2.5" style="flex-shrink:0;"><polyline points="20 6 9 17 4 12"/></svg>
-                Repeatable test cases
-              </div>
-              <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:#374151;">
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#22C55E" stroke-width="2.5" style="flex-shrink:0;"><polyline points="20 6 9 17 4 12"/></svg>
-                Outcome + reasoning eval
-              </div>
-            </div>
-          </div>
-        </div>
+    <div class="cs-compare pf-rv">
+      <div class="cs-compare__row cs-compare__head">
+        <span class="cs-compare__axis">&nbsp;</span>
+        <span class="cs-compare__was">Traditional QA</span>
+        <span class="cs-compare__now">TestBench</span>
       </div>
-
-      <!-- Right: Solution -->
-      <div>
-        <h2 style="font-size:clamp(22px,2.5vw,30px);font-weight:700;color:#0F172A;letter-spacing:-0.02em;margin:0 0 12px;">TestBench: A Reliability Layer for AI Agents</h2>
-        <p style="font-size:14px;color:#6B7280;line-height:1.65;margin:0 0 24px;">An internal platform that lets teams register, test, evaluate, and monitor AI agents end-to-end.</p>
-        <div style="display:flex;flex-direction:column;gap:2px;">
-          <div style="display:flex;align-items:center;gap:12px;padding:11px 14px;background:#fff;border:1px solid #E2E8F0;border-radius:7px 7px 2px 2px;">
-            <div style="width:26px;height:26px;border-radius:5px;background:#EFF6FF;border:1px solid #BFDBFE;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-              <span style="font-size:10px;font-weight:700;color:#2563EB;">01</span>
-            </div>
-            <div><div style="font-size:12px;font-weight:600;color:#0F172A;">Agent Registry</div><div style="font-size:11px;color:#6B7280;">Register and version AI agents</div></div>
-          </div>
-          <div style="display:flex;align-items:center;gap:12px;padding:11px 14px;background:#fff;border:1px solid #E2E8F0;border-radius:2px;">
-            <div style="width:26px;height:26px;border-radius:5px;background:#EFF6FF;border:1px solid #BFDBFE;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-              <span style="font-size:10px;font-weight:700;color:#2563EB;">02</span>
-            </div>
-            <div><div style="font-size:12px;font-weight:600;color:#0F172A;">Test Cases</div><div style="font-size:11px;color:#6B7280;">Chat, manual, or AI-generated</div></div>
-          </div>
-          <div style="display:flex;align-items:center;gap:12px;padding:11px 14px;background:#fff;border:1px solid #E2E8F0;border-radius:2px;">
-            <div style="width:26px;height:26px;border-radius:5px;background:#EFF6FF;border:1px solid #BFDBFE;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-              <span style="font-size:10px;font-weight:700;color:#2563EB;">03</span>
-            </div>
-            <div><div style="font-size:12px;font-weight:600;color:#0F172A;">Evaluations</div><div style="font-size:11px;color:#6B7280;">Metrics, judge models, ground truth</div></div>
-          </div>
-          <div style="display:flex;align-items:center;gap:12px;padding:11px 14px;background:#fff;border:1px solid #E2E8F0;border-radius:2px;">
-            <div style="width:26px;height:26px;border-radius:5px;background:#EFF6FF;border:1px solid #BFDBFE;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-              <span style="font-size:10px;font-weight:700;color:#2563EB;">04</span>
-            </div>
-            <div><div style="font-size:12px;font-weight:600;color:#0F172A;">Results</div><div style="font-size:11px;color:#6B7280;">Score breakdown + execution traces</div></div>
-          </div>
-          <div style="display:flex;align-items:center;gap:12px;padding:11px 14px;background:#fff;border:1px solid #E2E8F0;border-radius:2px 2px 7px 7px;">
-            <div style="width:26px;height:26px;border-radius:5px;background:#EFF6FF;border:1px solid #BFDBFE;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-              <span style="font-size:10px;font-weight:700;color:#2563EB;">05</span>
-            </div>
-            <div><div style="font-size:12px;font-weight:600;color:#0F172A;">Insights</div><div style="font-size:11px;color:#6B7280;">Performance trends across versions</div></div>
-          </div>
-        </div>
+      <div class="cs-compare__row">
+        <span class="cs-compare__axis">What is tested</span>
+        <span class="cs-compare__was">Input produces one deterministic output.</span>
+        <span class="cs-compare__now">Real agent behaviour &mdash; probabilistic, context-sensitive, across multiple models.</span>
+      </div>
+      <div class="cs-compare__row">
+        <span class="cs-compare__axis">Test cases</span>
+        <span class="cs-compare__was">Pass or fail, nothing in between.</span>
+        <span class="cs-compare__now">Repeatable cases against ground-truth datasets, versioned per evaluation run.</span>
+      </div>
+      <div class="cs-compare__row">
+        <span class="cs-compare__axis">Conversation</span>
+        <span class="cs-compare__was">Single turn only.</span>
+        <span class="cs-compare__now">The full trajectory, not just the last reply.</span>
+      </div>
+      <div class="cs-compare__row">
+        <span class="cs-compare__axis">Judgement</span>
+        <span class="cs-compare__was">No reasoning trace.</span>
+        <span class="cs-compare__now">A judge model scores quality and rationale, not only correctness.</span>
       </div>
     </div>
-
   </div>
 </section>
 
-
-
-
-<!-- ═══ VISUAL: DESIGN PRINCIPLES ═══ -->
-<div style="background:#F7F9FC;padding:80px 0;">
-  <div style="max-width:1200px;margin:0 auto;padding:0 40px;">
-    <div class="pf-rv" style="margin-bottom:48px;">
-      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#4F7CFF;margin-bottom:12px;display:flex;align-items:center;gap:10px;"><span style="display:inline-block;width:20px;height:1.5px;background:#4F7CFF;"></span>Mental Model</div>
-      <h2 style="font-family:'DM Serif Display',sans-serif;font-size:clamp(26px,3.5vw,42px);font-weight:800;color:#0A0F1E;letter-spacing:-0.03em;line-height:1.05;margin:0 0 12px;">The gap we were filling.</h2>
-      <p style="font-size:16px;color:#4A5568;line-height:1.7;max-width:560px;">Traditional QA tools test deterministic systems. TestBench was built for something fundamentally different.</p>
-    </div>
-    <div class="pf-rv pf-d1" style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;margin-bottom:40px;">
-      <div style="padding:24px;background:#fff;border:1px solid #E8EDF5;border-radius:12px;border-top:3px solid #EF4444;">
-        <div style="font-family:'JetBrains Mono',monospace;font-size:8.5px;color:#EF4444;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:14px;">Old approach</div>
-        <div style="display:flex;flex-direction:column;gap:8px;">
-          <div style="font-size:12px;color:#4A5568;padding:8px 10px;background:#FEF2F2;border-radius:7px;line-height:1.5">Input → deterministic output</div>
-          <div style="font-size:12px;color:#4A5568;padding:8px 10px;background:#FEF2F2;border-radius:7px;line-height:1.5">Pass / fail only</div>
-          <div style="font-size:12px;color:#4A5568;padding:8px 10px;background:#FEF2F2;border-radius:7px;line-height:1.5">Single-turn only</div>
-          <div style="font-size:12px;color:#4A5568;padding:8px 10px;background:#FEF2F2;border-radius:7px;line-height:1.5">No reasoning trace</div>
-        </div>
-      </div>
-      <div style="padding:24px;background:#fff;border:1px solid #E8EDF5;border-radius:12px;border-top:3px solid #4F7CFF;grid-column:span 2;">
-        <div style="font-family:'JetBrains Mono',monospace;font-size:8.5px;color:#4F7CFF;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:14px;">TestBench approach</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-          <div style="font-size:12px;color:#2D3650;padding:10px 12px;background:rgba(79,124,255,0.05);border:1px solid rgba(79,124,255,0.15);border-radius:7px;line-height:1.5"><strong style="display:block;margin-bottom:3px;font-weight:600">Real agent behavior</strong>Probabilistic, context-sensitive, multi-model</div>
-          <div style="font-size:12px;color:#2D3650;padding:10px 12px;background:rgba(79,124,255,0.05);border:1px solid rgba(79,124,255,0.15);border-radius:7px;line-height:1.5"><strong style="display:block;margin-bottom:3px;font-weight:600">Repeatable test cases</strong>Ground truth datasets, versioned evaluation runs</div>
-          <div style="font-size:12px;color:#2D3650;padding:10px 12px;background:rgba(79,124,255,0.05);border:1px solid rgba(79,124,255,0.15);border-radius:7px;line-height:1.5"><strong style="display:block;margin-bottom:3px;font-weight:600">Multi-turn trajectories</strong>Tests the full conversation path, not just last reply</div>
-          <div style="font-size:12px;color:#2D3650;padding:10px 12px;background:rgba(79,124,255,0.05);border:1px solid rgba(79,124,255,0.15);border-radius:7px;line-height:1.5"><strong style="display:block;margin-bottom:3px;font-weight:600">Outcome + reasoning</strong>Judge model evaluates quality, not just correctness</div>
-        </div>
-      </div>
-      <div style="padding:24px;background:#0A0F1E;border:1px solid rgba(79,124,255,0.3);border-radius:12px;border-top:3px solid #4F7CFF;">
-        <div style="font-family:'JetBrains Mono',monospace;font-size:8.5px;color:rgba(79,124,255,0.7);font-weight:700;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:14px;">The outcome</div>
-        <div style="font-family:'DM Serif Display',sans-serif;font-size:28px;font-weight:800;color:#4F7CFF;line-height:1;letter-spacing:-0.04em;margin-bottom:8px;">89%</div>
-        <div style="font-size:12px;color:rgba(255,255,255,0.4);line-height:1.5">avg reliability score on first successful enterprise demo run</div>
-        <div style="margin-top:12px;font-family:'DM Serif Display',sans-serif;font-size:22px;font-weight:800;color:rgba(79,124,255,0.7);line-height:1;letter-spacing:-0.04em;margin-bottom:6px;">↑5pt</div>
-        <div style="font-size:12px;color:rgba(255,255,255,0.4);line-height:1.5">improvement from v2.2 → v2.3 after prompt fix</div>
-      </div>
-    </div>
+<section class="cs-section cs-section--tight">
+  <div class="cs-wrap">
+    <h2 class="cs-h2 pf-rv">A reliability layer for AI agents</h2>
+    <p class="cs-lede pf-rv">An internal platform that lets teams register, test, evaluate and monitor an agent end to end. Five stages, each one feeding the next.</p>
+    <ol class="cs-steps pf-rv">
+      <li><span class="cs-steps__n">01</span><div><span class="cs-steps__t">Agent registry</span>
+        <p class="cs-steps__d">Register and version an agent so every later result is attached to a known build.</p></div></li>
+      <li><span class="cs-steps__n">02</span><div><span class="cs-steps__t">Test cases</span>
+        <p class="cs-steps__d">Captured from a real chat, written by hand, or generated against an objective.</p></div></li>
+      <li><span class="cs-steps__n">03</span><div><span class="cs-steps__t">Evaluations</span>
+        <p class="cs-steps__d">Metrics, judge models and ground truth, configured together before a run.</p></div></li>
+      <li><span class="cs-steps__n">04</span><div><span class="cs-steps__t">Results</span>
+        <p class="cs-steps__d">Score breakdown per metric, with the execution trace behind every number.</p></div></li>
+      <li><span class="cs-steps__n">05</span><div><span class="cs-steps__t">Insights</span>
+        <p class="cs-steps__d">Performance across versions, so a regression is visible before a customer finds it.</p></div></li>
+    </ol>
   </div>
-</div>
-
-<div class="pf-divider">
-  <span class="pf-divider-num">03</span>
-  <div class="pf-divider-line"></div>
-  <span class="pf-divider-label">Design · Test Creation</span>
-</div>
+</section>
 <!-- ═══════════════════════════════════════════════
      DESIGN SECTION 1 — TEST CREATION
 ════════════════════════════════════════════════ -->
 <section style="background:#fff;">
   <div style="max-width:1200px;margin:0 auto;padding:64px 24px;">
-    <div class="reveal" style="transition-delay:0.05s;display:grid;grid-template-columns:1fr 2.4fr;gap:48px;align-items:start;">
-      <div>
-        <h2 style="font-size:clamp(20px,2.2vw,28px);font-weight:700;color:#0F172A;letter-spacing:-0.02em;margin:0 0 12px;">Defining Correct Before Measuring Good</h2>
-        <p style="font-size:13px;color:#6B7280;line-height:1.7;margin:0;">Non-deterministic responses mean every interaction is different. Three creation modes let teams capture expected behavior as structured test cases.</p>
-      </div>
+    <div class="reveal" style="transition-delay:0.05s;">
+      <h2 class="cs-h2">Defining correct before measuring good</h2>
+      <p class="cs-lede">Non-deterministic responses mean no two interactions match. Three creation modes let a team capture what a correct answer looks like before asking the system to grade one.</p>
+    </div>
+    <div class="cs-figure">
       <!-- Product UI: 3 actual design cards -->
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;align-items:stretch;">
 
@@ -841,19 +630,14 @@ body h2 { font-family:var(--font-display);letter-spacing:-0.03em; }
 </section>
 
 
-<div class="pf-divider">
-  <span class="pf-divider-num">04</span>
-  <div class="pf-divider-line"></div>
-  <span class="pf-divider-label">Design · Evaluation Canvas</span>
-</div>
 <!-- ═══════════════════════════════════════════════
      DESIGN SECTION 2 — EVALUATION CANVAS
 ════════════════════════════════════════════════ -->
 <section style="background:#fff;">
   <div style="max-width:1200px;margin:0 auto;padding:64px 24px;">
     <div class="reveal" style="max-width:640px;margin-bottom:32px;">
-      <h2 style="font-size:clamp(20px,2.2vw,28px);font-weight:700;color:#0F172A;letter-spacing:-0.02em;margin:0 0 10px;">Evaluations Designed Like Workflows, Not Forms</h2>
-      <p style="font-size:13px;color:#6B7280;line-height:1.7;margin:0;">Configure tester models, judge models, metrics, and ground truth in a single connected canvas. Hover to watch the flow.</p>
+<h2 class="cs-h2">Evaluations designed like workflows, not forms</h2>
+<p class="cs-lede">Tester models, judge models, metrics and ground truth are configured in one connected canvas, where the dependencies between them are visible before anything runs.</p>
     </div>
     <div>
       <div style="border:2px solid #1E293B;border-radius:12px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,0.18);">
@@ -2118,19 +1902,14 @@ document.addEventListener('DOMContentLoaded',()=>{
 </section>
 
 
-<div class="pf-divider">
-  <span class="pf-divider-num">05</span>
-  <div class="pf-divider-line"></div>
-  <span class="pf-divider-label">Design · Results</span>
-</div>
 <!-- ═══════════════════════════════════════════════
      DESIGN SECTION 3 — RESULTS + INSIGHTS
 ════════════════════════════════════════════════ -->
 <section style="background:#fff;">
   <div style="max-width:1200px;margin:0 auto;padding:64px 24px;">
     <div class="reveal" style="transition-delay:0.05s;max-width:700px;margin-bottom:40px;">
-      <h2 style="font-size:clamp(22px,2.5vw,32px);font-weight:700;color:#0F172A;letter-spacing:-0.02em;margin:0 0 12px;">Scores Alone Aren't Enough</h2>
-      <p style="font-size:14px;color:#6B7280;line-height:1.7;margin:0;">Every score needs a rationale. Every failure needs a trace. TestBench surfaces the complete picture, from metric breakdowns to execution logs.</p>
+<h2 class="cs-h2">Scores alone aren't enough</h2>
+<p class="cs-lede">Every score needs a rationale and every failure needs a trace. Results carry the metric breakdown, the per-case verdict and the execution log behind it.</p>
     </div>
 
 <div class="reveal" style="transition-delay:0.1s;">
@@ -2573,8 +2352,8 @@ document.addEventListener('DOMContentLoaded',()=>{
 <section style="background:#fff;">
   <div style="max-width:1200px;margin:0 auto;padding:64px 24px;">
     <div class="reveal" style="transition-delay:0.05s;max-width:700px;margin-bottom:40px;">
-      <h2 style="font-size:clamp(22px,2.5vw,32px);font-weight:700;color:#0F172A;letter-spacing:-0.02em;margin:0 0 12px;">From One-Time Testing to Continuous Confidence</h2>
-      <p style="font-size:14px;color:#6B7280;line-height:1.7;margin:0;">Every evaluation becomes a data point. The Insights screen tracks your agent's scores across versions, so teams can see exactly when it improved, what changed, and where it still slips.</p>
+<h2 class="cs-h2">Every run becomes a data point</h2>
+<p class="cs-lede">A single score is a snapshot. The Insights screen tracks an agent across versions, so a regression shows up as a shape in the trend line rather than as a customer complaint.</p>
     </div>
 
     <div class="reveal" style="transition-delay: 0.1s;">
@@ -2738,11 +2517,6 @@ document.addEventListener('DOMContentLoaded',()=>{
 
 
 
-<div class="pf-divider">
-  <span class="pf-divider-num">06</span>
-  <div class="pf-divider-line"></div>
-  <span class="pf-divider-label">Design · Continuous Monitoring</span>
-</div>
 <!-- ═══════════════════════════════════════════════
      DESIGN SECTION 5 — AGENT OVERVIEW (CONTINUOUS MONITORING)
 ════════════════════════════════════════════════ -->
@@ -2750,8 +2524,8 @@ document.addEventListener('DOMContentLoaded',()=>{
   <div style="max-width:1200px;margin:0 auto;padding:72px 24px;">
 
     <div class="reveal" style="max-width:680px;margin-bottom:52px;">
-      <h2 style="font-size:clamp(20px,2.2vw,28px);font-weight:700;color:#0F172A;letter-spacing:-0.02em;margin:0 0 10px;">From One-Time Test to Continuous Confidence</h2>
-      <p style="font-size:13px;color:#6B7280;line-height:1.7;margin:0;">Once teams run evaluations regularly, agents become living entities with a full history. The Agent Overview gives every stakeholder a single source of truth, scores, risks, trends, and the ability to re-run in one click.</p>
+<h2 class="cs-h2">An agent with a history</h2>
+<p class="cs-lede">Once evaluations run regularly, an agent stops being a black box and starts carrying a record. The Agent Overview gives every stakeholder one place to see scores, risks, coverage and trend, and to re-run in a click.</p>
     </div>
 
     <!-- Clean bordered screen mockup -->
@@ -2994,68 +2768,19 @@ document.addEventListener('DOMContentLoaded',()=>{
 
 
 
-<!-- ═══ VISUAL: OUTCOME CALLOUTS ═══ -->
-<div style="background:#F7F9FC;padding:80px 0;">
-  <div style="max-width:1200px;margin:0 auto;padding:0 40px;">
-    <div class="pf-rv" style="margin-bottom:48px;">
-      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#4F7CFF;margin-bottom:12px;display:flex;align-items:center;gap:10px;"><span style="display:inline-block;width:20px;height:1.5px;background:#4F7CFF;"></span>What We Shipped</div>
-      <h2 style="font-family:'DM Serif Display',sans-serif;font-size:clamp(26px,3.5vw,42px);font-weight:800;color:#0A0F1E;letter-spacing:-0.03em;line-height:1.05;margin:0;">From zero to<br><em style='font-style:normal;color:#4F7CFF'>enterprise interest.</em></h2>
-    </div>
-    <div class="pf-rv pf-d1" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:40px;">
-      <div style="padding:28px;background:#fff;border:1px solid #E8EDF5;border-radius:14px;display:flex;flex-direction:column;gap:16px;transition:transform 0.3s,box-shadow 0.3s;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 12px 32px rgba(79,124,255,0.1)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
-        <div style="width:40px;height:40px;border-radius:10px;background:rgba(79,124,255,0.08);border:1px solid rgba(79,124,255,0.18);display:flex;align-items:center;justify-content:center;">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4F7CFF" stroke-width="2"><polygon points="12 2 2 7 2 17 12 22 22 17 22 7 12 2"/></svg>
-        </div>
-        <div>
-          <div style="font-family:'DM Serif Display',sans-serif;font-size:16px;font-weight:700;color:#0A0F1E;margin-bottom:6px;letter-spacing:-0.02em">Evaluation Canvas</div>
-          <div style="font-size:13px;color:#4A5568;line-height:1.65">A spatial canvas where teams configure agents, models, datasets and metrics, seeing all dependencies before running.</div>
-        </div>
-      </div>
-      <div style="padding:28px;background:#fff;border:1px solid #E8EDF5;border-radius:14px;display:flex;flex-direction:column;gap:16px;transition:transform 0.3s,box-shadow 0.3s;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 12px 32px rgba(79,124,255,0.1)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
-        <div style="width:40px;height:40px;border-radius:10px;background:rgba(79,124,255,0.08);border:1px solid rgba(79,124,255,0.18);display:flex;align-items:center;justify-content:center;">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4F7CFF" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-        </div>
-        <div>
-          <div style="font-family:'DM Serif Display',sans-serif;font-size:16px;font-weight:700;color:#0A0F1E;margin-bottom:6px;letter-spacing:-0.02em">Results + Insights</div>
-          <div style="font-size:13px;color:#4A5568;line-height:1.65">Per-metric scores, trajectory replays, and compliance filters. Engineers can see exactly which step failed and why.</div>
-        </div>
-      </div>
-      <div style="padding:28px;background:#fff;border:1px solid #E8EDF5;border-radius:14px;display:flex;flex-direction:column;gap:16px;transition:transform 0.3s,box-shadow 0.3s;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 12px 32px rgba(79,124,255,0.1)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
-        <div style="width:40px;height:40px;border-radius:10px;background:rgba(79,124,255,0.08);border:1px solid rgba(79,124,255,0.18);display:flex;align-items:center;justify-content:center;">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4F7CFF" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-        </div>
-        <div>
-          <div style="font-family:'DM Serif Display',sans-serif;font-size:16px;font-weight:700;color:#0A0F1E;margin-bottom:6px;letter-spacing:-0.02em">Continuous Monitoring</div>
-          <div style="font-size:13px;color:#4A5568;line-height:1.65">Score history over time. Teams see regressions before users do. Clickable timeline with run-level drill-down.</div>
-        </div>
-      </div>
-    </div>
-    <!-- Designer quote -->
-    <div class="pf-rv pf-d2" style="padding:36px 40px;background:#0A0F1E;border-radius:16px;position:relative;overflow:hidden;">
-      <div style="position:absolute;right:40px;top:50%;transform:translateY(-50%);font-family:'DM Serif Display',serif;font-size:120px;font-weight:800;color:rgba(79,124,255,0.07);line-height:1;letter-spacing:-0.06em;pointer-events:none;">"</div>
-      <div style="position:relative;z-index:1;max-width:700px;">
-        <p style="font-family:'DM Serif Display',sans-serif;font-size:clamp(17px,2.2vw,24px);font-weight:700;color:rgba(255,255,255,0.88);line-height:1.45;letter-spacing:-0.02em;margin:0 0 20px;">Designing TestBench taught me that AI UX isn't about delight. It's about trust, restraint, and accountability.</p>
-        <div style="font-family:'JetBrains Mono',monospace;font-size:9.5px;color:rgba(79,124,255,0.6);font-weight:500;text-transform:uppercase;letter-spacing:0.12em">Product Designer · Solo · 3 months</div>
-      </div>
-    </div>
+<section class="cs-section" style="background:#F7F9FC;">
+  <div class="cs-wrap">
+    <h2 class="cs-h2 pf-rv">From zero to enterprise interest</h2>
+    <p class="cs-lede pf-rv">The first successful enterprise demo run scored 89% average reliability, and a prompt fix between v2.2 and v2.3 moved it five points &mdash; the first time the team could point at a number and say what had changed and why.</p>
   </div>
-</div>
+</section>
 
-<div class="pf-divider">
-  <span class="pf-divider-num">07</span>
-  <div class="pf-divider-line"></div>
-  <span class="pf-divider-label">Outcome + Reflection</span>
-</div>
 
 <!-- LEARNINGS DARK SECTION inserted before outcome -->
 <section style="background:#0A0F1E;padding:96px 0;">
   <div style="max-width:1200px;margin:0 auto;padding:0 40px;">
     <div class="pf-rv">
-      <div class="pf-ey pf-ey-lt" style="color:rgba(129,176,255,0.6)">
-        <span style="display:inline-block;width:20px;height:1.5px;background:rgba(79,124,255,0.5);margin-right:10px"></span>
-        Reflections
-      </div>
-      <h2 class="pf-h2 pf-h2-lt" style="margin-bottom:56px">Three things<br>that didn't leave.</h2>
+<h2 class="cs-h2">Three things that didn't leave</h2>
     </div>
     <div class="pf-rv pf-d1">
       <div class="pf-lrn">
@@ -3085,7 +2810,7 @@ document.addEventListener('DOMContentLoaded',()=>{
       <!-- Impact -->
       <div>
         <div class="reveal" style="transition-delay:0.05s;">
-          <h2 style="font-size:clamp(22px,2.5vw,32px);font-weight:700;color:#0F172A;letter-spacing:-0.02em;margin:0 0 16px;">From Demo to Real Enterprise Interest</h2>
+        <h2 class="cs-h2">What it changed</h2>
           <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:24px;">
             <div style="display:flex;align-items:flex-start;gap:10px;">
               <div style="width:20px;height:20px;border-radius:50%;background:#EFF6FF;border:1px solid #BFDBFE;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;">
@@ -3112,7 +2837,7 @@ document.addEventListener('DOMContentLoaded',()=>{
       <!-- My Role + Reflection -->
       <div>
         <div class="reveal" style="transition-delay:0.05s;">
-          <h2 style="font-size:clamp(22px,2.5vw,32px);font-weight:700;color:#0F172A;letter-spacing:-0.02em;margin:0 0 16px;">End-to-End Product Designer</h2>
+<h2 class="cs-h2">The role, end to end</h2>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:28px;">
             <div style="padding:10px 12px;background:#fff;border:1px solid #E2E8F0;border-radius:7px;font-size:12px;color:#374151;font-weight:500;">Problem framing & research</div>
             <div style="padding:10px 12px;background:#fff;border:1px solid #E2E8F0;border-radius:7px;font-size:12px;color:#374151;font-weight:500;">Workflow design & IA</div>
@@ -3122,10 +2847,10 @@ document.addEventListener('DOMContentLoaded',()=>{
             <div style="padding:10px 12px;background:#fff;border:1px solid #E2E8F0;border-radius:7px;font-size:12px;color:#374151;font-weight:500;">Enterprise-ready UX</div>
           </div>
           <!-- Reflection -->
-          <div class="pf-callout" style="margin-top:4px">
-            <span class="pf-callout-lbl">Designer's take</span>
-            "Designing TestBench taught me that AI UX isn't about delight. It's about trust, restraint, and accountability."
-          </div>
+          <blockquote class="cs-quote">
+            <p>Designing TestBench taught me that AI UX isn&rsquo;t about delight. It&rsquo;s about trust, restraint and accountability.</p>
+            <footer>Product Designer &middot; solo &middot; 3 months</footer>
+          </blockquote>
         </div>
       </div>
 

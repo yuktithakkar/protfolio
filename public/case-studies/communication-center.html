@@ -69,7 +69,6 @@ body{font-family:Inter,ui-sans-serif,sans-serif;color:#0F172A;background:#fff;-w
 
 /* ─── HERO ────────────────────────────────────────── */
 .hero{min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;padding:80px 48px 72px;position:relative;overflow:hidden;border-bottom:1px solid var(--line);}
-.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(15,23,42,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(15,23,42,.03) 1px,transparent 1px);background-size:72px 72px;clip-path:inset(0 0 0 45%);}
 .hero-glow{position:absolute;top:-15%;right:-8%;width:60%;height:85%;background:radial-gradient(ellipse at center,rgba(37,99,235,.06) 0%,transparent 65%);pointer-events:none;}
 .hero-tag{font-family:var(--mo);font-size:10px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--meta);margin-bottom:20px;display:flex;align-items:center;gap:10px;}
 .hero-tag::before{content:"";width:24px;height:2px;background:var(--blue);}
@@ -1731,8 +1730,9 @@ body { font-family: var(--font-body), 'Inter', ui-sans-serif, sans-serif; }
 .sm-entry .sm-stage__sub { font-size: 10.5px; margin-top: 2px; }
 
 </style>
+<link rel="stylesheet" href="/case-studies/casestudy.css">
 </head>
-<body>
+<body class="cs-doc">
 <div id="cc-pg"></div>
 <div id="pg" style="display:none"></div>
 <nav class="cc-nav" id="cc-nav-el">
@@ -1741,69 +1741,23 @@ body { font-family: var(--font-body), 'Inter', ui-sans-serif, sans-serif; }
   <span class="cc-nav-r">ADP · IP Lifecycle SaaS</span>
 </nav>
 
-<section style="min-height:100vh;background:#FAFAF9;display:flex;flex-direction:column;padding-top:52px;position:relative;overflow:hidden;" id="cc-hero-main">
-  <!-- subtle grid -->
-  <div style="position:absolute;inset:0;background-image:linear-gradient(#E8EDF5 1px,transparent 1px),linear-gradient(90deg,#E8EDF5 1px,transparent 1px);background-size:72px 72px;opacity:0.4;pointer-events:none;"></div>
-  <div style="position:absolute;bottom:0;left:0;right:0;height:40%;background:linear-gradient(to top,#FAFAF9,transparent);pointer-events:none;"></div>
-
-  <div style="max-width:1200px;margin:0 auto;padding:72px 40px 0;width:100%;position:relative;z-index:2;flex:1;display:flex;flex-direction:column;">
-    <!-- Breadcrumb -->
-    <div class="cc-rv" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:64px;">
-      <div style="display:flex;align-items:center;gap:8px;">
-        <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#8492A6;letter-spacing:0.06em;">Portfolio</span>
-        <span style="color:#C1C9D8;font-size:11px;">/</span>
-        <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--cc-accent);letter-spacing:0.06em;">Case Study 02</span>
-      </div>
-      <div style="display:flex;align-items:center;gap:6px;">
-        <div style="width:6px;height:6px;border-radius:50%;background:#10B981;"></div>
-        <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#8492A6;letter-spacing:0.08em;text-transform:uppercase;">ADP · 2024 · Shipped</span>
-      </div>
-    </div>
-
-    <!-- Main content -->
-    <div style="display:grid;grid-template-columns:1fr 420px;gap:64px;align-items:start;flex:1;">
+<section class="cs-section cs-hero" id="cc-hero-main">
+  <div class="cs-wrap">
+    <div class="cs-two cs-hero__grid">
       <div>
-        <div class="cc-rv cc-d1" style="display:inline-flex;align-items:center;gap:8px;margin-bottom:28px;padding:5px 12px 5px 5px;background:#fff;border:1px solid #E8EDF5;border-radius:100px;box-shadow:0 1px 4px rgba(0,0,0,0.04);">
-          <span style="background:var(--cc-accent);color:#fff;font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:600;padding:3px 8px;border-radius:100px;letter-spacing:0.08em;text-transform:uppercase;">IP Lifecycle SaaS</span>
-          <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#8492A6;letter-spacing:0.06em;">Enterprise · Web · Product Designer</span>
-        </div>
-
-        <h1 class="cc-rv cc-d2" style="font-family:'DM Serif Display',Georgia,serif;font-size:clamp(40px,6vw,72px);font-weight:400;color:#0A0F1E;line-height:1.05;letter-spacing:-0.02em;margin:0 0 24px;">
-          Contextual<br>
-          <em style="font-style:italic;color:var(--cc-accent);">Communication</em><br>
-          Built In
-        </h1>
-
-        <p class="cc-rv cc-d3" style="font-family:'Inter',sans-serif;font-size:17px;line-height:1.72;color:#64748B;max-width:460px;margin:0 0 40px;">Six teams. One customer journey. Every conversation living in tools that had no idea what the work was.</p>
-
-        <!-- Before / After story — three paired numbers -->
-        <div class="cc-rv cc-d4" style="display:grid;grid-template-columns:auto auto auto auto auto;align-items:end;gap:20px 28px;margin-bottom:0;width:fit-content;">
-          <div style="display:flex;flex-direction:column;gap:4px;">
-            <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#94A3B8;text-transform:uppercase;letter-spacing:0.16em;">Teams</div>
-            <div style="font-family:'DM Serif Display',serif;font-size:46px;font-weight:400;color:#0A0F1E;line-height:1;letter-spacing:-0.03em;">6</div>
-            <div style="font-size:11px;color:#64748B;">across one customer journey</div>
-          </div>
-          <div style="width:1px;height:62px;background:#E8EDF5;align-self:end;margin-bottom:6px;"></div>
-          <div style="display:flex;flex-direction:column;gap:4px;">
-            <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#94A3B8;text-transform:uppercase;letter-spacing:0.16em;">Tools</div>
-            <div style="font-family:'DM Serif Display',serif;font-size:46px;font-weight:400;color:#0A0F1E;line-height:1;letter-spacing:-0.03em;">3<span style="font-size:24px;color:#94A3B8;margin-left:6px;">+</span></div>
-            <div style="font-size:11px;color:#64748B;">where context lived before</div>
-          </div>
-          <div style="width:1px;height:62px;background:#E8EDF5;align-self:end;margin-bottom:6px;"></div>
-          <div style="display:flex;flex-direction:column;gap:4px;">
-            <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--cc-accent);text-transform:uppercase;letter-spacing:0.16em;">Records in platform</div>
-            <div style="font-family:'DM Serif Display',serif;font-size:46px;font-weight:400;color:var(--cc-accent);line-height:1;letter-spacing:-0.03em;">0</div>
-            <div style="font-size:11px;color:#64748B;">traceable decisions, pre-launch</div>
-          </div>
-        </div>
+        <h1 class="cs-h1 cc-rv">Contextual <em>Communication</em> Built&nbsp;In</h1>
+        <p class="cs-lede cc-rv">Six teams, one customer journey, and every conversation living in tools that had no idea what the work was.</p>
+        <dl class="cs-spec cc-rv">
+          <div><dt>Role</dt><dd>Product Designer</dd></div>
+          <div><dt>Scope</dt><dd>Enterprise web &middot; IP lifecycle SaaS</dd></div>
+          <div><dt>Client</dt><dd>ADP</dd></div>
+          <div><dt>Status</dt><dd>Shipped &middot; 2024</dd></div>
+        </dl>
       </div>
-
-      <!-- Right: expanded case-study image, cropped to fill the visual area. -->
-      <div class="cc-rv cc-d3 cc-hero-stage">
-        <div style="width:100%;height:560px;border-radius:16px;overflow:hidden;background:transparent;">
-          <img src="/landing-cards/comm-inside.png" alt="Communication Center — expanded view" style="width:100%;height:100%;object-fit:cover;object-position:center;display:block;" />
-        </div>
-      </div>
+      <figure class="cs-figure cs-hero__fig cc-rv">
+        <img src="/landing-cards/comm-inside.png" alt="Communication Center — an internal thread with tagged messages and the customer-thread control" />
+        <figcaption class="cs-figure__cap">One thread, carrying the whole decision record.</figcaption>
+      </figure>
     </div>
   </div>
 </section>
@@ -1987,17 +1941,11 @@ body { font-family: var(--font-body), 'Inter', ui-sans-serif, sans-serif; }
 }
 </style>
 
-<div class="cc-divider">
-  <span class="cc-divider-num">01</span>
-  <div class="cc-divider-line"></div>
-  <span style="font-family:'JetBrains Mono',monospace;font-size:9.5px;color:#C1C9D8;letter-spacing:0.1em;text-transform:uppercase">The Problem</span>
-</div>
 <!-- 01 PROBLEM -->
 <section style="background:#FAFAF9;">
   <div style="max-width:1200px;margin:0 auto;padding:72px 24px;">
     <div class="reveal" style="transition-delay:0.05s;">
-      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;color:#2563EB;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:14px;">01 &middot; The problem</div>
-      <h2 style="font-size:clamp(28px,3.5vw,44px);font-weight:700;color:#0F172A;letter-spacing:-0.02em;line-height:1.1;margin:0 0 14px;">The work was in the platform.<br>The conversation was not.</h2>
+<h2 class="cs-h2">The work was in the platform. The conversation was not.</h2>
       <p style="font-size:16px;color:#6B7280;line-height:1.7;max-width:600px;margin:0 0 48px;">Six teams managing one deal over months. Each team communicating in different tools, with different people, leaving different records. Every handoff a context gap.</p>
     </div>
     <!-- Tool matrix -->
@@ -2049,57 +1997,20 @@ body { font-family: var(--font-body), 'Inter', ui-sans-serif, sans-serif; }
 
 
 <!-- ═══ VISUAL: KEY INSIGHT BREAK ═══ -->
-<div style="background:#0A0F1E;padding:80px 0;overflow:hidden;position:relative;">
-  <!-- decorative large text -->
-  <div style="position:absolute;right:-20px;top:50%;transform:translateY(-50%);font-family:'DM Serif Display',serif;font-size:180px;font-weight:800;color:rgba(37,99,235,0.06);letter-spacing:-0.06em;line-height:1;pointer-events:none;user-select:none;">SIGNAL</div>
-  <div style="max-width:1200px;margin:0 auto;padding:0 40px;position:relative;z-index:1;">
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;">
-      <!-- Pull quote -->
-      <div class="cc-rv">
-        <div style="width:40px;height:3px;background:var(--cc-accent);margin-bottom:28px;"></div>
-        <blockquote style="font-family:'DM Serif Display',serif;font-size:clamp(22px,3vw,36px);font-weight:700;color:rgba(255,255,255,0.9);line-height:1.25;letter-spacing:-0.02em;margin:0 0 24px;">
-          "Every handoff was<br>a context gap.<br><em style='font-style:normal;color:rgba(20,145,155,0.9)'>No one had the full picture.</em>"
-        </blockquote>
-        <p style="font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;color:rgba(255,255,255,0.3);letter-spacing:0.12em;text-transform:uppercase;">Discovery finding, Week 1</p>
-      </div>
-      <!-- 3 problem stats — clean numbers + text, no busy decorations -->
-      <div class="cc-rv cc-d2" style="display:flex;flex-direction:column;gap:1px;background:rgba(255,255,255,0.06);border-radius:14px;overflow:hidden;border:1px solid rgba(255,255,255,0.08);">
-        <div style="background:#0A0F1E;padding:24px 26px;display:flex;align-items:flex-end;gap:28px;">
-          <div style="display:flex;align-items:baseline;gap:6px;min-width:110px;">
-            <span style="font-family:'DM Serif Display',serif;font-size:48px;font-weight:400;color:rgba(234,88,12,0.95);line-height:1;letter-spacing:-0.02em;">3</span>
-            <span style="font-family:'Inter',sans-serif;font-size:13px;color:rgba(255,255,255,0.55);font-style:italic;">tools</span>
-          </div>
-          <div style="font-size:13.5px;color:rgba(255,255,255,0.6);line-height:1.65;padding-bottom:4px;">Same issue surfaced across three separate tools before anyone acted on it.</div>
-        </div>
-        <div style="background:#0A0F1E;padding:24px 26px;display:flex;align-items:flex-end;gap:28px;">
-          <div style="display:flex;align-items:baseline;gap:6px;min-width:110px;">
-            <span style="font-family:'DM Serif Display',serif;font-size:48px;font-weight:400;color:rgba(234,88,12,0.95);line-height:1;letter-spacing:-0.02em;">6</span>
-            <span style="font-family:'Inter',sans-serif;font-size:13px;color:rgba(255,255,255,0.55);font-style:italic;">weeks</span>
-          </div>
-          <div style="font-size:13.5px;color:rgba(255,255,255,0.6);line-height:1.65;padding-bottom:4px;">Average time before an undocumented decision resurfaced as a problem.</div>
-        </div>
-        <div style="background:#0A0F1E;padding:24px 26px;display:flex;align-items:flex-end;gap:28px;">
-          <div style="display:flex;align-items:baseline;gap:6px;min-width:110px;">
-            <span style="font-family:'DM Serif Display',serif;font-size:48px;font-weight:400;color:rgba(37,99,235,0.95);line-height:1;letter-spacing:-0.02em;">0</span>
-            <span style="font-family:'Inter',sans-serif;font-size:13px;color:rgba(255,255,255,0.55);font-style:italic;">records</span>
-          </div>
-          <div style="font-size:13.5px;color:rgba(255,255,255,0.6);line-height:1.65;padding-bottom:4px;">Decisions traceable inside the platform before this project. Everything lived elsewhere.</div>
-        </div>
-      </div>
-    </div>
+<div class="cs-section" style="background:#0A0F1E;">
+  <div class="cs-wrap">
+    <blockquote class="cs-quote cc-rv">
+      <p>Every handoff was a context gap. <em>No one had the full picture.</em></p>
+      <footer>Discovery finding &middot; week 1</footer>
+    </blockquote>
+    <p class="cs-body cc-rv">The same issue surfaced across three separate tools before anyone acted on it. An undocumented decision took six weeks, on average, to resurface as a problem. Before this project, not one of those decisions was traceable inside the platform.</p>
   </div>
-</div>
-<div class="cc-divider">
-  <span class="cc-divider-num">02</span>
-  <div class="cc-divider-line"></div>
-  <span style="font-family:'JetBrains Mono',monospace;font-size:9.5px;color:#C1C9D8;letter-spacing:0.1em;text-transform:uppercase">Architecture</span>
 </div>
 <!-- 02 ARCHITECTURE — text-led, light, no heavy card stack -->
 <section style="background:#0A0F1E;">
   <div style="max-width:1200px;margin:0 auto;padding:80px 24px 88px;">
     <div class="reveal" style="transition-delay:0.05s;margin-bottom:64px;max-width:760px;">
-      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;color:rgba(147,197,253,.65);letter-spacing:0.16em;text-transform:uppercase;margin-bottom:14px;">02 &middot; How we thought about it</div>
-      <h2 style="font-family:'DM Serif Display',serif;font-size:clamp(28px,3.5vw,42px);font-weight:400;color:#F1F5F9;letter-spacing:-0.015em;line-height:1.1;margin:0 0 14px;">Not a messaging tool. <em style="font-style:italic;color:#93C5FD;">A communication layer.</em></h2>
+<h2 class="cs-h2">Not a messaging tool. <em>A communication layer.</em></h2>
       <p style="font-family:'Inter',sans-serif;font-size:15px;color:rgba(209,213,219,.55);line-height:1.7;margin:0;">Four layers. Each with a hard boundary. Information moves outward only by deliberate action, never automatically.</p>
     </div>
 
@@ -2131,7 +2042,7 @@ body { font-family: var(--font-body), 'Inter', ui-sans-serif, sans-serif; }
       </div>
     </div>
 
-    <div class="reveal" style="margin-top:22px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(147,197,253,0.32);">
+    <div class="cs-body reveal" style="margin-top:22px;">
       Customers cannot access L1-L3 &middot; architectural boundary, not a permission toggle
     </div>
   </div>
@@ -2140,10 +2051,9 @@ body { font-family: var(--font-body), 'Inter', ui-sans-serif, sans-serif; }
 
 <!-- ═══ DESIGN PRINCIPLES — tight horizontal strip ═══ -->
 <div style="background:#F7F9FC;padding:56px 0;border-bottom:1px solid #E8EDF5;">
-  <div style="max-width:1200px;margin:0 auto;padding:0 40px;display:grid;grid-template-columns:240px 1fr;gap:48px;align-items:center;">
+  <div style="max-width:1200px;margin:0 auto;padding:0 40px;">
     <div class="cc-rv">
-      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--cc-accent);margin-bottom:10px;">Design Principles</div>
-      <h2 style="font-family:'DM Serif Display',serif;font-size:22px;font-weight:400;color:#0A0F1E;letter-spacing:-0.015em;line-height:1.15;margin:0;">Three rules that<br>governed every decision.</h2>
+<h2 class="cs-h2">Three rules that governed every decision</h2>
     </div>
     <div class="cc-rv cc-d1" style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;">
       <div style="padding:18px 18px 16px;background:#fff;border:1px solid #E8EDF5;border-radius:12px;display:flex;flex-direction:column;gap:6px;border-left:3px solid var(--cc-accent);">
@@ -2163,11 +2073,6 @@ body { font-family: var(--font-body), 'Inter', ui-sans-serif, sans-serif; }
       </div>
     </div>
   </div>
-</div>
-<div class="cc-divider">
-  <span class="cc-divider-num">03</span>
-  <div class="cc-divider-line"></div>
-  <span style="font-family:'JetBrains Mono',monospace;font-size:9.5px;color:#C1C9D8;letter-spacing:0.1em;text-transform:uppercase">The System, Working</span>
 </div>
 <style id="cadence-screens">
 /* ============================================================
@@ -2713,7 +2618,7 @@ body { font-family: var(--font-body), 'Inter', ui-sans-serif, sans-serif; }
   <div style="max-width:1200px;margin:0 auto;padding:56px 24px 48px;">
     <div class="reveal">
       <div style="font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;color:#2563EB;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:14px;">03 &middot; The system, working</div>
-      <h2 style="font-size:clamp(28px,3.5vw,44px);font-weight:700;color:#0F172A;letter-spacing:-0.02em;line-height:1.1;margin:0 0 14px;">Five moments.<br>One thread. One customer.</h2>
+<h2 class="cs-h2">Five moments. One thread. One customer.</h2>
       <p style="font-size:16px;color:#6B7280;line-height:1.7;max-width:580px;">Omega Electronics. BO David Clark. A delivery failure and how the Communication Center handles it from entry to customer thread.</p>
     </div>
   </div>
@@ -3650,8 +3555,7 @@ body { font-family: var(--font-body), 'Inter', ui-sans-serif, sans-serif; }
 </style>
 <div class="iflow-section">
   <div class="iflow-head cc-rv">
-    <div class="iflow-eyebrow">Information Flow</div>
-    <h2 class="iflow-h">How information moves <em style="color:#EA580C;font-style:italic">through the system.</em></h2>
+<h2 class="cs-h2 iflow-h">What actually reaches the customer</h2>
     <p class="iflow-sub">Four layers. Information only flows outward by deliberate action, never automatically. Each gate is an explicit, named decision.</p>
   </div>
 
@@ -3748,17 +3652,11 @@ body { font-family: var(--font-body), 'Inter', ui-sans-serif, sans-serif; }
     </div>
   </div>
 </div>
-<div class="cc-divider">
-  <span class="cc-divider-num">04</span>
-  <div class="cc-divider-line"></div>
-  <span style="font-family:'JetBrains Mono',monospace;font-size:9.5px;color:#C1C9D8;letter-spacing:0.1em;text-transform:uppercase">Hard Constraints</span>
-</div>
 <!-- 04 CONSTRAINTS -->
 <section style="background:#FAFAF9;">
   <div style="max-width:1200px;margin:0 auto;padding:72px 24px;">
     <div class="reveal">
-      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;color:#2563EB;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:14px;">04 &middot; Hard constraints</div>
-      <h2 style="font-size:clamp(28px,3.5vw,44px);font-weight:700;color:#0F172A;letter-spacing:-0.02em;line-height:1.1;margin:0 0 14px;">Enforced. Not advised.</h2>
+<h2 class="cs-h2">Enforced, not advised</h2>
       <p style="font-size:16px;color:#6B7280;line-height:1.7;max-width:600px;margin:0 0 40px;">The customer thread model has architectural boundaries. Not guidelines that erode under pressure.</p>
     </div>
     <div class="reveal" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;transition-delay:0.1s;">
@@ -3786,17 +3684,11 @@ body { font-family: var(--font-body), 'Inter', ui-sans-serif, sans-serif; }
   </div>
 </section>
 
-<div class="cc-divider">
-  <span class="cc-divider-num">05</span>
-  <div class="cc-divider-line"></div>
-  <span style="font-family:'JetBrains Mono',monospace;font-size:9.5px;color:#C1C9D8;letter-spacing:0.1em;text-transform:uppercase">Learnings</span>
-</div>
 <!-- 05 LEARNINGS -->
 <section style="background:#0A0F1E;padding:96px 0;">
   <div style="max-width:1200px;margin:0 auto;padding:0 40px;">
     <div class="cc-rv">
-      <div class="cc-ey cc-ey-lt">05 · Learnings</div>
-      <h2 class="cc-h2 cc-h2-lt" style="margin-bottom:56px">Three things<br>that didn't leave.</h2>
+<h2 class="cs-h2" style="margin-bottom:48px">What the boundaries taught me</h2>
     </div>
     <div class="cc-rv cc-d1">
       <div class="cc-lrn">

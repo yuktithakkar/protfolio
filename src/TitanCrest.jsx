@@ -119,7 +119,6 @@ function Challenges() {
     <section className="tc-section tc-challenges">
       <div className="tc-container">
         <div className="tc-section-head">
-          <Reveal as="span" className="tc-eyebrow">01 · The brief</Reveal>
           <Reveal as="h2" className="tc-section-title">
             Challenges &amp; opportunities
           </Reveal>
@@ -166,7 +165,6 @@ function Moodboard() {
     <section className="tc-section tc-moodboard">
       <div className="tc-container">
         <div className="tc-section-head">
-          <Reveal as="span" className="tc-eyebrow">02 · Reference</Reveal>
           <Reveal as="h2" className="tc-section-title">Moodboard</Reveal>
           <Reveal as="p" className="tc-section-sub" delay={60}>
             What we wanted the Crest to feel like before sketching a single dial.
@@ -223,8 +221,7 @@ function Moodboard() {
 
         <Reveal className="tc-persona" delay={120}>
           <div className="tc-persona__head">
-            <span className="tc-eyebrow tc-eyebrow--accent">The wearer</span>
-            <h3 className="tc-persona__title">Designed for the Modern Classic</h3>
+                        <h3 className="tc-persona__title">Designed for the Modern Classic</h3>
           </div>
           <div className="tc-persona__grid">
             <div className="tc-persona__cell">
@@ -264,7 +261,6 @@ function Palette() {
     <section className="tc-section tc-palette">
       <div className="tc-container">
         <div className="tc-section-head">
-          <Reveal as="span" className="tc-eyebrow">03 · Surfaces</Reveal>
           <Reveal as="h2" className="tc-section-title">Material palette</Reveal>
         </div>
         <Reveal className="tc-palette__strip" delay={80}>
@@ -308,18 +304,21 @@ function Process() {
     <section className="tc-section tc-process">
       <div className="tc-container">
         <div className="tc-section-head">
-          <Reveal as="span" className="tc-eyebrow">04 · Method</Reveal>
           <Reveal as="h2" className="tc-section-title">Process</Reveal>
         </div>
-        <div className="tc-process__grid">
+        {/* Rows, not three equal cards — the stages are a sequence, and
+            as cards the third one sat two-thirds empty. */}
+        <ol className="tc-steps">
           {cols.map((c, i) => (
-            <Reveal key={c.title} className="tc-process__col" delay={80 + 80 * i}>
-              <span className="tc-process__col-n">{c.n}</span>
-              <h3 className="tc-process__col-title">{c.title}</h3>
-              <ul>{c.items.map((t, j) => <li key={j}>{t}</li>)}</ul>
+            <Reveal as="li" key={c.title} className="tc-steps__row" delay={80 + 80 * i}>
+              <span className="tc-steps__n">{c.n}</span>
+              <div>
+                <h3 className="tc-steps__t">{c.title}</h3>
+                <ul className="tc-steps__list">{c.items.map((t, j) => <li key={j}>{t}</li>)}</ul>
+              </div>
             </Reveal>
           ))}
-        </div>
+        </ol>
       </div>
     </section>
   )
@@ -397,7 +396,6 @@ function Anatomy() {
     >
       <div className="tc-container">
         <div className="tc-section-head tc-section-head--center">
-          <Reveal as="span" className="tc-eyebrow">05 · Anatomy</Reveal>
           <Reveal as="h2" className="tc-section-title">A face, layer by layer</Reveal>
           <Reveal as="p" className="tc-section-sub" delay={60}>
             16 ordered layers compose every Crest face. Finishes set the tone,
@@ -465,11 +463,16 @@ function Collection() {
   // Render the watches twice; the CSS animation translates by -50%
   // (one full first-copy width) so the second copy lines up exactly
   // where the first started; no visible seam when it wraps.
+  //
+  // The track loops forever. Hover pauses it, but hover is not a
+  // mechanism a keyboard or touch visitor has — so the loop also gets a
+  // real control, in the same ghost-pill vocabulary as the anatomy
+  // replay button below.
+  const [paused, setPaused] = useState(false)
   return (
     <section className="tc-section tc-collection">
       <div className="tc-container">
         <div className="tc-section-head tc-section-head--center">
-          <Reveal as="span" className="tc-eyebrow">06 · The Collection</Reveal>
           <Reveal as="h2" className="tc-section-title">A few favourites</Reveal>
           <Reveal as="p" className="tc-section-sub" delay={60}>
             More than six faces were drawn for the Crest line. These are the
@@ -479,15 +482,29 @@ function Collection() {
         </div>
       </div>
       <Reveal className="tc-collection__viewport" delay={120}>
-        <div className="tc-collection__track">
+        <div className={`tc-collection__track${paused ? ' is-paused' : ''}`}>
           {[...list, ...list].map((n, i) => (
             <div className="tc-collection__item" key={i} aria-hidden={i >= 6}>
-              <img src={`${ASSETS}/variants/${n}.png`} alt={`Watchface variant ${n}`} />
+              <img
+                src={`${ASSETS}/variants/${n}.png`}
+                alt={`Titan Crest 2.0 watch face, variant ${n}`}
+                loading="lazy"
+                decoding="async"
+              />
               <div className="tc-collection__num">{`0${n}`}</div>
             </div>
           ))}
         </div>
       </Reveal>
+      <div className="tc-container">
+        <button
+          type="button"
+          className="tc-collection__toggle"
+          onClick={() => setPaused((p) => !p)}
+        >
+          {paused ? 'Resume' : 'Pause'} the loop
+        </button>
+      </div>
     </section>
   )
 }
@@ -517,7 +534,6 @@ function Campaign() {
     <section className="tc-section tc-campaign">
       <div className="tc-container">
         <div className="tc-section-head">
-          <Reveal as="span" className="tc-eyebrow">07 · Campaign</Reveal>
           <Reveal as="h2" className="tc-section-title">Real-world<br />in the wild</Reveal>
           <Reveal as="p" className="tc-section-sub" delay={60}>
             The watch face system carried into the launch creative. Key
