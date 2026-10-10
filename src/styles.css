@@ -1,8 +1,19 @@
 :root {
   --bg-dark: #0a0a0a;
-  --bg-cream: #ebe7e0;
-  --ink: #0f0f10;
-  --bar: #f4f0e8;
+  --bg-cream: #F1EEE7;      /* warm paper */
+  --bg-hero: #E8E7E1;       /* hero field */
+  --ink: #111111;
+  --ink-2: #575650;
+  --line: #C7C3BA;
+  --accent-sage: #797F68;
+  --bar: #F1EEE7;
+  /* Project panels: solid tone + a lighter tint for the glow behind the art */
+  --panel-sage: #CED7C3;
+  --panel-sage-lt: #DCE3D3;
+  --panel-blue: #C8D2E4;
+  --panel-blue-lt: #D8E0EE;
+  --panel-lilac: #D8CDD9;
+  --panel-lilac-lt: #E5DCE6;
 }
 
 * { box-sizing: border-box; }
@@ -220,7 +231,7 @@ body.locked-scroll { overflow: hidden; height: 100vh; }
   align-items: center;
   justify-content: flex-start;
   padding: 24px 56px;
-  background: linear-gradient(to bottom, rgba(235,231,224,0.95) 60%, rgba(235,231,224,0));
+  background: linear-gradient(to bottom, rgba(241,238,231,0.95) 60%, rgba(241,238,231,0));
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
   pointer-events: none;
@@ -1728,49 +1739,21 @@ body.locked-scroll { overflow: hidden; height: 100vh; }
   position: absolute;
   inset: 0;
   overflow: hidden;
-  /* Fluid colour field that the glass cards frost over. */
-  /* Each pool sits under the card that shares its tint: sage under the
-     first slot (~56vw), periwinkle under the second, lilac under the
-     third at the right edge. Reordered along with the project order —
-     the cards read as condensations of the field behind them. */
+  /* Warm-grey surface with one faint cool-grey light source, upper left.
+     Barely perceptible: ambient light on paper, not a wallpaper. */
   background:
-    radial-gradient(40% 48% at 14% 24%, rgba(160,176,214,0.50), transparent 70%),
-    radial-gradient(42% 46% at 58% 70%, rgba(170,190,152,0.44), transparent 70%),
-    radial-gradient(48% 52% at 90% 24%, rgba(190,172,206,0.50), transparent 70%),
-    radial-gradient(38% 40% at 36% 92%, rgba(186,198,220,0.40), transparent 70%),
-    #E8E9E4;
+    radial-gradient(70% 80% at 18% 12%, rgba(196,203,210,0.38), transparent 70%),
+    var(--bg-hero);
 }
-/* Cursor-reactive soft highlight (interactive). */
+/* Cursor-reactive highlight, kept to a whisper. */
 .landing::before {
   content: "";
   position: absolute;
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  background: radial-gradient(26% 34% at var(--mx, 30%) var(--my, 38%), rgba(255,255,255,0.45), transparent 70%);
+  background: radial-gradient(30% 40% at var(--mx, 30%) var(--my, 38%), rgba(255,255,255,0.16), transparent 70%);
   transition: background 0.18s ease-out;
-}
-/* Slow drifting blob (fluid motion). */
-.landing::after {
-  content: "";
-  position: absolute;
-  width: 55vw;
-  height: 55vw;
-  left: 18%;
-  top: 8%;
-  z-index: 0;
-  pointer-events: none;
-  background: radial-gradient(circle, rgba(190,172,206,0.32), transparent 60%);
-  filter: blur(46px);
-  animation: floatBlob 24s ease-in-out infinite alternate;
-}
-@keyframes floatBlob {
-  0%   { transform: translate(0, 0) scale(1); }
-  50%  { transform: translate(8vw, 7vh) scale(1.14); }
-  100% { transform: translate(-6vw, 4vh) scale(0.94); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .landing::after { animation: none; }
 }
 
 /* Top nav */
@@ -1904,12 +1887,15 @@ body.locked-scroll { overflow: hidden; height: 100vh; }
   will-change: left, width, transform;
   container-type: inline-size;   /* lets text inside size by card width */
 }
-/* Frosted-glass card over the fluid background. */
+/* Solid muted panel. A large, low-contrast tint sits behind the artwork
+   (which is centred ~39% down the card); --tone / --tone-lt per project. */
 .band--glass {
-  backdrop-filter: blur(16px) saturate(1.4);
-  -webkit-backdrop-filter: blur(16px) saturate(1.4);
-  border-left: 1px solid rgba(255, 255, 255, 0.4);
+  background-image: radial-gradient(75% 55% at 50% 39%, var(--tone-lt), transparent 75%);
+  border-left: 1px solid var(--line);
 }
+.band--1 { --tone: var(--panel-sage); --tone-lt: var(--panel-sage-lt); }
+.band--2 { --tone: var(--panel-blue); --tone-lt: var(--panel-blue-lt); }
+.band--3 { --tone: var(--panel-lilac); --tone-lt: var(--panel-lilac-lt); }
 /* Collapsed content: square thumbnail + vertical name, centred in the
    column at the card's staggered start (inline `top`). */
 .band-collapsed {

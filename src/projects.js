@@ -18,7 +18,7 @@ const PROJECTS = [
     discipline: 'Product Design · AI',   // shown on the landing card
     sub: 'AI evaluation platform',       // shown in the Selected Work index
     meta: 'Under NDA · 2024',            // shown in the case-study header
-    glass: 'rgba(170, 190, 152, 0.40)',  // sage
+    tone: '#CED7C3',  // sage
     thumb: '/landing-cards/test-1.png',
     imgExpanded: '/landing-cards/test-3.png',
   },
@@ -29,7 +29,7 @@ const PROJECTS = [
     discipline: 'UX · SaaS',
     sub: 'IP lifecycle SaaS',
     meta: 'ADP · Enterprise web',
-    glass: 'rgba(160, 176, 214, 0.40)',  // periwinkle
+    tone: '#C8D2E4',  // periwinkle
     thumb: '/landing-cards/comm-thumb.png',
     imgExpanded: '/landing-cards/comm-3.png',
   },
@@ -40,7 +40,7 @@ const PROJECTS = [
     discipline: 'UI · Watch Faces',
     sub: 'Smartwatch face system',
     meta: 'Titan Company · 2024',
-    glass: 'rgba(190, 172, 206, 0.40)',  // lilac
+    tone: '#D8CDD9',  // lilac
     thumb: '/landing-cards/crest-thumb.png',
     imgExpanded: '/landing-cards/crest-3.png',
   },

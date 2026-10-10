@@ -348,7 +348,7 @@ function ScrollCard({ card, index, scrollYProgress, show, onCaseOpen }) {
       className={`band band--glass band--${index + 1}${clickable ? ' is-clickable' : ''}`}
       style={{
         position: 'absolute',
-        background: card.glass,
+        backgroundColor: card.tone,
         left, width, top, height,
       }}
       initial={{ x: '100vw' }}
